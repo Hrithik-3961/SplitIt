@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/themes.dart';
-import 'package:splitit/controllers/home_controller.dart';
-import 'package:splitit/pages/home.dart';
+import 'package:splitit/controllers/all_groups_controller.dart';
+import 'package:splitit/pages/all_groups_page.dart';
+import 'package:splitit/pages/group_overview_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,9 +22,10 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: Themes.lightTheme,
       darkTheme: Themes.darkTheme,
-      initialRoute: HomePage.route,
+      initialRoute: AllGroupsPage.route,
       getPages: [
-        GetPage(name: HomePage.route, page: () => HomePage(), binding: HomeBinding()),
+        GetPage(name: AllGroupsPage.route, page: () => const AllGroupsPage(), binding: HomeBinding()),
+        GetPage(name: GroupOverViewPage.route, page: () => const GroupOverViewPage()),
       ],
     );
   }
