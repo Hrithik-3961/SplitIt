@@ -7,7 +7,7 @@ import 'package:splitit/controllers/all_groups_controller.dart';
 class AllGroupsPage extends GetView<HomeController> {
   const AllGroupsPage({super.key});
 
-  static const String route = "/allgroups";
+  static const String route = "/";
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class AllGroupsPage extends GetView<HomeController> {
             padding: const EdgeInsets.only(top: 22.0, left: 16.0, right: 16.0),
             itemBuilder: (context, item) => GroupsTile(
                 title: "lorem epsum",
-                onTap: () => controller.navigateToGroupsOverview("title")),
+                onTap: () => controller.navigateToGroupsOverview("lorem epsum")),
             itemCount: controller.groupsCount.value),
       ),
     );

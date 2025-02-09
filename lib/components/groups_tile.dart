@@ -19,13 +19,13 @@ class GroupsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: onTap,
-            child: Card(
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6.0),
+        child: Row(
+          children: [
+            Card(
               color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
               child: SizedBox(
                   width: Values.groupIconSize,
@@ -37,12 +37,12 @@ class GroupsTile extends StatelessWidget {
                     ),
                   )),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 12),
-            child: Text(title, style: const TextStyle(fontSize: Values.groupListTextSize),),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child: Text(title, style: const TextStyle(fontSize: Values.groupListTextSize),),
+            )
+          ],
+        ),
       ),
     );
   }

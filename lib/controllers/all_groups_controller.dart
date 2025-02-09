@@ -17,7 +17,7 @@ class HomeController extends GetxController {
     }
   }
 
-  void navigateToGroupsOverview(String title) => Get.toNamed("${GroupOverViewPage.route}?title=$title");
+  void navigateToGroupsOverview(String title) => Get.toNamed("${GroupOverviewPage.route}?title=$title");
 
 }
 

@@ -5,6 +5,7 @@ import 'package:splitit/constants/themes.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
 import 'package:splitit/pages/all_groups_page.dart';
 import 'package:splitit/pages/group_overview_page.dart';
+import 'package:splitit/controllers/group_overview_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       initialRoute: AllGroupsPage.route,
       getPages: [
         GetPage(name: AllGroupsPage.route, page: () => const AllGroupsPage(), binding: HomeBinding()),
-        GetPage(name: GroupOverViewPage.route, page: () => const GroupOverViewPage()),
+        GetPage(name: GroupOverviewPage.route, page: () => const GroupOverviewPage(), binding: GroupOverviewBinding()),
       ],
     );
   }
