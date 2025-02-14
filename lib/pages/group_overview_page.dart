@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
+import 'package:splitit/components/member_tile.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
 
 class GroupOverviewPage extends GetView<GroupOverviewController> {
@@ -11,12 +13,21 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
 
   @override
   Widget build(BuildContext context) {
-    String title = Get.parameters["title"] ?? "";
+    String title = Get.arguments ?? "";
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(title),
+        actions: [
+          PopupMenuButton(
+              onSelected: (item) => controller.handleAddMember(item),
+              itemBuilder: (context) => [
+                    const PopupMenuItem(
+                        value: Strings.addMember,
+                        child: Text(Strings.addMember))
+                  ])
+        ],
       ),
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFab(
@@ -27,7 +38,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
             heroTag: null,
             label: const Text(Strings.addExpense),
             icon: const Icon(Icons.add),
-            onPressed: () => controller.handleAddExpense,
+            onPressed: () => controller.handleAddExpense(),
           ),
           FloatingActionButton.extended(
             heroTag: null,
@@ -37,6 +48,19 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
           ),
         ],
       ),
+      body: Obx(() => ListView.separated(
+            padding: Values.defaultListPadding,
+            itemBuilder: (context, item) {
+              final member = controller.members[item];
+              return MemberTile(
+                title: member.name,
+                onTap: () {},
+              );
+            },
+            itemCount: controller.members.length,
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
+          )),
     );
   }
 }

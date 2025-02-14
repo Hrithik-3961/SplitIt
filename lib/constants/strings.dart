@@ -6,4 +6,6 @@ class Strings {
 
   static const String addExpense = "Add Expense";
   static const String recordPayment = "Record Payment";
+
+  static const String addMember = "Add a member";
 }
