@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
-import 'package:splitit/components/member_tile.dart';
+import 'package:splitit/components/expense_tile.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
@@ -51,13 +51,13 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
       body: Obx(() => ListView.separated(
             padding: Values.defaultListPadding,
             itemBuilder: (context, item) {
-              final member = controller.members[item];
-              return MemberTile(
-                title: member.name,
+              final expense = controller.expenses[item];
+              return ExpenseTile(
+                expense: expense,
                 onTap: () {},
               );
             },
-            itemCount: controller.members.length,
+            itemCount: controller.expenses.length,
             separatorBuilder: (BuildContext context, int index) =>
                 const Divider(),
           )),

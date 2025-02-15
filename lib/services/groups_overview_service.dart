@@ -1,17 +1,24 @@
 import 'package:get/get.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
+import 'package:splitit/models/expense.dart';
+import 'package:splitit/models/group_details.dart';
 import 'package:splitit/models/user.dart';
 
 class GroupsOverviewService {
-  late List<User> _members;
-  List<User> get members => _members;
+  late GroupDetails _groupDetails;
+
+  GroupDetails get groupDetails => _groupDetails;
 
   GroupsOverviewService(int groupId) {
-    _members = Get.find<AllGroupsController>().groupDetails.firstWhere((group) => group.id == groupId).members.obs;
+    _groupDetails = Get.find<AllGroupsController>().groupDetails.firstWhere((group) => group.id == groupId);
   }
 
   void addMember() {
-    _members.add(User(name: "New Member"));
+    _groupDetails.members.add(User(name: "New Member"));
+  }
+
+  void addExpense() {
+    _groupDetails.expenses.add(Expense(title: "Expense 1", amount: 100));
   }
 
 }
