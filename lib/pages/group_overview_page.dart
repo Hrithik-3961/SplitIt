@@ -48,19 +48,23 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
           ),
         ],
       ),
-      body: Obx(() => ListView.separated(
-            padding: Values.defaultListPadding,
-            itemBuilder: (context, item) {
-              final expense = controller.expenses[item];
-              return ExpenseTile(
-                expense: expense,
-                onTap: () {},
-              );
-            },
-            itemCount: controller.expenses.length,
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(),
-          )),
+      body: Obx(() => controller.expenses.isEmpty
+          ? const Center(
+              child: Text(Strings.noExpensesMsg, style: TextStyle(fontSize: Values.defaultTextSize),),
+            )
+          : ListView.separated(
+              padding: Values.defaultListPadding,
+              itemBuilder: (context, item) {
+                final expense = controller.expenses[item];
+                return ExpenseTile(
+                  expense: expense,
+                  onTap: () {},
+                );
+              },
+              itemCount: controller.expenses.length,
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(),
+            )),
     );
   }
 }

@@ -29,13 +29,24 @@ class AllGroupsPage extends GetView<AllGroupsController> {
         ],
       ),
       body: Obx(
-        () => ListView.builder(
-            padding: Values.defaultListPadding,
-            itemBuilder: (context, item) {
-              final group = controller.groupDetails[item];
-              return GroupsTile(title: group.title, onTap: () => controller.navigateToGroupsOverview(group.id));
-            },
-            itemCount: controller.groupDetails.length),
+        () => controller.groupDetails.isEmpty
+            ? const Center(
+                child: Text(
+                  Strings.noGroupsMsg,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: Values.defaultTextSize),
+                ),
+              )
+            : ListView.builder(
+                padding: Values.defaultListPadding,
+                itemBuilder: (context, item) {
+                  final group = controller.groupDetails[item];
+                  return GroupsTile(
+                      title: group.title,
+                      onTap: () =>
+                          controller.navigateToGroupsOverview(group.id));
+                },
+                itemCount: controller.groupDetails.length),
       ),
     );
   }
