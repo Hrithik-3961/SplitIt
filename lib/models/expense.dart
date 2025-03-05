@@ -1,6 +1,6 @@
 class Expense {
-  String _title;
-  double _amount;
+  final String _title;
+  final double _amount;
 
   Expense({required String title, required double amount})
       : _title = title,

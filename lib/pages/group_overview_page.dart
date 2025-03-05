@@ -38,7 +38,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
             heroTag: null,
             label: const Text(Strings.addExpense),
             icon: const Icon(Icons.add),
-            onPressed: () => controller.handleAddExpense(),
+            onPressed: () => controller.navigateToAddExpensePage(),
           ),
           FloatingActionButton.extended(
             heroTag: null,

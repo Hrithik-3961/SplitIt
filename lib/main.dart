@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/themes.dart';
+import 'package:splitit/controllers/add_expense_controller.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
+import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/pages/all_groups_page.dart';
 import 'package:splitit/pages/group_overview_page.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: AllGroupsPage.route, page: () => const AllGroupsPage(), binding: HomeBinding()),
         GetPage(name: GroupOverviewPage.route, page: () => const GroupOverviewPage(), binding: GroupOverviewBinding()),
+        GetPage(name: AddExpensePage.route, page: () => const AddExpensePage(), binding: AddExpenseBinding())
       ],
     );
   }

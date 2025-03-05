@@ -9,4 +9,9 @@ class Themes {
   static final darkTheme = ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: MyColors.darkBlue, brightness: Brightness.dark),
   );
+
+  static InputDecoration getFormDecoration(String hint) => InputDecoration(
+      hintText: hint, filled: true, border: InputBorder.none
+  );
+
 }

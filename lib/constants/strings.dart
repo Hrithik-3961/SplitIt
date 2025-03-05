@@ -10,4 +10,7 @@ class Strings {
   static const String recordPayment = "Record Payment";
 
   static const String addMember = "Add a member";
+  
+  static const String title = "Title";
+  static const String amount = "Amount";
 }

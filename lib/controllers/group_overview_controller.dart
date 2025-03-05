@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/expense.dart';
 import 'package:splitit/models/user.dart';
+import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/services/groups_overview_service.dart';
 
 class GroupOverviewController extends GetxController {
@@ -25,8 +26,8 @@ class GroupOverviewController extends GetxController {
     }
   }
 
-  void handleAddExpense() {
-    _groupsOverviewService.addExpense();
+  void navigateToAddExpensePage() {
+    Get.toNamed(AddExpensePage.route);
   }
 
   void handleRecordPayment() {}
