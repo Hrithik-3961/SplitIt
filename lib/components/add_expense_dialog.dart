@@ -22,26 +22,31 @@ class AddExpenseDialog extends StatelessWidget {
           const Text(Strings.enterAmount),
           Form(
               key: formKey,
-              child: TextFormField(
-                controller: controller,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                style: const TextStyle(fontSize: Values.largeTextSize),
-                decoration: InputDecoration(
-                  hintText: toCurrencyString(
-                    "",
-                    leadingSymbol: Strings.rupeeSign,
-                    useSymbolPadding: true,
+              child: Center(
+                child: IntrinsicWidth(
+                  child: TextFormField(
+                    controller: controller,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    style: const TextStyle(fontSize: Values.largeTextSize),
+                    decoration: InputDecoration(
+                      hintText: toCurrencyString(
+                        "",
+                        leadingSymbol: Strings.rupeeSign,
+                        useSymbolPadding: true,
+                      ),
+                      border: InputBorder.none
+                    ),
+                    inputFormatters: [
+                      CurrencyInputFormatter(
+                        leadingSymbol: Strings.rupeeSign,
+                        useSymbolPadding: true,
+                      )
+                    ],
+                    validator: (value) => ExpenseValidator.validateAmount(value),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                 ),
-                inputFormatters: [
-                  CurrencyInputFormatter(
-                    leadingSymbol: Strings.rupeeSign,
-                    useSymbolPadding: true,
-                  )
-                ],
-                validator: (value) => ExpenseValidator.validateAmount(value),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
               ))
         ],
       ),
