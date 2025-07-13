@@ -8,7 +8,7 @@ class Styles {
 
   static get defaultTextStyle => const TextStyle(fontSize: Values.defaultTextSize);
 
-  static get amountTextStyle => const TextStyle(fontSize: Values.largeTextSize);
+  static get expenseTextStyle => const TextStyle(fontSize: Values.largeTextSize);
 
   static get expenseInputDecoration => InputDecoration(
       hintText: toCurrencyString(

@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
-import 'package:splitit/utils/expense_validator.dart';
 
 class AddExpenseDialog extends StatelessWidget {
-  const AddExpenseDialog({super.key});
+  final GlobalKey<FormState> formKey;
+  final TextEditingController textController;
+  final VoidCallback onPressed;
+
+  const AddExpenseDialog(
+      {super.key,
+      required this.formKey,
+      required this.textController,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final controller = TextEditingController();
-
     return AlertDialog(
       title: const Text(Strings.addExpense),
       content: Column(
@@ -20,36 +23,19 @@ class AddExpenseDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(Strings.enterAmount),
-          Form(
-              key: formKey,
-              child: Center(
-                child: IntrinsicWidth(
-                  child: TextFormField(
-                    controller: controller,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    style: Styles.amountTextStyle,
-                    decoration: Styles.expenseInputDecoration,
-                    inputFormatters: [
-                      CurrencyInputFormatter(
-                        leadingSymbol: Strings.rupeeSign,
-                        useSymbolPadding: true,
-                      )
-                    ],
-                    validator: (value) => ExpenseValidator.validateAmount(value),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                ),
-              ))
+          Center(
+              child: Form(
+            key: formKey,
+            child: AmountTextField(
+              textController: textController,
+              textStyle: Styles.expenseTextStyle,
+            ),
+          )),
         ],
       ),
       actions: [
         TextButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                Get.back(result: controller.text);
-              }
-            },
+            onPressed: onPressed,
             child: const Text(Strings.add))
       ],
     );

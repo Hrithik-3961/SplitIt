@@ -1,4 +1,4 @@
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:splitit/utils/base_util.dart';
 
 class ExpenseValidator {
   static String? validateAmount(String? value) {
@@ -6,13 +6,12 @@ class ExpenseValidator {
       return 'Amount is required';
     }
 
-    final cleanedValue = toNumericString(value);
-    final parsed = double.tryParse(cleanedValue);
-    if (parsed == null) {
+    final parsedValue = BaseUtil.getNumericValue(value);
+    if (parsedValue == null) {
       return 'Invalid number';
     }
 
-    if (parsed <= 0) {
+    if (parsedValue <= 0) {
       return 'Amount must be greater than 0';
     }
 

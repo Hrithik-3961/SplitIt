@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/add_expense_dialog.dart';
 import 'package:splitit/constants/strings.dart';
@@ -7,10 +8,16 @@ import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/services/groups_overview_service.dart';
 
 class GroupOverviewController extends GetxController {
-
   late GroupsOverviewService _groupsOverviewService;
+
   List<User> get members => _groupsOverviewService.groupDetails.members;
+
   List<Expense> get expenses => _groupsOverviewService.groupDetails.expenses;
+
+  String get groupName => Get.arguments ?? "";
+
+  final _formKey = GlobalKey<FormState>();
+  final _textController = TextEditingController();
 
   @override
   void onInit() {
@@ -28,23 +35,27 @@ class GroupOverviewController extends GetxController {
   }
 
   void navigateToAddExpensePage() async {
-    final amount = await Get.dialog(
-      const AddExpenseDialog()
-    );
-    if(amount != null) {
+    final amount = await Get.dialog(AddExpenseDialog(
+      formKey: _formKey,
+      textController: _textController,
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          Get.back(result: _textController.text);
+        }
+      },
+    ));
+
+    if (amount != null) {
       Get.toNamed(AddExpensePage.route, arguments: amount);
     }
   }
 
   void handleRecordPayment() {}
-
 }
 
 class GroupOverviewBinding extends Bindings {
-
   @override
   void dependencies() {
     Get.lazyPut(() => GroupOverviewController());
   }
-
 }

@@ -13,8 +13,6 @@ class AddExpensePage extends GetView<AddExpenseController> {
 
   @override
   Widget build(BuildContext context) {
-    String amount = Get.arguments ?? "";
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -24,12 +22,12 @@ class AddExpensePage extends GetView<AddExpenseController> {
         padding: Values.defaultListPadding,
         child: Form(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Center(
                 child: Text(
-                  amount,
-                  style: Styles.amountTextStyle,
+                  controller.amountString,
+                  style: Styles.expenseTextStyle,
                 ),
               ),
               Obx(
@@ -44,14 +42,21 @@ class AddExpensePage extends GetView<AddExpenseController> {
                   },
                 ),
               ),
-              Expanded(
-                child: ListView.separated(
-                  itemBuilder: (context, item) {
-                    final user = controller.members[item];
-                    return UserTile(user: user);
-                  },
-                  separatorBuilder: (_, __) => const Divider(),
-                  itemCount: controller.members.length,
+              Form(
+                key: controller.formKey,
+                child: Expanded(
+                  child: ListView.separated(
+                    itemBuilder: (context, item) {
+                      final user = controller.members[item];
+                      final textController = TextEditingController();
+                      return UserTile(
+                        user: user,
+                        textController: textController,
+                      );
+                    },
+                    separatorBuilder: (_, __) => const Divider(),
+                    itemCount: controller.members.length,
+                  ),
                 ),
               )
             ],

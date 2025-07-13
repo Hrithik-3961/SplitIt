@@ -14,12 +14,10 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
 
   @override
   Widget build(BuildContext context) {
-    String title = Get.arguments ?? "";
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(title),
+        title: Text(controller.groupName),
         actions: [
           PopupMenuButton(
               onSelected: (item) => controller.handleAddMember(item),
@@ -51,7 +49,10 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
       ),
       body: Obx(() => controller.expenses.isEmpty
           ? Center(
-              child: Text(Strings.noExpensesMsg, style: Styles.defaultTextStyle,),
+              child: Text(
+                Strings.noExpensesMsg,
+                style: Styles.defaultTextStyle,
+              ),
             )
           : ListView.separated(
               padding: Values.defaultListPadding,
