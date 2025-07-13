@@ -10,7 +10,13 @@ class GroupsOverviewService {
   GroupDetails get groupDetails => _groupDetails;
 
   GroupsOverviewService(int groupId) {
-    _groupDetails = Get.find<AllGroupsController>().groupDetails.firstWhere((group) => group.id == groupId);
+    _init(groupId);
+  }
+
+  void _init(int groupId) {
+    _groupDetails = Get.find<AllGroupsController>()
+        .groupDetails
+        .firstWhere((group) => group.id == groupId);
   }
 
   void addMember() {
@@ -20,5 +26,4 @@ class GroupsOverviewService {
   void addExpense() {
     _groupDetails.expenses.add(Expense(title: "Expense 1", amount: 100));
   }
-
 }

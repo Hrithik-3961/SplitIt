@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/groups_tile.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
 
@@ -30,11 +31,11 @@ class AllGroupsPage extends GetView<AllGroupsController> {
       ),
       body: Obx(
         () => controller.groupDetails.isEmpty
-            ? const Center(
+            ? Center(
                 child: Text(
                   Strings.noGroupsMsg,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: Values.defaultTextSize),
+                  style: Styles.defaultTextStyle,
                 ),
               )
             : ListView.builder(

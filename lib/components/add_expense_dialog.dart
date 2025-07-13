@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:splitit/constants/values.dart';
+import 'package:splitit/constants/styles.dart';
 import 'package:splitit/utils/expense_validator.dart';
 
 class AddExpenseDialog extends StatelessWidget {
@@ -28,15 +28,8 @@ class AddExpenseDialog extends StatelessWidget {
                     controller: controller,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
-                    style: const TextStyle(fontSize: Values.largeTextSize),
-                    decoration: InputDecoration(
-                      hintText: toCurrencyString(
-                        "",
-                        leadingSymbol: Strings.rupeeSign,
-                        useSymbolPadding: true,
-                      ),
-                      border: InputBorder.none
-                    ),
+                    style: Styles.amountTextStyle,
+                    decoration: Styles.expenseInputDecoration,
                     inputFormatters: [
                       CurrencyInputFormatter(
                         leadingSymbol: Strings.rupeeSign,
@@ -54,8 +47,7 @@ class AddExpenseDialog extends StatelessWidget {
         TextButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                final amount = double.parse(toNumericString(controller.text));
-                Get.back(result: amount);
+                Get.back(result: controller.text);
               }
             },
             child: const Text(Strings.add))

@@ -3,6 +3,7 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/expense_tile.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
 
@@ -49,8 +50,8 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
         ],
       ),
       body: Obx(() => controller.expenses.isEmpty
-          ? const Center(
-              child: Text(Strings.noExpensesMsg, style: TextStyle(fontSize: Values.defaultTextSize),),
+          ? Center(
+              child: Text(Strings.noExpensesMsg, style: Styles.defaultTextStyle,),
             )
           : ListView.separated(
               padding: Values.defaultListPadding,

@@ -7,8 +7,12 @@ class AllGroupsService {
   List<GroupDetails> get groupDetails => _groups;
 
   AllGroupsService() {
+    _init();
+  }
+
+  void _init() {
     _groups = [
-      GroupDetails(id: 1, title: "Group 1", members: [User(name: "Name 1")])
+      GroupDetails(id: 1, title: "Group 1", members: [User(name: "Name 1"), User(name: "Name 2")])
     ].obs;
   }
 

@@ -31,7 +31,7 @@ class GroupOverviewController extends GetxController {
     final amount = await Get.dialog(
       const AddExpenseDialog()
     );
-    if(amount != null && amount > 0) {
+    if(amount != null) {
       Get.toNamed(AddExpensePage.route, arguments: amount);
     }
   }
