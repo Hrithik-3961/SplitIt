@@ -7,10 +7,14 @@ class Strings {
 
   static const String noExpensesMsg = "No expenses added";
   static const String addExpense = "Add Expense";
+  static const String add = "Add";
+  static const String enterAmount = "Enter amount to split";
   static const String recordPayment = "Record Payment";
 
   static const String addMember = "Add a member";
   
   static const String title = "Title";
   static const String amount = "Amount";
+
+  static const String rupeeSign = '₹';
 }

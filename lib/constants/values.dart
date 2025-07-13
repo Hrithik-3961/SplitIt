@@ -7,6 +7,7 @@ class Values {
   static const double groupListTextSize = 24;
 
   static const double defaultTextSize = 18;
+  static const double largeTextSize = 34;
 
   static const EdgeInsets defaultListPadding = EdgeInsets.only(top: 22.0, left: 16.0, right: 16.0);
 

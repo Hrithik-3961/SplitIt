@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   get: ^4.7.2
   flutter_expandable_fab: ^2.3.0
+  flutter_multi_formatter: ^2.13.7
 
 dev_dependencies:
   flutter_test:

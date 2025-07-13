@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:splitit/components/add_expense_dialog.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/expense.dart';
 import 'package:splitit/models/user.dart';
@@ -26,8 +27,11 @@ class GroupOverviewController extends GetxController {
     }
   }
 
-  void navigateToAddExpensePage() {
-    Get.toNamed(AddExpensePage.route);
+  void navigateToAddExpensePage() async {
+    final amount = await Get.dialog(
+      const AddExpenseDialog()
+    );
+    Get.toNamed(AddExpensePage.route, arguments: amount);
   }
 
   void handleRecordPayment() {}
