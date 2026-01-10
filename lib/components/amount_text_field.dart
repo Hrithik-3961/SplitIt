@@ -1,3 +1,4 @@
+import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
 import 'package:splitit/constants/strings.dart';
@@ -10,6 +11,7 @@ class AmountTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final TextStyle? _textStyle;
   final Function(String)? onChanged;
+  final bool fullWidth;
 
   const AmountTextField(
       {super.key,
@@ -17,28 +19,30 @@ class AmountTextField extends StatelessWidget {
       this.enabled = true,
       this.focusNode,
       this.onChanged,
-      TextStyle? textStyle}) : _textStyle = textStyle;
+        this.fullWidth = true,
+      TextStyle? textStyle})
+      : _textStyle = textStyle;
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicWidth(
-      child: TextFormField(
-        controller: textController,
-        enabled: enabled,
-        focusNode: focusNode,
-        onChanged: onChanged,
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: _textStyle ?? Theme.of(context).textTheme.bodyMedium,
-        decoration: Styles.expenseInputDecoration,
-        inputFormatters: [
-          CurrencyInputFormatter(
-            leadingSymbol: Strings.rupeeSign,
-            useSymbolPadding: true,
-          )
-        ],
-        validator: (value) => ExpenseValidator.validateAmount(value),
-        autovalidateMode: AutovalidateMode.disabled,
-      ),
+    return AutoSizeTextFormField(
+      fullwidth: fullWidth,
+      controller: textController,
+      enabled: enabled,
+      focusNode: focusNode,
+      onChanged: onChanged,
+      textAlign: TextAlign.center,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      style: _textStyle ?? Theme.of(context).textTheme.bodyMedium,
+      decoration: Styles.expenseInputDecoration,
+      inputFormatters: [
+        CurrencyInputFormatter(
+          leadingSymbol: Strings.rupeeSign,
+          useSymbolPadding: true,
+        )
+      ],
+      validator: (value) => ExpenseValidator.validateAmount(value),
+      autovalidateMode: AutovalidateMode.disabled,
     );
   }
 }

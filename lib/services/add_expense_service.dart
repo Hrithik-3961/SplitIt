@@ -46,7 +46,7 @@ class AddExpenseService {
     }
   }
 
-    void redistributeAmounts({
+  void redistributeAmounts({
     required List<UserExpenseData> userExpenseDataList,
     required UserExpenseData editingUser,
     required double totalAmount,
@@ -74,127 +74,103 @@ class AddExpenseService {
     }
   }
 
-
   void updateAmounts({
     required List<UserExpenseData> userExpenseDataList,
     required String splitOption,
     required double totalAmount,
     bool recalculateDistribution = false,
   }) {
-    final isSplitEvenly = splitOption == Strings.splitOptions[0];
-    final isSplitByShares = splitOption == Strings.splitOptions[1];
-    final isSplitByPercentage = splitOption == Strings.splitOptions[2];
-    final isSplitUnevenly = splitOption == Strings.splitOptions[3];
-
-    if (isSplitEvenly) {
-      final selectedUsers =
-          userExpenseDataList.where((d) => d.isSelected.value).toList();
-      if (selectedUsers.isEmpty) {
-        for (final data in userExpenseDataList) {
-          data.amountController.clear();
-        }
-        return;
-      }
-      final splitAmount = totalAmount / selectedUsers.length;
-
-      for (final data in userExpenseDataList) {
-        if (data.isSelected.value) {
-          data.amountController.text = BaseUtil.getFormattedCurrency(splitAmount.toString());
-        } else {
-          data.amountController.clear();
-        }
-      }
-    } else if (isSplitByShares) {
-        final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
-        if (selectedUsers.isEmpty) {
-            for (final data in userExpenseDataList) {
-                data.amountController.clear();
-            }
-            return;
-        }
-
-        double totalShares = 0;
-        for (final data in selectedUsers) {
-            totalShares += double.tryParse(data.shareController.text) ?? 0;
-        }
-
-        if (totalShares == 0) {
-            for (final data in userExpenseDataList) {
-                if (data.isSelected.value) {
-                    data.amountController.text = BaseUtil.getFormattedCurrency("0");
-                } else {
-                    data.amountController.clear();
-                }
-            }
-            return;
-        }
-
-        final amountPerShare = totalAmount / totalShares;
-
-        for (final data in userExpenseDataList) {
-            if (data.isSelected.value) {
-                final userShares = double.tryParse(data.shareController.text) ?? 0;
-                final userAmount = userShares * amountPerShare;
-                data.amountController.text = BaseUtil.getFormattedCurrency(userAmount.toString());
-            } else {
-                data.amountController.clear();
-            }
-        }
-    } else if (isSplitByPercentage) {
-        final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
-        if (selectedUsers.isEmpty) {
-            for (final data in userExpenseDataList) {
-                data.amountController.clear();
-            }
-            return;
-        }
-
-        if (recalculateDistribution) {
-          final evenPercentage = 100 / selectedUsers.length;
-          for (final data in userExpenseDataList) {
-            if (data.isSelected.value) {
-              data.percentageController.text = evenPercentage.toStringAsFixed(2);
-            } else {
-              data.percentageController.clear();
-            }
-          }
-        }
-
-        for (final data in userExpenseDataList) {
-            if (data.isSelected.value) {
-                final userPercentage = double.tryParse(data.percentageController.text) ?? 0;
-                final userAmount = (totalAmount * userPercentage) / 100;
-                data.amountController.text = BaseUtil.getFormattedCurrency(userAmount.toString());
-            } else {
-                data.amountController.clear();
-            }
-        }
-    } else if (isSplitUnevenly) {
-      if (recalculateDistribution) {
-        final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
-        if (selectedUsers.isEmpty) {
-          for (final data in userExpenseDataList) {
-            data.amountController.clear();
-          }
-          return;
-        }
-        final splitAmount = totalAmount / selectedUsers.length;
-
-        for (final data in userExpenseDataList) {
-          if (data.isSelected.value) {
-            data.amountController.text = BaseUtil.getFormattedCurrency(splitAmount.toString());
-          } else {
-            data.amountController.clear();
-          }
-        }
-      }
+    if (splitOption == Strings.splitOptions[0]) {
+      _splitEvenly(userExpenseDataList, totalAmount);
+    } else if (splitOption == Strings.splitOptions[1]) {
+      _splitByShares(userExpenseDataList, totalAmount);
+    } else if (splitOption == Strings.splitOptions[2]) {
+      _splitByPercentage(userExpenseDataList, totalAmount, recalculateDistribution);
+    } else if (splitOption == Strings.splitOptions[3]) {
+      _splitUnevenly(userExpenseDataList, totalAmount, recalculateDistribution);
     } else {
-      // If not splitting by another method, clear the fields for manual entry
+      _clearAllAmounts(userExpenseDataList);
+    }
+  }
+
+  void _splitEvenly(List<UserExpenseData> userExpenseDataList, double totalAmount) {
+    final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
+    if (selectedUsers.isEmpty) {
+      _clearAllAmounts(userExpenseDataList);
+      return;
+    }
+    final splitAmount = totalAmount / selectedUsers.length;
+    for (final data in userExpenseDataList) {
+      data.amountController.text = data.isSelected.value
+          ? BaseUtil.getFormattedCurrency(splitAmount.toString())
+          : '';
+    }
+  }
+
+  void _splitByShares(List<UserExpenseData> userExpenseDataList, double totalAmount) {
+    final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
+    if (selectedUsers.isEmpty) {
+      _clearAllAmounts(userExpenseDataList);
+      return;
+    }
+
+    double totalShares = 0;
+    for (final data in selectedUsers) {
+      totalShares += double.tryParse(data.shareController.text) ?? 0;
+    }
+
+    if (totalShares == 0) {
       for (final data in userExpenseDataList) {
-        if (data.isSelected.value) {
-          data.amountController.clear();
-        }
+        data.amountController.text = data.isSelected.value ? BaseUtil.getFormattedCurrency("0") : '';
       }
+      return;
+    }
+
+    final amountPerShare = totalAmount / totalShares;
+    for (final data in userExpenseDataList) {
+      if (data.isSelected.value) {
+        final userShares = double.tryParse(data.shareController.text) ?? 0;
+        data.amountController.text = BaseUtil.getFormattedCurrency((userShares * amountPerShare).toString());
+      } else {
+        data.amountController.clear();
+      }
+    }
+  }
+
+  void _splitByPercentage(
+      List<UserExpenseData> userExpenseDataList, double totalAmount, bool recalculateDistribution) {
+    final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
+    if (selectedUsers.isEmpty) {
+      _clearAllAmounts(userExpenseDataList);
+      return;
+    }
+
+    if (recalculateDistribution) {
+      final evenPercentage = 100 / selectedUsers.length;
+      for (final data in userExpenseDataList) {
+        data.percentageController.text = data.isSelected.value ? evenPercentage.toStringAsFixed(2) : '';
+      }
+    }
+
+    for (final data in userExpenseDataList) {
+      if (data.isSelected.value) {
+        final userPercentage = double.tryParse(data.percentageController.text) ?? 0;
+        data.amountController.text = BaseUtil.getFormattedCurrency(((totalAmount * userPercentage) / 100).toString());
+      } else {
+        data.amountController.clear();
+      }
+    }
+  }
+
+  void _splitUnevenly(List<UserExpenseData> userExpenseDataList, double totalAmount, bool recalculateDistribution) {
+    if (recalculateDistribution) {
+      _splitEvenly(userExpenseDataList, totalAmount);
+    }
+  }
+
+  void _clearAllAmounts(List<UserExpenseData> userExpenseDataList) {
+    for (final data in userExpenseDataList) {
+      data.amountController.clear();
     }
   }
 }

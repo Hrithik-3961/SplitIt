@@ -80,7 +80,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
                   )
                 ),
                 Padding(
-                  padding: Values.defaultPadding,
+                  padding: Values.bottomPadding,
                   child: SizedBox(
                     width: double.infinity,
                     child: TextButton(

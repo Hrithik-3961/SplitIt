@@ -38,6 +38,7 @@ dependencies:
   get: ^4.7.2
   flutter_expandable_fab: ^2.3.0
   flutter_multi_formatter: ^2.13.7
+  auto_size_text_field: ^2.2.4
 
 dev_dependencies:
   flutter_test:

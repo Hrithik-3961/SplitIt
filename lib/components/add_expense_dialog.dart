@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/values.dart';
 
 class AddExpenseDialog extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -36,27 +37,42 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text(Strings.addExpense),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(Strings.enterAmount),
-          Center(
-              child: Form(
-            key: widget.formKey,
-            child: AmountTextField(
-              textController: widget.textController,
-              focusNode: _focusNode,
-              textStyle: Theme.of(context).textTheme.displayLarge,
+    return Dialog(
+      child: Padding(
+        padding: Values.defaultPadding,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: Values.defaultGap,
+          children: [
+            Text(
+              Strings.addExpense,
+              style: Theme.of(context).textTheme.displaySmall,
             ),
-          )),
-        ],
+            const Text(Strings.enterAmount),
+            Center(
+                child: Form(
+              key: widget.formKey,
+              child: SizedBox(
+                width: double.maxFinite,
+                height: Values.dialogHeight,
+                child: Center(
+                  child: AmountTextField(
+                    textController: widget.textController,
+                    focusNode: _focusNode,
+                    textStyle: Theme.of(context).textTheme.displayLarge,
+                  ),
+                ),
+              ),
+            )),
+            Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                    onPressed: widget.onPressed,
+                    child: const Text(Strings.add)))
+          ],
+        ),
       ),
-      actions: [
-        TextButton(onPressed: widget.onPressed, child: const Text(Strings.add))
-      ],
     );
   }
 }

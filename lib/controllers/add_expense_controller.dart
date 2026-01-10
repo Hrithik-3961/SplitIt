@@ -40,7 +40,7 @@ class AddExpenseController extends GetxController {
 
   late final splitOption = splitOptions.first.obs;
 
-  double get _totalAmount => BaseUtil.getNumericValue(amountString)!;
+  double get _totalAmount => BaseUtil.getNumericValue(amountString) ?? 0.0;
 
   final _formKey = GlobalKey<FormState>();
   final updateTrigger = 0.obs;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/constants/styles.dart';
+import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/user.dart';
 
 class UserTile extends StatelessWidget {
@@ -46,92 +47,82 @@ class UserTile extends StatelessWidget {
       });
     }
 
-    return Obx(
-      () => ListTile(
-        leading: Checkbox(
-          value: isSelected.value,
-          onChanged: (value) {
-            isSelected.value = value!;
-            if (isSelected.value) {
-              if (isAmountManuallyEditable) {
-                requestFocusAfterBuild(amountFocusNode);
-              } else if (isSharesEditable) {
-                requestFocusAfterBuild(shareFocusNode);
-              } else if (isPercentageEditable) {
-                requestFocusAfterBuild(percentageFocusNode);
-              }
-            } else {
-              FocusScope.of(context).unfocus();
-            }
-          },
-        ),
-        title: Text(user.name),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isSharesEditable)
-              IntrinsicWidth(
-                child: TextFormField(
-                  controller: shareController,
-                  enabled: isSelected.value,
-                  focusNode: shareFocusNode,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  decoration: Styles.shareOrPercentageInputDecoration,
+    void handleTap() {
+      isSelected.toggle();
+      if (isSelected.value) {
+        if (isAmountManuallyEditable) {
+          requestFocusAfterBuild(amountFocusNode);
+        } else if (isSharesEditable) {
+          requestFocusAfterBuild(shareFocusNode);
+        } else if (isPercentageEditable) {
+          requestFocusAfterBuild(percentageFocusNode);
+        }
+      } else {
+        FocusScope.of(context).unfocus();
+      }
+    }
+
+    return InkWell(
+      onTap: handleTap,
+      child: Padding(
+        padding: Values.userTilePadding,
+        child: Obx(
+          () => Row(
+            children: [
+              Checkbox(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                value: isSelected.value,
+                onChanged: (value) => handleTap(),
+              ),
+              Expanded(
+                flex: 50,
+                child: Text(user.name, overflow: TextOverflow.ellipsis),
+              ),
+              const Spacer(),
+              if (isSharesEditable)
+                SizedBox(
+                  width: 50,
+                  child: TextFormField(
+                    controller: shareController,
+                    enabled: isSelected.value,
+                    focusNode: shareFocusNode,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.number,
+                    decoration: Styles.shareOrPercentageInputDecoration,
+                  ),
+                ),
+
+              if (isPercentageEditable)
+                SizedBox(
+                  width: 70,
+                  child: TextFormField(
+                    controller: percentageController,
+                    enabled: isSelected.value,
+                    focusNode: percentageFocusNode,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.number,
+                    decoration: Styles.shareOrPercentageInputDecoration.copyWith(
+                      suffixText: '%',
+                    ),
+                    onChanged: onPercentageChanged,
+                  ),
+                ),
+
+              if (isSharesEditable || isPercentageEditable) const SizedBox(width: Values.defaultGap),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: handleTap,
+                child: AmountTextField(
+                  textController: amountController,
+                  enabled: isSelected.value && isAmountManuallyEditable,
+                  focusNode: amountFocusNode,
+                  onChanged: onAmountChanged,
+                  fullWidth: false,
                 ),
               ),
-            if (isPercentageEditable)
-              IntrinsicWidth(
-                child: TextFormField(
-                  controller: percentageController,
-                  enabled: isSelected.value,
-                  focusNode: percentageFocusNode,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  decoration: Styles.shareOrPercentageInputDecoration,
-                  onChanged: onPercentageChanged,
-                ),
-              ),
-            if (isSharesEditable || isPercentageEditable) const SizedBox(width: 12),
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                isSelected.toggle();
-                if (isSelected.value) {
-                  if (isAmountManuallyEditable) {
-                    requestFocusAfterBuild(amountFocusNode);
-                  } else if (isSharesEditable) {
-                    requestFocusAfterBuild(shareFocusNode);
-                  } else if (isPercentageEditable) {
-                    requestFocusAfterBuild(percentageFocusNode);
-                  }
-                } else {
-                  FocusScope.of(context).unfocus();
-                }
-              },
-              child: AmountTextField(
-                textController: amountController,
-                enabled: isSelected.value && isAmountManuallyEditable,
-                focusNode: amountFocusNode,
-                onChanged: onAmountChanged,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-        onTap: () {
-          isSelected.toggle();
-          if (isSelected.value) {
-            if (isAmountManuallyEditable) {
-              requestFocusAfterBuild(amountFocusNode);
-            } else if (isSharesEditable) {
-              requestFocusAfterBuild(shareFocusNode);
-            } else if (isPercentageEditable) {
-              requestFocusAfterBuild(percentageFocusNode);
-            }
-          } else {
-            FocusScope.of(context).unfocus();
-          }
-        },
       ),
     );
   }

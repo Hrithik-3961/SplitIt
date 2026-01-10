@@ -22,7 +22,7 @@ class GroupsTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6.0),
+        padding: Values.groupsTilePadding,
         child: Row(
           children: [
             Card(
@@ -37,10 +37,8 @@ class GroupsTile extends StatelessWidget {
                     ),
                   )),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Text(title, style: const TextStyle(fontSize: Values.groupListTextSize),),
-            )
+            const SizedBox(width: Values.defaultGap),
+            Text(title, style: const TextStyle(fontSize: Values.groupListTextSize),)
           ],
         ),
       ),
