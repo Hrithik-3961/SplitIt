@@ -70,6 +70,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
                           isSharesEditable: controller.isSharesEditable,
                           isPercentageEditable: controller.isPercentageEditable,
                           onPercentageChanged: (_) => controller.onPercentageChanged(data),
+                          onAmountChanged: (_) => controller.onAmountChanged(data),
                         );
                       },
                       separatorBuilder: (_, __) => const Divider(),

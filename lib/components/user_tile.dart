@@ -17,6 +17,7 @@ class UserTile extends StatelessWidget {
   final bool isSharesEditable;
   final bool isPercentageEditable;
   final Function(String) onPercentageChanged;
+  final Function(String) onAmountChanged;
 
   const UserTile({
     super.key,
@@ -32,6 +33,7 @@ class UserTile extends StatelessWidget {
     required this.isSharesEditable,
     required this.isPercentageEditable,
     required this.onPercentageChanged,
+    required this.onAmountChanged,
   });
 
   @override
@@ -111,6 +113,7 @@ class UserTile extends StatelessWidget {
                 textController: amountController,
                 enabled: isSelected.value && isAmountManuallyEditable,
                 focusNode: amountFocusNode,
+                onChanged: onAmountChanged,
               ),
             ),
           ],

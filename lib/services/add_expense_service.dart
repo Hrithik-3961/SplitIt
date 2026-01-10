@@ -46,6 +46,35 @@ class AddExpenseService {
     }
   }
 
+    void redistributeAmounts({
+    required List<UserExpenseData> userExpenseDataList,
+    required UserExpenseData editingUser,
+    required double totalAmount,
+  }) {
+    final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
+    final otherUsers = selectedUsers.where((u) => u != editingUser).toList();
+
+    if (otherUsers.isEmpty) return;
+
+    final editingUserAmount = BaseUtil.getNumericValue(editingUser.amountController.text) ?? 0;
+    final remainingAmount = totalAmount - editingUserAmount;
+
+    if (remainingAmount < 0) {
+      editingUser.amountController.text = BaseUtil.getFormattedCurrency(totalAmount.toString());
+      for (final other in otherUsers) {
+        other.amountController.text = BaseUtil.getFormattedCurrency("0");
+      }
+      return;
+    }
+
+    final splitAmount = remainingAmount / otherUsers.length;
+
+    for (final other in otherUsers) {
+      other.amountController.text = BaseUtil.getFormattedCurrency(splitAmount.toString());
+    }
+  }
+
+
   void updateAmounts({
     required List<UserExpenseData> userExpenseDataList,
     required String splitOption,
@@ -55,6 +84,7 @@ class AddExpenseService {
     final isSplitEvenly = splitOption == Strings.splitOptions[0];
     final isSplitByShares = splitOption == Strings.splitOptions[1];
     final isSplitByPercentage = splitOption == Strings.splitOptions[2];
+    final isSplitUnevenly = splitOption == Strings.splitOptions[3];
 
     if (isSplitEvenly) {
       final selectedUsers =
@@ -139,6 +169,25 @@ class AddExpenseService {
                 data.amountController.clear();
             }
         }
+    } else if (isSplitUnevenly) {
+      if (recalculateDistribution) {
+        final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
+        if (selectedUsers.isEmpty) {
+          for (final data in userExpenseDataList) {
+            data.amountController.clear();
+          }
+          return;
+        }
+        final splitAmount = totalAmount / selectedUsers.length;
+
+        for (final data in userExpenseDataList) {
+          if (data.isSelected.value) {
+            data.amountController.text = BaseUtil.getFormattedCurrency(splitAmount.toString());
+          } else {
+            data.amountController.clear();
+          }
+        }
+      }
     } else {
       // If not splitting by another method, clear the fields for manual entry
       for (final data in userExpenseDataList) {

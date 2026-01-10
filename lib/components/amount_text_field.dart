@@ -9,12 +9,14 @@ class AmountTextField extends StatelessWidget {
   final bool enabled;
   final FocusNode? focusNode;
   final TextStyle? _textStyle;
+  final Function(String)? onChanged;
 
   const AmountTextField(
       {super.key,
       required this.textController,
       this.enabled = true,
       this.focusNode,
+      this.onChanged,
       TextStyle? textStyle}) : _textStyle = textStyle;
 
   @override
@@ -24,6 +26,7 @@ class AmountTextField extends StatelessWidget {
         controller: textController,
         enabled: enabled,
         focusNode: focusNode,
+        onChanged: onChanged,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         style: _textStyle ?? Theme.of(context).textTheme.bodyMedium,
         decoration: Styles.expenseInputDecoration,

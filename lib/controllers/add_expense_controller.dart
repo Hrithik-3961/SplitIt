@@ -77,7 +77,15 @@ class AddExpenseController extends GetxController {
       userExpenseDataList: userExpenseDataList,
       editingUser: editingData,
     );
-    // After redistributing, update the monetary amounts
+    _updateAmounts();
+  }
+
+  void onAmountChanged(UserExpenseData editingData) {
+    _addExpenseService.redistributeAmounts(
+      userExpenseDataList: userExpenseDataList,
+      editingUser: editingData,
+      totalAmount: _totalAmount,
+    );
     _updateAmounts();
   }
 
