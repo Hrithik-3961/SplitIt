@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:splitit/constants/values.dart';
 import 'package:splitit/utils/base_util.dart';
 
 class Styles {

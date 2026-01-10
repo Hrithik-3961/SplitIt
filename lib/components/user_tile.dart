@@ -8,6 +8,7 @@ class UserTile extends StatelessWidget {
   final TextEditingController textController;
   final FocusNode focusNode;
   final RxBool isSelected;
+  final bool isAmountEditable;
 
   const UserTile({
     super.key,
@@ -15,6 +16,7 @@ class UserTile extends StatelessWidget {
     required this.textController,
     required this.focusNode,
     required this.isSelected,
+    required this.isAmountEditable,
   });
 
   @override
@@ -44,16 +46,16 @@ class UserTile extends StatelessWidget {
         trailing: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
-            if (!isSelected.value) {
-              isSelected.value = true;
+            isSelected.toggle();
+            if (isSelected.value && isAmountEditable) {
               requestFocusAfterBuild();
-            } else {
-              focusNode.requestFocus();
+            } else if (!isSelected.value) {
+              FocusScope.of(context).unfocus();
             }
           },
           child: AmountTextField(
             textController: textController,
-            enabled: isSelected.value,
+            enabled: isSelected.value && isAmountEditable,
             focusNode: focusNode,
           ),
         ),

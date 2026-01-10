@@ -3,7 +3,6 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/expense_tile.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
 

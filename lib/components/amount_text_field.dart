@@ -34,7 +34,7 @@ class AmountTextField extends StatelessWidget {
           )
         ],
         validator: (value) => ExpenseValidator.validateAmount(value),
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: AutovalidateMode.disabled,
       ),
     );
   }

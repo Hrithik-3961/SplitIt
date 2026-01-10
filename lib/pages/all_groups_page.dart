@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/groups_tile.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
 

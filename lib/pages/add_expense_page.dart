@@ -51,26 +51,36 @@ class AddExpensePage extends GetView<AddExpenseController> {
                   ],
                 ),
                 Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (context, item) {
-                      final data = controller.userExpenseDataList[item];
-                      return UserTile(
-                        user: data.user,
-                        textController: data.controller,
-                        focusNode: data.focusNode,
-                        isSelected: data.isSelected,
-                      );
-                    },
-                    separatorBuilder: (_, __) => const Divider(),
-                    itemCount: controller.userExpenseDataList.length,
-                  ),
+                  child: Obx(() {
+                    // Depend on the trigger to rebuild the list
+                    final _ = controller.updateTrigger.value;
+                    return ListView.separated(
+                      itemBuilder: (context, item) {
+                        final data = controller.userExpenseDataList[item];
+                        return UserTile(
+                          user: data.user,
+                          textController: data.controller,
+                          focusNode: data.focusNode,
+                          isSelected: data.isSelected,
+                          isAmountEditable: controller.isAmountEditable,
+                        );
+                      },
+                      separatorBuilder: (_, __) => const Divider(),
+                      itemCount: controller.userExpenseDataList.length,
+                    );
+                  }
+                  )
                 ),
                 Padding(
                   padding: Values.defaultPadding,
                   child: SizedBox(
                     width: double.infinity,
                     child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (controller.formKey.currentState!.validate()) {
+                            // Your logic to send the request goes here
+                          }
+                        },
                         child: const Text(Strings.sendRequest)
                     ),
                   ),

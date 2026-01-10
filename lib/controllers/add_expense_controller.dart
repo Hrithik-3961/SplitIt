@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/services/add_expense_service.dart';
 import 'package:splitit/utils/base_util.dart';
+import 'package:splitit/constants/strings.dart';
 
 class UserExpenseData {
   final User user;
@@ -31,9 +32,13 @@ class AddExpenseController extends GetxController {
 
   late final splitOption = splitOptions.first.obs;
 
-  double get _totalAmount => BaseUtil.getNumericValue(amountString) ?? 0.0;
+  double get _totalAmount => BaseUtil.getNumericValue(amountString)!;
 
   final _formKey = GlobalKey<FormState>();
+  final updateTrigger = 0.obs;
+
+  bool get isSplitEvenly => splitOption.value == Strings.splitOptions[0];
+  bool get isAmountEditable => !isSplitEvenly;
 
   @override
   void onInit() {
@@ -43,6 +48,23 @@ class AddExpenseController extends GetxController {
     userExpenseDataList = _addExpenseService.members
         .map((user) => UserExpenseData(user: user))
         .toList();
+
+    // Add listeners to react to state changes
+    ever(splitOption, (_) => _updateAmounts());
+    for (final data in userExpenseDataList) {
+      ever(data.isSelected, (_) => _updateAmounts());
+    }
+    // Set initial state
+    _updateAmounts();
+  }
+
+  void _updateAmounts() {
+    _addExpenseService.updateAmounts(
+      userExpenseDataList: userExpenseDataList,
+      splitOption: splitOption.value,
+      totalAmount: _totalAmount,
+    );
+    updateTrigger.value++;
   }
 
   @override
