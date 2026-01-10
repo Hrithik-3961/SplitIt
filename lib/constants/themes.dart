@@ -38,7 +38,12 @@ class AppTheme {
       ),
       checkboxTheme: CheckboxThemeData(
         checkColor: WidgetStateProperty.all(MyColors.lightOnPrimary),
-        fillColor: WidgetStateProperty.all(MyColors.lightPrimary),
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return MyColors.lightPrimary;
+          }
+          return null;
+        }),
       ),
       textTheme: const TextTheme(
         bodyMedium: TextStyle(fontSize: Values.defaultTextSize),
@@ -81,7 +86,12 @@ class AppTheme {
       ),
       checkboxTheme: CheckboxThemeData(
         checkColor: WidgetStateProperty.all(MyColors.darkOnPrimary),
-        fillColor: WidgetStateProperty.all(MyColors.darkPrimary),
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return MyColors.darkPrimary;
+          }
+          return null;
+        }),
       ),
       textTheme: const TextTheme(
         bodyMedium: TextStyle(fontSize: Values.defaultTextSize),

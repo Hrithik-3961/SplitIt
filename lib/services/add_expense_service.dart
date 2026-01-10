@@ -25,12 +25,14 @@ class AddExpenseService {
     required double totalAmount,
   }) {
     final isSplitEvenly = splitOption == Strings.splitOptions[0];
+    final isSplitByShares = splitOption == Strings.splitOptions[1];
+
     if (isSplitEvenly) {
       final selectedUsers =
           userExpenseDataList.where((d) => d.isSelected.value).toList();
       if (selectedUsers.isEmpty) {
         for (final data in userExpenseDataList) {
-          data.controller.clear();
+          data.amountController.clear();
         }
         return;
       }
@@ -38,17 +40,52 @@ class AddExpenseService {
 
       for (final data in userExpenseDataList) {
         if (data.isSelected.value) {
-
-          data.controller.text = BaseUtil.getFormattedCurrency(splitAmount.toString());
+          data.amountController.text = BaseUtil.getFormattedCurrency(splitAmount.toString());
         } else {
-          data.controller.clear();
+          data.amountController.clear();
         }
       }
+    } else if (isSplitByShares) {
+        final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
+        if (selectedUsers.isEmpty) {
+            for (final data in userExpenseDataList) {
+                data.amountController.clear();
+            }
+            return;
+        }
+
+        double totalShares = 0;
+        for (final data in selectedUsers) {
+            totalShares += double.tryParse(data.shareController.text) ?? 0;
+        }
+
+        if (totalShares == 0) {
+            for (final data in userExpenseDataList) {
+                if (data.isSelected.value) {
+                    data.amountController.text = BaseUtil.getFormattedCurrency("0");
+                } else {
+                    data.amountController.clear();
+                }
+            }
+            return;
+        }
+
+        final amountPerShare = totalAmount / totalShares;
+
+        for (final data in userExpenseDataList) {
+            if (data.isSelected.value) {
+                final userShares = double.tryParse(data.shareController.text) ?? 0;
+                final userAmount = userShares * amountPerShare;
+                data.amountController.text = BaseUtil.getFormattedCurrency(userAmount.toString());
+            } else {
+                data.amountController.clear();
+            }
+        }
     } else {
-      // If not splitting evenly, clear the fields for manual entry
+      // If not splitting by another method, clear the fields for manual entry
       for (final data in userExpenseDataList) {
         if (data.isSelected.value) {
-          data.controller.clear();
+          data.amountController.clear();
         }
       }
     }

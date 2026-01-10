@@ -19,5 +19,5 @@ class Strings {
 
   static const String rupeeSign = '₹';
 
-  static const List<String> splitOptions = ["Split evenly", "Split by amounts", "Split by shares", "Split by percentages"];
+  static const List<String> splitOptions = ["Split evenly", "Split by shares", "Split by percentages"];
 }

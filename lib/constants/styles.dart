@@ -6,4 +6,9 @@ class Styles {
 
   static get expenseInputDecoration => InputDecoration(
       hintText: BaseUtil.getFormattedCurrency(""), border: InputBorder.none);
+
+  static get shareOrPercentageInputDecoration => const InputDecoration(
+    isDense: true,
+    border: UnderlineInputBorder(),
+  );
 }

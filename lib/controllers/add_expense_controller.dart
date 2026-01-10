@@ -7,15 +7,19 @@ import 'package:splitit/constants/strings.dart';
 
 class UserExpenseData {
   final User user;
-  final TextEditingController controller = TextEditingController();
-  final FocusNode focusNode = FocusNode();
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController shareController = TextEditingController(text: '1');
+  final FocusNode amountFocusNode = FocusNode();
+  final FocusNode shareFocusNode = FocusNode();
   final RxBool isSelected = true.obs;
 
   UserExpenseData({required this.user});
 
   void dispose() {
-    controller.dispose();
-    focusNode.dispose();
+    amountController.dispose();
+    shareController.dispose();
+    amountFocusNode.dispose();
+    shareFocusNode.dispose();
   }
 }
 
@@ -37,8 +41,11 @@ class AddExpenseController extends GetxController {
   final _formKey = GlobalKey<FormState>();
   final updateTrigger = 0.obs;
 
-  bool get isSplitEvenly => splitOption.value == Strings.splitOptions[0];
-  bool get isAmountEditable => !isSplitEvenly;
+  bool get isSplitByShares => splitOption.value == Strings.splitOptions[1];
+  bool get isSplitUnevenly => splitOption.value == Strings.splitOptions[2];
+
+  bool get isAmountManuallyEditable => isSplitUnevenly;
+  bool get isSharesEditable => isSplitByShares;
 
   @override
   void onInit() {
@@ -53,6 +60,7 @@ class AddExpenseController extends GetxController {
     ever(splitOption, (_) => _updateAmounts());
     for (final data in userExpenseDataList) {
       ever(data.isSelected, (_) => _updateAmounts());
+      data.shareController.addListener(_updateAmounts);
     }
     // Set initial state
     _updateAmounts();

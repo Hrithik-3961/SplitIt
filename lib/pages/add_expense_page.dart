@@ -59,10 +59,13 @@ class AddExpensePage extends GetView<AddExpenseController> {
                         final data = controller.userExpenseDataList[item];
                         return UserTile(
                           user: data.user,
-                          textController: data.controller,
-                          focusNode: data.focusNode,
+                          amountController: data.amountController,
+                          shareController: data.shareController,
+                          amountFocusNode: data.amountFocusNode,
+                          shareFocusNode: data.shareFocusNode,
                           isSelected: data.isSelected,
-                          isAmountEditable: controller.isAmountEditable,
+                          isAmountManuallyEditable: controller.isAmountManuallyEditable,
+                          isSharesEditable: controller.isSharesEditable,
                         );
                       },
                       separatorBuilder: (_, __) => const Divider(),
