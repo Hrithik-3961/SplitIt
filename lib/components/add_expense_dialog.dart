@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:splitit/constants/styles.dart';
 
-class AddExpenseDialog extends StatelessWidget {
+class AddExpenseDialog extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController textController;
   final VoidCallback onPressed;
@@ -13,6 +12,27 @@ class AddExpenseDialog extends StatelessWidget {
       required this.formKey,
       required this.textController,
       required this.onPressed});
+
+  @override
+  State<AddExpenseDialog> createState() => _AddExpenseDialogState();
+}
+
+class _AddExpenseDialogState extends State<AddExpenseDialog> {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +45,17 @@ class AddExpenseDialog extends StatelessWidget {
           const Text(Strings.enterAmount),
           Center(
               child: Form(
-            key: formKey,
+            key: widget.formKey,
             child: AmountTextField(
-              textController: textController,
+              textController: widget.textController,
+              focusNode: _focusNode,
               textStyle: Theme.of(context).textTheme.displayLarge,
             ),
           )),
         ],
       ),
       actions: [
-        TextButton(
-            onPressed: onPressed,
-            child: const Text(Strings.add))
+        TextButton(onPressed: widget.onPressed, child: const Text(Strings.add))
       ],
     );
   }
