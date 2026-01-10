@@ -26,6 +26,12 @@ class GroupOverviewController extends GetxController {
     _groupsOverviewService = Get.put(GroupsOverviewService(groupId));
   }
 
+  @override
+  void onClose() {
+    _textController.dispose();
+    super.onClose();
+  }
+
   void handleAddMember(String item) {
     switch (item) {
       case Strings.addMember:
@@ -35,15 +41,18 @@ class GroupOverviewController extends GetxController {
   }
 
   void navigateToAddExpensePage() async {
-    final amount = await Get.dialog(AddExpenseDialog(
-      formKey: _formKey,
-      textController: _textController,
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          Get.back(result: _textController.text);
-        }
-      },
-    ));
+    _textController.clear();
+    final amount = await Get.dialog(
+      AddExpenseDialog(
+        formKey: _formKey,
+        textController: _textController,
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            Get.back(result: _textController.text);
+          }
+        },
+      ),
+    );
 
     if (amount != null) {
       Get.toNamed(AddExpensePage.route, arguments: amount);

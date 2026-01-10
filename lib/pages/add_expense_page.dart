@@ -26,27 +26,29 @@ class AddExpensePage extends GetView<AddExpenseController> {
           child: Form(
             key: controller.formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Center(
-                  child: Text(
-                    controller.amountString,
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
+                Text(
+                  controller.amountString,
+                  style: Theme.of(context).textTheme.displayLarge,
+                  textAlign: TextAlign.center,
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Obx(
-                    () => DropdownButton<String>(
-                      value: controller.splitOption.value,
-                      items: controller.splitOptions
-                          .map((option) => DropdownMenuItem<String>(
-                              value: option, child: Text(option)))
-                          .toList(),
-                      onChanged: (newValue) {
-                        controller.splitOption.value = newValue!;
-                      },
+                Row(
+                  children: [
+                    const Spacer(),
+                    Obx(
+                      () => DropdownButton<String>(
+                        value: controller.splitOption.value,
+                        items: controller.splitOptions
+                            .map((option) => DropdownMenuItem<String>(
+                                value: option, child: Text(option)))
+                            .toList(),
+                        onChanged: (newValue) {
+                          controller.splitOption.value = newValue!;
+                        },
+                      ),
                     ),
-                  ),
+                  ],
                 ),
                 Expanded(
                   child: ListView.separated(

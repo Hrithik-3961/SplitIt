@@ -4,25 +4,41 @@ import 'package:splitit/models/user.dart';
 import 'package:splitit/services/add_expense_service.dart';
 import 'package:splitit/utils/base_util.dart';
 
+class UserExpenseData {
+  final User user;
+  final TextEditingController controller = TextEditingController();
+  final FocusNode focusNode = FocusNode();
+  final RxBool isSelected = true.obs;
+
+  UserExpenseData({required this.user});
+
+  void dispose() {
+    controller.dispose();
+    focusNode.dispose();
+  }
+}
+
 class AddExpenseController extends GetxController {
   late AddExpenseService _addExpenseService;
 
   List<String> get splitOptions => _addExpenseService.splitOptions;
 
-  String get amountString => Get.arguments ?? "";
+  late final String amountString;
 
   get formKey => _formKey;
 
   late final List<UserExpenseData> userExpenseDataList;
 
   late final splitOption = splitOptions.first.obs;
-  late final _totalAmount = BaseUtil.getNumericValue(amountString);
+
+  double get _totalAmount => BaseUtil.getNumericValue(amountString) ?? 0.0;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void onInit() {
     super.onInit();
+    amountString = Get.arguments ?? "";
     _addExpenseService = Get.put(AddExpenseService());
     userExpenseDataList = _addExpenseService.members
         .map((user) => UserExpenseData(user: user))
@@ -41,20 +57,6 @@ class AddExpenseController extends GetxController {
 class AddExpenseBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => AddExpenseController());
-  }
-}
-
-class UserExpenseData {
-  final User user;
-  final TextEditingController controller = TextEditingController();
-  final FocusNode focusNode = FocusNode();
-  final RxBool isSelected = true.obs;
-
-  UserExpenseData({required this.user});
-
-  void dispose() {
-    controller.dispose();
-    focusNode.dispose();
+    Get.lazyPut(() => AddExpenseController(), fenix: true);
   }
 }
