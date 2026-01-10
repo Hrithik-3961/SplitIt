@@ -8,22 +8,30 @@ class UserTile extends StatelessWidget {
   final User user;
   final TextEditingController amountController;
   final TextEditingController shareController;
+  final TextEditingController percentageController;
   final FocusNode amountFocusNode;
   final FocusNode shareFocusNode;
+  final FocusNode percentageFocusNode;
   final RxBool isSelected;
   final bool isAmountManuallyEditable;
   final bool isSharesEditable;
+  final bool isPercentageEditable;
+  final Function(String) onPercentageChanged;
 
   const UserTile({
     super.key,
     required this.user,
     required this.amountController,
     required this.shareController,
+    required this.percentageController,
     required this.amountFocusNode,
     required this.shareFocusNode,
+    required this.percentageFocusNode,
     required this.isSelected,
     required this.isAmountManuallyEditable,
     required this.isSharesEditable,
+    required this.isPercentageEditable,
+    required this.onPercentageChanged,
   });
 
   @override
@@ -47,6 +55,8 @@ class UserTile extends StatelessWidget {
                 requestFocusAfterBuild(amountFocusNode);
               } else if (isSharesEditable) {
                 requestFocusAfterBuild(shareFocusNode);
+              } else if (isPercentageEditable) {
+                requestFocusAfterBuild(percentageFocusNode);
               }
             } else {
               FocusScope.of(context).unfocus();
@@ -59,7 +69,6 @@ class UserTile extends StatelessWidget {
           children: [
             if (isSharesEditable)
               IntrinsicWidth(
-                stepWidth: 10,
                 child: TextFormField(
                   controller: shareController,
                   enabled: isSelected.value,
@@ -69,7 +78,19 @@ class UserTile extends StatelessWidget {
                   decoration: Styles.shareOrPercentageInputDecoration,
                 ),
               ),
-            if (isSharesEditable) const SizedBox(width: 12),
+            if (isPercentageEditable)
+              IntrinsicWidth(
+                child: TextFormField(
+                  controller: percentageController,
+                  enabled: isSelected.value,
+                  focusNode: percentageFocusNode,
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.number,
+                  decoration: Styles.shareOrPercentageInputDecoration,
+                  onChanged: onPercentageChanged,
+                ),
+              ),
+            if (isSharesEditable || isPercentageEditable) const SizedBox(width: 12),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
@@ -79,6 +100,8 @@ class UserTile extends StatelessWidget {
                     requestFocusAfterBuild(amountFocusNode);
                   } else if (isSharesEditable) {
                     requestFocusAfterBuild(shareFocusNode);
+                  } else if (isPercentageEditable) {
+                    requestFocusAfterBuild(percentageFocusNode);
                   }
                 } else {
                   FocusScope.of(context).unfocus();
@@ -99,6 +122,8 @@ class UserTile extends StatelessWidget {
               requestFocusAfterBuild(amountFocusNode);
             } else if (isSharesEditable) {
               requestFocusAfterBuild(shareFocusNode);
+            } else if (isPercentageEditable) {
+              requestFocusAfterBuild(percentageFocusNode);
             }
           } else {
             FocusScope.of(context).unfocus();

@@ -9,8 +9,10 @@ class UserExpenseData {
   final User user;
   final TextEditingController amountController = TextEditingController();
   final TextEditingController shareController = TextEditingController(text: '1');
+  final TextEditingController percentageController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
   final FocusNode shareFocusNode = FocusNode();
+  final FocusNode percentageFocusNode = FocusNode();
   final RxBool isSelected = true.obs;
 
   UserExpenseData({required this.user});
@@ -18,8 +20,10 @@ class UserExpenseData {
   void dispose() {
     amountController.dispose();
     shareController.dispose();
+    percentageController.dispose();
     amountFocusNode.dispose();
     shareFocusNode.dispose();
+    percentageFocusNode.dispose();
   }
 }
 
@@ -42,10 +46,12 @@ class AddExpenseController extends GetxController {
   final updateTrigger = 0.obs;
 
   bool get isSplitByShares => splitOption.value == Strings.splitOptions[1];
-  bool get isSplitUnevenly => splitOption.value == Strings.splitOptions[2];
+  bool get isSplitByPercentage => splitOption.value == Strings.splitOptions[2];
+  bool get isSplitUnevenly => splitOption.value == Strings.splitOptions[3];
 
   bool get isAmountManuallyEditable => isSplitUnevenly;
   bool get isSharesEditable => isSplitByShares;
+  bool get isPercentageEditable => isSplitByPercentage;
 
   @override
   void onInit() {
@@ -57,20 +63,30 @@ class AddExpenseController extends GetxController {
         .toList();
 
     // Add listeners to react to state changes
-    ever(splitOption, (_) => _updateAmounts());
+    ever(splitOption, (_) => _updateAmounts(recalculateDistribution: true));
     for (final data in userExpenseDataList) {
-      ever(data.isSelected, (_) => _updateAmounts());
-      data.shareController.addListener(_updateAmounts);
+      ever(data.isSelected, (_) => _updateAmounts(recalculateDistribution: true));
+      data.shareController.addListener(() => _updateAmounts());
     }
     // Set initial state
+    _updateAmounts(recalculateDistribution: true);
+  }
+
+  void onPercentageChanged(UserExpenseData editingData) {
+    _addExpenseService.redistributePercentages(
+      userExpenseDataList: userExpenseDataList,
+      editingUser: editingData,
+    );
+    // After redistributing, update the monetary amounts
     _updateAmounts();
   }
 
-  void _updateAmounts() {
+  void _updateAmounts({bool recalculateDistribution = false}) {
     _addExpenseService.updateAmounts(
       userExpenseDataList: userExpenseDataList,
       splitOption: splitOption.value,
       totalAmount: _totalAmount,
+      recalculateDistribution: recalculateDistribution,
     );
     updateTrigger.value++;
   }
