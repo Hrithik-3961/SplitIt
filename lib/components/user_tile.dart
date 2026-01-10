@@ -1,31 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/models/user.dart';
-import 'package:get/get.dart';
 
 class UserTile extends StatelessWidget {
   final User user;
   final TextEditingController textController;
+  final FocusNode focusNode;
+  final RxBool isSelected;
 
-  const UserTile(
-      {super.key,
-      required this.user,
-      required this.textController});
+  const UserTile({
+    super.key,
+    required this.user,
+    required this.textController,
+    required this.focusNode,
+    required this.isSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    RxBool selected = true.obs;
+    void requestFocusAfterBuild() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (focusNode.context != null) {
+          focusNode.requestFocus();
+        }
+      });
+    }
+
     return Obx(
       () => ListTile(
         leading: Checkbox(
-          value: selected.value,
-          onChanged: (_) {},
+          value: isSelected.value,
+          onChanged: (value) {
+            isSelected.value = value!;
+            if (isSelected.value) {
+              requestFocusAfterBuild();
+            } else {
+              FocusScope.of(context).unfocus();
+            }
+          },
         ),
         title: Text(user.name),
-        trailing:
-            AmountTextField(textController: textController),
+        trailing: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            if (!isSelected.value) {
+              isSelected.value = true;
+              requestFocusAfterBuild();
+            } else {
+              focusNode.requestFocus();
+            }
+          },
+          child: AmountTextField(
+            textController: textController,
+            enabled: isSelected.value,
+            focusNode: focusNode,
+          ),
+        ),
         onTap: () {
-          selected.value = !selected.value;
+          isSelected.toggle();
+          if (isSelected.value) {
+            requestFocusAfterBuild();
+          } else {
+            FocusScope.of(context).unfocus();
+          }
         },
       ),
     );

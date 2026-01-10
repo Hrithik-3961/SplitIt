@@ -28,7 +28,7 @@ class AddExpenseDialog extends StatelessWidget {
             key: formKey,
             child: AmountTextField(
               textController: textController,
-              textStyle: Styles.expenseTextStyle,
+              textStyle: Theme.of(context).textTheme.displayLarge,
             ),
           )),
         ],

@@ -48,10 +48,9 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
         ],
       ),
       body: Obx(() => controller.expenses.isEmpty
-          ? Center(
+          ? const Center(
               child: Text(
                 Strings.noExpensesMsg,
-                style: Styles.defaultTextStyle,
               ),
             )
           : ListView.separated(

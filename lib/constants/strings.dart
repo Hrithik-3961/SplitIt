@@ -9,6 +9,7 @@ class Strings {
   static const String addExpense = "Add Expense";
   static const String add = "Add";
   static const String enterAmount = "Enter amount to split";
+  static const String sendRequest = "Send Request";
   static const String recordPayment = "Record Payment";
 
   static const String addMember = "Add a member";

@@ -6,21 +6,26 @@ import 'package:splitit/utils/expense_validator.dart';
 
 class AmountTextField extends StatelessWidget {
   final TextEditingController textController;
-  final TextStyle _textStyle;
+  final bool enabled;
+  final FocusNode? focusNode;
+  final TextStyle? _textStyle;
 
-  AmountTextField(
+  const AmountTextField(
       {super.key,
       required this.textController,
-      TextStyle? textStyle})
-      : _textStyle = textStyle ?? Styles.defaultTextStyle;
+      this.enabled = true,
+      this.focusNode,
+      TextStyle? textStyle}) : _textStyle = textStyle;
 
   @override
   Widget build(BuildContext context) {
     return IntrinsicWidth(
       child: TextFormField(
         controller: textController,
+        enabled: enabled,
+        focusNode: focusNode,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: _textStyle,
+        style: _textStyle ?? Theme.of(context).textTheme.bodyMedium,
         decoration: Styles.expenseInputDecoration,
         inputFormatters: [
           CurrencyInputFormatter(

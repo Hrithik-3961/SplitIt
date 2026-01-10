@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: Strings.appName,
       themeMode: ThemeMode.system,
-      theme: Themes.lightTheme,
-      darkTheme: Themes.darkTheme,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       initialRoute: AllGroupsPage.route,
       getPages: [
         GetPage(name: AllGroupsPage.route, page: () => const AllGroupsPage(), binding: HomeBinding()),

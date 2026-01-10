@@ -1,13 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:splitit/constants/colors.dart';
+import 'package:splitit/constants/values.dart';
 
-class Themes {
-  static final lightTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: MyColors.lightBlue, brightness: Brightness.light),
-  );
+class AppTheme {
+  static ThemeData get lightTheme {
+    return ThemeData(
+      primaryColor: MyColors.lightPrimary,
+      colorScheme: const ColorScheme.light(
+        primary: MyColors.lightPrimary,
+        secondary: MyColors.lightAccent,
+        surface: MyColors.lightSurface,
+        onPrimary: MyColors.lightOnPrimary,
+        onSecondary: MyColors.lightOnBackground,
+        onSurface: MyColors.lightOnBackground,
+        error: MyColors.error,
+        onError: MyColors.onError,
+      ),
+      scaffoldBackgroundColor: MyColors.lightBackground,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: MyColors.lightPrimary,
+        elevation: 0,
+        iconTheme: IconThemeData(color: MyColors.lightOnPrimary),
+        titleTextStyle: TextStyle(
+          color: MyColors.lightOnPrimary,
+          fontSize: Values.defaultTextSize,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: MyColors.lightOnPrimary,
+          backgroundColor: MyColors.lightPrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        checkColor: WidgetStateProperty.all(MyColors.lightOnPrimary),
+        fillColor: WidgetStateProperty.all(MyColors.lightPrimary),
+      ),
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(fontSize: Values.defaultTextSize),
+      ),
+    );
+  }
 
-  static final darkTheme = ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: MyColors.darkBlue, brightness: Brightness.dark),
-  );
-
+  static ThemeData get darkTheme {
+    return ThemeData(
+      primaryColor: MyColors.darkPrimary,
+      colorScheme: const ColorScheme.dark(
+        primary: MyColors.darkPrimary,
+        secondary: MyColors.darkAccent,
+        surface: MyColors.darkSurface,
+        onPrimary: MyColors.darkOnPrimary,
+        onSecondary: MyColors.darkOnBackground,
+        onSurface: MyColors.darkOnBackground,
+        error: MyColors.error,
+        onError: MyColors.onError,
+      ),
+      scaffoldBackgroundColor: MyColors.darkBackground,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: MyColors.darkSurface,
+        elevation: 0,
+        iconTheme: IconThemeData(color: MyColors.darkOnBackground),
+        titleTextStyle: TextStyle(
+          color: MyColors.darkOnBackground,
+          fontSize: Values.defaultTextSize,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: MyColors.darkOnPrimary,
+          backgroundColor: MyColors.darkPrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        checkColor: WidgetStateProperty.all(MyColors.darkOnPrimary),
+        fillColor: WidgetStateProperty.all(MyColors.darkPrimary),
+      ),
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(fontSize: Values.defaultTextSize),
+      ),
+    );
+  }
 }

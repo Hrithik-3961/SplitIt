@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/user_tile.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
 
@@ -13,53 +12,69 @@ class AddExpensePage extends GetView<AddExpenseController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(Strings.addExpense),
-      ),
-      body: Padding(
-        padding: Values.defaultListPadding,
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Center(
-                child: Text(
-                  controller.amountString,
-                  style: Styles.expenseTextStyle,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(Strings.addExpense),
+        ),
+        body: Padding(
+          padding: Values.defaultListPadding,
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              children: [
+                Center(
+                  child: Text(
+                    controller.amountString,
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
                 ),
-              ),
-              Obx(
-                () => DropdownButton<String>(
-                  value: controller.splitOption.value,
-                  items: controller.splitOptions
-                      .map((option) => DropdownMenuItem<String>(
-                          value: option, child: Text(option)))
-                      .toList(),
-                  onChanged: (newValue) {
-                    controller.splitOption.value = newValue!;
-                  },
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Obx(
+                    () => DropdownButton<String>(
+                      value: controller.splitOption.value,
+                      items: controller.splitOptions
+                          .map((option) => DropdownMenuItem<String>(
+                              value: option, child: Text(option)))
+                          .toList(),
+                      onChanged: (newValue) {
+                        controller.splitOption.value = newValue!;
+                      },
+                    ),
+                  ),
                 ),
-              ),
-              Form(
-                key: controller.formKey,
-                child: Expanded(
+                Expanded(
                   child: ListView.separated(
                     itemBuilder: (context, item) {
-                      final user = controller.members[item];
-                      final textController = TextEditingController();
+                      final data = controller.userExpenseDataList[item];
                       return UserTile(
-                        user: user,
-                        textController: textController,
+                        user: data.user,
+                        textController: data.controller,
+                        focusNode: data.focusNode,
+                        isSelected: data.isSelected,
                       );
                     },
                     separatorBuilder: (_, __) => const Divider(),
-                    itemCount: controller.members.length,
+                    itemCount: controller.userExpenseDataList.length,
                   ),
                 ),
-              )
-            ],
+                Padding(
+                  padding: Values.defaultPadding,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                        onPressed: () {},
+                        child: const Text(Strings.sendRequest)
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

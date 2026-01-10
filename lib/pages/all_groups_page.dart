@@ -31,11 +31,10 @@ class AllGroupsPage extends GetView<AllGroupsController> {
       ),
       body: Obx(
         () => controller.groupDetails.isEmpty
-            ? Center(
+            ? const Center(
                 child: Text(
                   Strings.noGroupsMsg,
                   textAlign: TextAlign.center,
-                  style: Styles.defaultTextStyle,
                 ),
               )
             : ListView.builder(
