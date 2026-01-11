@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/constants/styles.dart';
@@ -88,6 +89,9 @@ class UserTile extends StatelessWidget {
                     focusNode: shareFocusNode,
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                     decoration: Styles.shareOrPercentageInputDecoration,
                   ),
                 ),
@@ -100,7 +104,10 @@ class UserTile extends StatelessWidget {
                     enabled: isSelected.value,
                     focusNode: percentageFocusNode,
                     textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                    ],
                     decoration: Styles.shareOrPercentageInputDecoration.copyWith(
                       suffixText: '%',
                     ),
