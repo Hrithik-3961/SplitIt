@@ -20,4 +20,5 @@ class MyColors {
   // Common colors
   static const Color error = Color(0xFFB00020);
   static const Color onError = Color(0xFFFFFFFF);
+  static const Color hint = Color(0xFF999999);
 }

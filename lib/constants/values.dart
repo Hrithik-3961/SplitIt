@@ -10,6 +10,7 @@ class Values {
   static const double largeTextSize = 56;
 
   static const EdgeInsets defaultPadding = EdgeInsets.all(20.0);
+  static const EdgeInsets defaultPaddingSmall = EdgeInsets.all(8.0);
   static const EdgeInsets bottomPadding = EdgeInsets.only(bottom: 20.0);
   static const EdgeInsets defaultListPadding = EdgeInsets.only(top: 22.0, left: 16.0, right: 16.0);
   static const EdgeInsets groupsTilePadding = EdgeInsets.symmetric(vertical: 8.0);

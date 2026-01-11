@@ -36,6 +36,7 @@ class AddExpenseController extends GetxController {
   late final String amountString;
 
   get formKey => _formKey;
+  TextEditingController get expenseTitleController => _expenseTitleController;
 
   late final List<UserExpenseData> userExpenseDataList;
 
@@ -44,6 +45,7 @@ class AddExpenseController extends GetxController {
   double get _totalAmount => BaseUtil.getNumericValue(amountString) ?? 0.0;
 
   final _formKey = GlobalKey<FormState>();
+  final _expenseTitleController = TextEditingController();
   final updateTrigger = 0.obs;
 
   bool get isSplitByShares => splitOption.value == Strings.splitOptions[1];
@@ -91,7 +93,8 @@ class AddExpenseController extends GetxController {
   }
 
   void onSendRequest() {
-    Get.back(result: Expense(title: "title", amount: amountString, paidBy: "paidBy"));
+    String title = expenseTitleController.text.isEmpty ? Strings.expenseTitleDefaultText : expenseTitleController.text;
+    Get.back(result: Expense(title: title, amount: amountString, paidBy: "paidBy"));
   }
 
   void _updateAmounts({bool recalculateDistribution = false}) {
@@ -106,6 +109,7 @@ class AddExpenseController extends GetxController {
 
   @override
   void onClose() {
+    expenseTitleController.dispose();
     for (var data in userExpenseDataList) {
       data.dispose();
     }

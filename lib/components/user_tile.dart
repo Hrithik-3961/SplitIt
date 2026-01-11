@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/constants/styles.dart';
@@ -89,10 +88,8 @@ class UserTile extends StatelessWidget {
                     focusNode: shareFocusNode,
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    decoration: Styles.shareOrPercentageInputDecoration,
+                    inputFormatters: Styles.sharesInputFormatters,
+                    decoration: Styles.shareInputDecoration,
                   ),
                 ),
 
@@ -105,26 +102,25 @@ class UserTile extends StatelessWidget {
                     focusNode: percentageFocusNode,
                     textAlign: TextAlign.center,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
-                    ],
-                    decoration: Styles.shareOrPercentageInputDecoration.copyWith(
-                      suffixText: '%',
-                    ),
+                    inputFormatters: Styles.percentageInputFormatters,
+                    decoration: Styles.percentageInputDecoration,
                     onChanged: onPercentageChanged,
                   ),
                 ),
 
               if (isSharesEditable || isPercentageEditable) const SizedBox(width: Values.defaultGap),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: handleTap,
-                child: AmountTextField(
-                  textController: amountController,
-                  enabled: isSelected.value && isAmountManuallyEditable,
-                  focusNode: amountFocusNode,
-                  onChanged: onAmountChanged,
-                  fullWidth: false,
+              Expanded(
+                flex: 20,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: handleTap,
+                  child: AmountTextField(
+                    textController: amountController,
+                    enabled: isSelected.value && isAmountManuallyEditable,
+                    focusNode: amountFocusNode,
+                    onChanged: onAmountChanged,
+                    fullWidth: false,
+                  ),
                 ),
               ),
             ],

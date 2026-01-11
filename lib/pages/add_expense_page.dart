@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/user_tile.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
 
@@ -26,12 +27,20 @@ class AddExpensePage extends GetView<AddExpenseController> {
           child: Form(
             key: controller.formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   controller.amountString,
                   style: Theme.of(context).textTheme.displayLarge,
                   textAlign: TextAlign.center,
+                ),
+                Container(
+                  padding: Values.defaultPaddingSmall,
+                  width: Get.width * 0.6,
+                  child: TextFormField(
+                    controller: controller.expenseTitleController,
+                    decoration: Styles.expenseTitleDecoration,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 Row(
                   children: [
