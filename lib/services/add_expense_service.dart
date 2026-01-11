@@ -93,6 +93,16 @@ class AddExpenseService {
     }
   }
 
+  void updateUserAmountOwed(
+      {required List<UserExpenseData> userExpenseDataList}) {
+    for (var data in userExpenseDataList) {
+      final amount = BaseUtil.getNumericValue(data.amountController.text);
+      if (amount != null) {
+        data.user.addExpense(amount);
+      }
+    }
+  }
+
   void _splitEvenly(List<UserExpenseData> userExpenseDataList, double totalAmount) {
     final selectedUsers = userExpenseDataList.where((d) => d.isSelected.value).toList();
     if (selectedUsers.isEmpty) {

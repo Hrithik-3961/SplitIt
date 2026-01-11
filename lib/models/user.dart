@@ -1,6 +1,6 @@
 class User {
   final String _name;
-  final double _totalAmountOwed;
+  double _totalAmountOwed;
 
   User({required String name, double totalAmountOwed = 0})
       : _name = name,
@@ -9,4 +9,12 @@ class User {
   String get name => _name;
 
   double get totalAmountOwed => _totalAmountOwed;
+
+  void addExpense(double value) {
+    _totalAmountOwed -= value;
+  }
+
+  void addPayment(double value) {
+    _totalAmountOwed += value;
+  }
 }

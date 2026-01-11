@@ -93,8 +93,13 @@ class AddExpenseController extends GetxController {
   }
 
   void onSendRequest() {
-    String title = expenseTitleController.text.isEmpty ? Strings.expenseTitleDefaultText : expenseTitleController.text;
-    Get.back(result: Expense(title: title, amount: amountString, paidBy: "paidBy"));
+    String title = expenseTitleController.text.isEmpty
+        ? Strings.expenseTitleDefaultText
+        : expenseTitleController.text;
+    _addExpenseService.updateUserAmountOwed(
+        userExpenseDataList: userExpenseDataList);
+    Get.back(
+        result: Expense(title: title, amount: amountString, paidBy: "paidBy"));
   }
 
   void _updateAmounts({bool recalculateDistribution = false}) {
