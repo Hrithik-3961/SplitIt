@@ -55,7 +55,10 @@ class GroupOverviewController extends GetxController {
     );
 
     if (amount != null) {
-      Get.toNamed(AddExpensePage.route, arguments: amount);
+      final expense = await Get.toNamed(AddExpensePage.route, arguments: amount);
+      if (expense != null) {
+        _groupsOverviewService.addExpense(expense);
+      }
     }
   }
 

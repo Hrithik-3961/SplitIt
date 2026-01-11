@@ -86,7 +86,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
                     child: TextButton(
                         onPressed: () {
                           if (controller.formKey.currentState!.validate()) {
-                            // Your logic to send the request goes here
+                            controller.onSendRequest();
                           }
                         },
                         child: const Text(Strings.sendRequest)

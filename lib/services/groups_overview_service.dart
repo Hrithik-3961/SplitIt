@@ -23,7 +23,7 @@ class GroupsOverviewService {
     _groupDetails.members.add(User(name: "New Memberrrrrrrr"));
   }
 
-  void addExpense() {
-    _groupDetails.expenses.add(Expense(title: "Expense 1", amount: 100));
+  void addExpense(Expense e) {
+    _groupDetails.expenses.add(e);
   }
 }

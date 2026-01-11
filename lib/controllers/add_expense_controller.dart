@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:splitit/models/expense.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/services/add_expense_service.dart';
 import 'package:splitit/utils/base_util.dart';
@@ -87,6 +88,10 @@ class AddExpenseController extends GetxController {
       totalAmount: _totalAmount,
     );
     _updateAmounts();
+  }
+
+  void onSendRequest() {
+    Get.back(result: Expense(title: "title", amount: amountString, paidBy: "paidBy"));
   }
 
   void _updateAmounts({bool recalculateDistribution = false}) {

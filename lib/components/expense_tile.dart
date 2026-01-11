@@ -12,13 +12,13 @@ class ExpenseTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: ListTile(
+        leading: const Icon(Icons.attach_money),
         title: Text(expense.title),
-        trailing: Text(
-          "${expense.amount > 0 ? "+" : "-"} ${expense.amount.abs()}",
-          style: TextStyle(
-              color: expense.amount > 0 ? Colors.green : Colors.red,
-              fontWeight: FontWeight.bold),
-        ),
+        titleTextStyle: Theme.of(context).textTheme.titleLarge,
+        subtitle: Text(expense.paidBy),
+        subtitleTextStyle: Theme.of(context).textTheme.titleMedium,
+        trailing: Text(expense.amount),
+        leadingAndTrailingTextStyle: Theme.of(context).textTheme.bodyMedium,
       ),
     );
   }
