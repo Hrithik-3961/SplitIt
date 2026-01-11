@@ -60,7 +60,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
             ),
             Expanded(
               child: TabBarView(children: [
-                ListView.separated(
+                Obx(() => ListView.separated(
                   padding: Values.defaultListPadding,
                   itemBuilder: (context, item) {
                     final user = controller.members[item];
@@ -72,7 +72,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
                   itemCount: controller.members.length,
                   separatorBuilder: (BuildContext context, int index) =>
                   const Divider(),
-                ),
+                ),),
                 Obx(() => controller.expenses.isEmpty
                     ? const Center(
                         child: Text(

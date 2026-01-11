@@ -1,3 +1,4 @@
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
 import 'package:splitit/models/expense.dart';
@@ -23,7 +24,16 @@ class GroupsOverviewService {
     _groupDetails.members.add(User(name: "New Memberrrrrrrr"));
   }
 
-  void addExpense(Expense e) {
-    _groupDetails.expenses.add(e);
+  void closeFAB(ExpandableFabState? fabState) {
+    if (fabState != null && fabState.isOpen) {
+      fabState.toggle();
+    }
+  }
+
+  void addExpense(Expense? expense) {
+    if (expense != null) {
+      _groupDetails.expenses.add(expense);
+      _groupDetails.members.refresh();
+    }
   }
 }

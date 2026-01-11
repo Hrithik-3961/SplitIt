@@ -12,7 +12,7 @@ class AllGroupsService {
 
   void _init() {
     _groups = [
-      GroupDetails(id: 1, title: "Group 1", members: [User(name: "Name 1"), User(name: "Name 2")])
+      GroupDetails(id: 1, title: "Group 1", members: [User(name: "Name 1"), User(name: "Name 2")].obs)
     ].obs;
   }
 
@@ -21,7 +21,7 @@ class AllGroupsService {
       GroupDetails(
           id: _groups.length + 1,
           title: "New Group",
-          members: [User(name: "New Name 1"), User(name: "New Name 2")]),
+          members: [User(name: "New Name 1"), User(name: "New Name 2")].obs),
     );
   }
 }

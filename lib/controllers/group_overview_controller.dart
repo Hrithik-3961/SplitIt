@@ -11,9 +11,8 @@ import 'package:splitit/services/groups_overview_service.dart';
 class GroupOverviewController extends GetxController {
   late GroupsOverviewService _groupsOverviewService;
 
-  List<User> get members => _groupsOverviewService.groupDetails.members;
-
-  List<Expense> get expenses => _groupsOverviewService.groupDetails.expenses;
+  late RxList<User> members = <User>[].obs;
+  late RxList<Expense> expenses = <Expense>[].obs;
 
   String get groupName => Get.arguments ?? "";
 
@@ -28,6 +27,8 @@ class GroupOverviewController extends GetxController {
     super.onInit();
     int groupId = int.parse(Get.currentRoute.split('/').last);
     _groupsOverviewService = Get.put(GroupsOverviewService(groupId));
+    members = _groupsOverviewService.groupDetails.members;
+    expenses = _groupsOverviewService.groupDetails.expenses;
   }
 
   @override
@@ -46,28 +47,22 @@ class GroupOverviewController extends GetxController {
 
   void navigateToAddExpensePage() async {
     _textController.clear();
-    final amount = await Get.dialog(
-      AddExpenseDialog(
-        formKey: _formKey,
-        textController: _textController,
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            Get.back(result: _textController.text);
-          }
-        },
-      ),
-    );
+    final result = await Get.dialog(AddExpenseDialog(
+      formKey: _formKey,
+      textController: _textController,
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          Get.back(result: _textController.text);
+        }
+      },
+    ));
 
     final fabState = _fabKey.currentState;
-    if (fabState != null && fabState.isOpen) {
-      fabState.toggle();
-    }
+    _groupsOverviewService.closeFAB(fabState);
 
-    if (amount != null) {
-      final expense = await Get.toNamed(AddExpensePage.route, arguments: amount);
-      if (expense != null) {
-        _groupsOverviewService.addExpense(expense);
-      }
+    if (result != null) {
+      final newExpense = await Get.toNamed(AddExpensePage.route, arguments: result);
+      _groupsOverviewService.addExpense(newExpense);
     }
   }
 
