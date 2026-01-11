@@ -29,6 +29,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
       ),
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFab(
+        key: controller.fabKey,
         type: ExpandableFabType.up,
         childrenAnimation: ExpandableFabAnimation.none,
         children: [

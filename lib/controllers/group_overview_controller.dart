@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/add_expense_dialog.dart';
 import 'package:splitit/constants/strings.dart';
@@ -16,8 +17,11 @@ class GroupOverviewController extends GetxController {
 
   String get groupName => Get.arguments ?? "";
 
+  get fabKey => _fabKey;
+
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
+  final _fabKey = GlobalKey<ExpandableFabState>();
 
   @override
   void onInit() {
@@ -53,6 +57,11 @@ class GroupOverviewController extends GetxController {
         },
       ),
     );
+
+    final fabState = _fabKey.currentState;
+    if (fabState != null && fabState.isOpen) {
+      fabState.toggle();
+    }
 
     if (amount != null) {
       final expense = await Get.toNamed(AddExpensePage.route, arguments: amount);
