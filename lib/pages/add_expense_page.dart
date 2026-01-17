@@ -44,6 +44,18 @@ class AddExpensePage extends GetView<AddExpenseController> {
                 ),
                 Row(
                   children: [
+                    const Text(Strings.paidBy),
+                    const SizedBox(
+                      width: Values.defaultGap,
+                    ),
+                    ElevatedButton(
+                      onPressed: controller.onPaidByClicked,
+                      child: Obx(() => Text(controller.paidByText.value)),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
                     const Spacer(),
                     Obx(
                       () => DropdownButton<String>(
@@ -59,35 +71,35 @@ class AddExpensePage extends GetView<AddExpenseController> {
                     ),
                   ],
                 ),
-                Expanded(
-                  child: Obx(() {
-                    // Depend on the trigger to rebuild the list
-                    final _ = controller.updateTrigger.value;
-                    return ListView.separated(
-                      itemBuilder: (context, item) {
-                        final data = controller.userExpenseDataList[item];
-                        return UserTile(
-                          user: data.user,
-                          amountController: data.amountController,
-                          shareController: data.shareController,
-                          percentageController: data.percentageController,
-                          amountFocusNode: data.amountFocusNode,
-                          shareFocusNode: data.shareFocusNode,
-                          percentageFocusNode: data.percentageFocusNode,
-                          isSelected: data.isSelected,
-                          isAmountManuallyEditable: controller.isAmountManuallyEditable,
-                          isSharesEditable: controller.isSharesEditable,
-                          isPercentageEditable: controller.isPercentageEditable,
-                          onPercentageChanged: (_) => controller.onPercentageChanged(data),
-                          onAmountChanged: (_) => controller.onAmountChanged(data),
-                        );
-                      },
-                      separatorBuilder: (_, __) => const Divider(),
-                      itemCount: controller.userExpenseDataList.length,
-                    );
-                  }
-                  )
-                ),
+                Expanded(child: Obx(() {
+                  // Depend on the trigger to rebuild the list
+                  final _ = controller.updateTrigger.value;
+                  return ListView.separated(
+                    itemBuilder: (context, item) {
+                      final data = controller.userExpenseDataList[item];
+                      return UserTile(
+                        user: data.user,
+                        amountController: data.splitAmountController,
+                        shareController: data.shareController,
+                        percentageController: data.percentageController,
+                        amountFocusNode: data.amountFocusNode,
+                        shareFocusNode: data.shareFocusNode,
+                        percentageFocusNode: data.percentageFocusNode,
+                        isSelected: data.isPaidForSelected,
+                        isAmountManuallyEditable:
+                            controller.isAmountManuallyEditable,
+                        isSharesEditable: controller.isSharesEditable,
+                        isPercentageEditable: controller.isPercentageEditable,
+                        onPercentageChanged: (_) =>
+                            controller.onPercentageChanged(data),
+                        onAmountChanged: (_) =>
+                            controller.onAmountChanged(data),
+                      );
+                    },
+                    separatorBuilder: (_, __) => const Divider(),
+                    itemCount: controller.userExpenseDataList.length,
+                  );
+                })),
                 Padding(
                   padding: Values.bottomPadding,
                   child: SizedBox(
@@ -98,8 +110,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
                             controller.onSendRequest();
                           }
                         },
-                        child: const Text(Strings.sendRequest)
-                    ),
+                        child: const Text(Strings.sendRequest)),
                   ),
                 )
               ],

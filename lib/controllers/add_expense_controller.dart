@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:splitit/components/paid_by_bottom_sheet.dart';
 import 'package:splitit/models/expense.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/services/add_expense_service.dart';
@@ -8,20 +9,24 @@ import 'package:splitit/constants/strings.dart';
 
 class UserExpenseData {
   final User user;
-  final TextEditingController amountController = TextEditingController();
-  final TextEditingController shareController = TextEditingController(text: '1');
+  final TextEditingController splitAmountController = TextEditingController();
+  final TextEditingController shareController =
+      TextEditingController(text: '1');
   final TextEditingController percentageController = TextEditingController();
+  final TextEditingController paidByController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
   final FocusNode shareFocusNode = FocusNode();
   final FocusNode percentageFocusNode = FocusNode();
-  final RxBool isSelected = true.obs;
+  final RxBool isPaidForSelected = true.obs;
+  final RxBool isPaidBySelected = false.obs;
 
   UserExpenseData({required this.user});
 
   void dispose() {
-    amountController.dispose();
+    splitAmountController.dispose();
     shareController.dispose();
     percentageController.dispose();
+    paidByController.dispose();
     amountFocusNode.dispose();
     shareFocusNode.dispose();
     percentageFocusNode.dispose();
@@ -36,6 +41,7 @@ class AddExpenseController extends GetxController {
   late final String amountString;
 
   get formKey => _formKey;
+
   TextEditingController get expenseTitleController => _expenseTitleController;
 
   late final List<UserExpenseData> userExpenseDataList;
@@ -47,13 +53,18 @@ class AddExpenseController extends GetxController {
   final _formKey = GlobalKey<FormState>();
   final _expenseTitleController = TextEditingController();
   final updateTrigger = 0.obs;
+  final RxString paidByText = ''.obs;
 
   bool get isSplitByShares => splitOption.value == Strings.splitOptions[1];
+
   bool get isSplitByPercentage => splitOption.value == Strings.splitOptions[2];
+
   bool get isSplitUnevenly => splitOption.value == Strings.splitOptions[3];
 
   bool get isAmountManuallyEditable => isSplitUnevenly;
+
   bool get isSharesEditable => isSplitByShares;
+
   bool get isPercentageEditable => isSplitByPercentage;
 
   @override
@@ -68,11 +79,34 @@ class AddExpenseController extends GetxController {
     // Add listeners to react to state changes
     ever(splitOption, (_) => _updateAmounts(recalculateDistribution: true));
     for (final data in userExpenseDataList) {
-      ever(data.isSelected, (_) => _updateAmounts(recalculateDistribution: true));
+      ever(data.isPaidForSelected,
+          (_) => _updateAmounts(recalculateDistribution: true));
       data.shareController.addListener(() => _updateAmounts());
     }
     // Set initial state
     _updateAmounts(recalculateDistribution: true);
+
+    final firstUserData = userExpenseDataList.first;
+    firstUserData.isPaidBySelected.value = true;
+    paidByText.value = firstUserData.user.name;
+  }
+
+  void onPaidByClicked() {
+    Get.bottomSheet(
+      PaidByBottomSheet(
+        userExpenseDataList: userExpenseDataList,
+        totalAmount: _totalAmount,
+      ),
+    );
+  }
+
+  void onPaidByChanged(UserExpenseData editingUser) {
+    _addExpenseService.onSplitPaidByChanged(
+        userExpenseDataList: userExpenseDataList,
+        editingUser: editingUser,
+        totalAmount: _totalAmount,
+      paidByText: paidByText
+    );
   }
 
   void onPercentageChanged(UserExpenseData editingData) {

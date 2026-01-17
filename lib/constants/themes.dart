@@ -36,6 +36,14 @@ class AppTheme {
           ),
         ),
       ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
       checkboxTheme: CheckboxThemeData(
         checkColor: WidgetStateProperty.all(MyColors.lightOnPrimary),
         fillColor: WidgetStateProperty.resolveWith((states) {
@@ -79,6 +87,14 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: MyColors.darkOnPrimary,
           backgroundColor: MyColors.darkPrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),

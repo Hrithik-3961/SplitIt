@@ -18,6 +18,11 @@ class Styles {
           borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       hintStyle: const TextStyle(color: MyColors.hint));
 
+  static get paidByBottomSheetDecoration => const BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  );
+
   static get expenseInputDecoration => InputDecoration(
       hintText: BaseUtil.getFormattedCurrency(""), border: InputBorder.none);
 
