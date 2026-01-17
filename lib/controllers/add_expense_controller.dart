@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/paid_by_bottom_sheet.dart';
+import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/expense.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/services/add_expense_service.dart';
@@ -19,6 +20,7 @@ class UserExpenseData {
   final FocusNode percentageFocusNode = FocusNode();
   final RxBool isPaidForSelected = true.obs;
   final RxBool isPaidBySelected = false.obs;
+  bool isAmountManuallyEdited = false;
 
   UserExpenseData({required this.user});
 
@@ -105,8 +107,7 @@ class AddExpenseController extends GetxController {
         userExpenseDataList: userExpenseDataList,
         editingUser: editingUser,
         totalAmount: _totalAmount,
-      paidByText: paidByText
-    );
+        paidByText: paidByText);
   }
 
   void onPercentageChanged(UserExpenseData editingData) {
@@ -118,6 +119,9 @@ class AddExpenseController extends GetxController {
   }
 
   void onAmountChanged(UserExpenseData editingData) {
+    if (isSplitUnevenly) {
+      editingData.isAmountManuallyEdited = true;
+    }
     _addExpenseService.redistributeAmounts(
       userExpenseDataList: userExpenseDataList,
       editingUser: editingData,
@@ -127,6 +131,23 @@ class AddExpenseController extends GetxController {
   }
 
   void onSendRequest() {
+    double totalSplitAmount = 0;
+    for (var u in userExpenseDataList) {
+      final amount = BaseUtil.getNumericValue(u.splitAmountController.text);
+      if (amount != null) {
+        totalSplitAmount += amount;
+      }
+    }
+
+    final difference = totalSplitAmount - _totalAmount;
+    if (difference.isNegative) {
+      _showSnackBar("${Strings.shortBy} ${BaseUtil.getFormattedCurrency(difference.abs().toString())}");
+      return;
+    } else if (difference > 0) {
+      _showSnackBar("${Strings.exceedsBy} ${BaseUtil.getFormattedCurrency(difference.toString())}");
+      return;
+    }
+
     String title = expenseTitleController.text.isEmpty
         ? Strings.expenseTitleDefaultText
         : expenseTitleController.text;
@@ -136,7 +157,19 @@ class AddExpenseController extends GetxController {
         result: Expense(title: title, amount: amountString, paidBy: "paidBy"));
   }
 
+  void _showSnackBar(String message) {
+    Get.rawSnackbar(
+      message: message,
+      margin: Values.defaultMargin
+    );
+  }
+
   void _updateAmounts({bool recalculateDistribution = false}) {
+    if (recalculateDistribution) {
+      for (final data in userExpenseDataList) {
+        data.isAmountManuallyEdited = false;
+      }
+    }
     _addExpenseService.updateAmounts(
       userExpenseDataList: userExpenseDataList,
       splitOption: splitOption.value,

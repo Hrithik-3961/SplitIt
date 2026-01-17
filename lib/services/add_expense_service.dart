@@ -56,17 +56,28 @@ class AddExpenseService {
   }) {
     final selectedUsers =
         userExpenseDataList.where((d) => d.isPaidForSelected.value).toList();
-    final otherUsers = selectedUsers.where((u) => u != editingUser).toList();
+
+    final manuallyEditedUsers = selectedUsers
+        .where((u) => u.isAmountManuallyEdited && u != editingUser)
+        .toList();
+    final manuallyEditedAmount = manuallyEditedUsers.fold<double>(
+        0,
+        (prev, u) =>
+            prev + (BaseUtil.getNumericValue(u.splitAmountController.text) ?? 0));
+
+    final otherUsers = selectedUsers
+        .where((u) => !u.isAmountManuallyEdited && u != editingUser)
+        .toList();
 
     if (otherUsers.isEmpty) return;
 
     final editingUserAmount =
         BaseUtil.getNumericValue(editingUser.splitAmountController.text) ?? 0;
-    final remainingAmount = totalAmount - editingUserAmount;
+    final remainingAmount = totalAmount - editingUserAmount - manuallyEditedAmount;
 
     if (remainingAmount < 0) {
       editingUser.splitAmountController.text =
-          BaseUtil.getFormattedCurrency(totalAmount.toString());
+          BaseUtil.getFormattedCurrency((totalAmount - manuallyEditedAmount).toString());
       for (final other in otherUsers) {
         other.splitAmountController.text = BaseUtil.getFormattedCurrency("0");
       }

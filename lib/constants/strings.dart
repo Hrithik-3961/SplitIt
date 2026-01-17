@@ -23,4 +23,6 @@ class Strings {
   static const String paidBy = "Paid By";
   static const String expenseTitleDefaultText = "Expense";
   static const List<String> splitOptions = ["Split evenly", "Split by shares", "Split by percentages", "Split by amounts"];
+  static const String shortBy = "Total amount is short by";
+  static const String exceedsBy = "Total amount exceeds by";
 }

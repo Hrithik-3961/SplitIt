@@ -9,6 +9,7 @@ class Values {
   static const double defaultTextSize = 18;
   static const double largeTextSize = 56;
 
+  static const EdgeInsets defaultMargin = EdgeInsets.symmetric(horizontal: 16.0);
   static const EdgeInsets defaultPadding = EdgeInsets.all(20.0);
   static const EdgeInsets defaultPaddingSmall = EdgeInsets.all(8.0);
   static const EdgeInsets bottomPadding = EdgeInsets.only(bottom: 20.0);
