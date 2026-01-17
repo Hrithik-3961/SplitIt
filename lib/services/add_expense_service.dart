@@ -122,36 +122,46 @@ class AddExpenseService {
     }
   }
 
-  void onSplitPaidByChanged({
+  void distributePaidByAmounts({
     required List<UserExpenseData> userExpenseDataList,
-    required UserExpenseData editingUser,
     required double totalAmount,
     required RxString paidByText,
   }) {
     final selectedUsers =
         userExpenseDataList.where((d) => d.isPaidBySelected.value).toList();
-    final otherUsers = selectedUsers.where((u) => u != editingUser).toList();
-
     paidByText.value = _getPaidByText(selectedUsers);
 
-    if (otherUsers.isEmpty) return;
+    // Clear amounts for unselected users and reset their manual edit flag
+    for (var user in userExpenseDataList.where((d) => !d.isPaidBySelected.value)) {
+      user.paidByController.clear();
+      user.isPaidByManuallyEdited = false;
+    }
 
-    final editingUserAmount =
-        BaseUtil.getNumericValue(editingUser.paidByController.text) ?? 0;
-    final remainingAmount = totalAmount - editingUserAmount;
-
-    if (remainingAmount < 0) {
-      editingUser.paidByController.text =
-          BaseUtil.getFormattedCurrency(totalAmount.toString());
-      for (final other in otherUsers) {
-        other.paidByController.text = BaseUtil.getFormattedCurrency("0");
-      }
+    if (selectedUsers.isEmpty) {
       return;
     }
 
-    final splitAmount = remainingAmount / otherUsers.length;
+    final manuallyEditedUsers =
+        selectedUsers.where((u) => u.isPaidByManuallyEdited).toList();
+    final manuallyEditedAmount = manuallyEditedUsers.fold<double>(
+        0,
+        (prev, u) =>
+            prev + (BaseUtil.getNumericValue(u.paidByController.text) ?? 0));
 
-    for (final other in otherUsers) {
+    final nonManuallyEditedUsers =
+        selectedUsers.where((u) => !u.isPaidByManuallyEdited).toList();
+
+    if (nonManuallyEditedUsers.isEmpty) {
+      // All selected users have been manually edited, nothing to distribute.
+      return;
+    }
+
+    final remainingAmount = totalAmount - manuallyEditedAmount;
+
+    final splitAmount =
+        remainingAmount > 0 ? remainingAmount / nonManuallyEditedUsers.length : 0;
+
+    for (final other in nonManuallyEditedUsers) {
       other.paidByController.text =
           BaseUtil.getFormattedCurrency(splitAmount.toString());
     }
@@ -161,8 +171,10 @@ class AddExpenseService {
     if (selectedUsers.isEmpty) {
       return '';
     }
-
-    return "${selectedUsers.first.user.name}${selectedUsers.length > 1 ? '+${selectedUsers.length-1}' : ''}";
+    if (selectedUsers.length == 1) {
+      return selectedUsers.first.user.name;
+    }
+    return "${selectedUsers.length} people";
   }
 
   void _splitEvenly(

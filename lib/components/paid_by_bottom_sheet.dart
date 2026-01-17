@@ -16,7 +16,6 @@ class PaidByBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final addExpenseController = Get.find<AddExpenseController>();
 
     return Container(
@@ -35,13 +34,13 @@ class PaidByBottomSheet extends StatelessWidget {
                   value: isSelected.value,
                   onChanged: (value) {
                     isSelected.toggle();
-                    addExpenseController.onPaidByChanged(data);
+                    addExpenseController.onPaidByAmountChanged(data, false);
                   }),
               title: Text(data.user.name),
               trailing: AmountTextField(
                 textController: data.paidByController,
                 enabled: isSelected.value,
-                onChanged: (_) => addExpenseController.onPaidByChanged(data),
+                onChanged: (_) => addExpenseController.onPaidByAmountChanged(data, true),
                 fullWidth: false,
               ),
             ),

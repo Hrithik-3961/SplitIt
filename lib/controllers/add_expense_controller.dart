@@ -21,6 +21,7 @@ class UserExpenseData {
   final RxBool isPaidForSelected = true.obs;
   final RxBool isPaidBySelected = false.obs;
   bool isAmountManuallyEdited = false;
+  bool isPaidByManuallyEdited = false;
 
   UserExpenseData({required this.user});
 
@@ -84,13 +85,16 @@ class AddExpenseController extends GetxController {
       ever(data.isPaidForSelected,
           (_) => _updateAmounts(recalculateDistribution: true));
       data.shareController.addListener(() => _updateAmounts());
+      // Listen for changes in who paid
+      ever(data.isPaidBySelected, (_) => _distributePaidByAmounts());
     }
     // Set initial state
     _updateAmounts(recalculateDistribution: true);
 
-    final firstUserData = userExpenseDataList.first;
-    firstUserData.isPaidBySelected.value = true;
-    paidByText.value = firstUserData.user.name;
+    // Set initial paid by state
+    if (userExpenseDataList.isNotEmpty) {
+      userExpenseDataList.first.isPaidBySelected.value = true;
+    }
   }
 
   void onPaidByClicked() {
@@ -102,12 +106,12 @@ class AddExpenseController extends GetxController {
     );
   }
 
-  void onPaidByChanged(UserExpenseData editingUser) {
-    _addExpenseService.onSplitPaidByChanged(
-        userExpenseDataList: userExpenseDataList,
-        editingUser: editingUser,
-        totalAmount: _totalAmount,
-        paidByText: paidByText);
+  // Called when the user manually edits a paid by amount
+  void onPaidByAmountChanged(UserExpenseData editingUser, bool isManuallyEdited) {
+    if (isManuallyEdited) {
+      editingUser.isPaidByManuallyEdited = true;
+    }
+    _distributePaidByAmounts();
   }
 
   void onPercentageChanged(UserExpenseData editingData) {
@@ -159,9 +163,7 @@ class AddExpenseController extends GetxController {
 
   void _showSnackBar(String message) {
     Get.rawSnackbar(
-      message: message,
-      margin: Values.defaultMargin
-    );
+        message: message, margin: Values.defaultMargin);
   }
 
   void _updateAmounts({bool recalculateDistribution = false}) {
@@ -177,6 +179,14 @@ class AddExpenseController extends GetxController {
       recalculateDistribution: recalculateDistribution,
     );
     updateTrigger.value++;
+  }
+
+  void _distributePaidByAmounts() {
+    _addExpenseService.distributePaidByAmounts(
+      userExpenseDataList: userExpenseDataList,
+      totalAmount: _totalAmount,
+      paidByText: paidByText,
+    );
   }
 
   @override

@@ -50,7 +50,19 @@ class AddExpensePage extends GetView<AddExpenseController> {
                     ),
                     ElevatedButton(
                       onPressed: controller.onPaidByClicked,
-                      child: Obx(() => Text(controller.paidByText.value)),
+                      child: Obx(() {
+                        String paidBy = controller.paidByText.value;
+                        return Text(
+                          paidBy.isEmpty ? '--Select--' : paidBy,
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    fontStyle: paidBy.isEmpty
+                                        ? FontStyle.italic
+                                        : FontStyle.normal,
+                                color: Theme.of(context).primaryColor
+                                  ),
+                        );
+                      }),
                     ),
                   ],
                 ),
