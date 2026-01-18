@@ -141,14 +141,9 @@ class AddExpenseController extends GetxController {
     double totalSplitAmount = 0;
     double totalPaidByAmount = 0;
     for (var u in userExpenseDataList) {
-      final splitAmount = BaseUtil.getNumericValue(u.splitAmountController.text);
-      final paidAmount = BaseUtil.getNumericValue(u.paidByController.text);
-      if (splitAmount != null) {
-        totalSplitAmount += splitAmount;
-      }
-      if (paidAmount != null) {
-        totalPaidByAmount += paidAmount;
-      }
+      final amounts = BaseUtil.getUserAmounts(u);
+      totalSplitAmount += amounts.splitAmount;
+      totalPaidByAmount += amounts.paidAmount;
     }
 
     String? message = ExpenseValidator.validateSplit(totalPaidByAmount, _totalAmount, totalSplitAmount);

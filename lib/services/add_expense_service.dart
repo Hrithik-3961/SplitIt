@@ -73,8 +73,7 @@ class AddExpenseService {
         .toList();
     final manuallyEditedAmount = manuallyEditedUsers.fold<double>(
         0,
-        (prev, u) =>
-            prev + (BaseUtil.getNumericValue(u.splitAmountController.text) ?? 0));
+        (prev, u) => prev + BaseUtil.getUserAmounts(u).splitAmount);
 
     final otherUsers = selectedUsers
         .where((u) => !u.isAmountManuallyEdited && u != editingUser)
@@ -82,8 +81,7 @@ class AddExpenseService {
 
     if (otherUsers.isEmpty) return;
 
-    final editingUserAmount =
-        BaseUtil.getNumericValue(editingUser.splitAmountController.text) ?? 0;
+    final editingUserAmount = BaseUtil.getUserAmounts(editingUser).splitAmount;
     final remainingAmount = totalAmount - editingUserAmount - manuallyEditedAmount;
 
     if (remainingAmount < 0) {
@@ -126,14 +124,9 @@ class AddExpenseService {
   void updateUserAmountOwed(
       {required List<UserExpenseData> userExpenseDataList}) {
     for (var data in userExpenseDataList) {
-      final splitAmount = BaseUtil.getNumericValue(data.splitAmountController.text);
-      final paidAmount = BaseUtil.getNumericValue(data.paidByController.text);
-      if (splitAmount != null) {
-        data.user.addExpense(splitAmount);
-      }
-      if (paidAmount != null) {
-        data.user.addPayment(paidAmount);
-      }
+      final amounts = BaseUtil.getUserAmounts(data);
+      data.user.addExpense(amounts.splitAmount);
+      data.user.addPayment(amounts.paidAmount);
     }
   }
 
@@ -160,8 +153,7 @@ class AddExpenseService {
         selectedUsers.where((u) => u.isPaidByManuallyEdited).toList();
     final manuallyEditedAmount = manuallyEditedUsers.fold<double>(
         0,
-        (prev, u) =>
-            prev + (BaseUtil.getNumericValue(u.paidByController.text) ?? 0));
+        (prev, u) => prev + BaseUtil.getUserAmounts(u).paidAmount);
 
     final nonManuallyEditedUsers =
         selectedUsers.where((u) => !u.isPaidByManuallyEdited).toList();
