@@ -23,6 +23,7 @@ class UserExpenseData {
   final RxBool isPaidBySelected = false.obs;
   bool isAmountManuallyEdited = false;
   bool isPaidByManuallyEdited = false;
+  bool isPercentageManuallyEdited = false;
 
   UserExpenseData({required this.user});
 
@@ -116,6 +117,7 @@ class AddExpenseController extends GetxController {
   }
 
   void onPercentageChanged(UserExpenseData editingData) {
+    editingData.isPercentageManuallyEdited = true;
     _addExpenseService.redistributePercentages(
       userExpenseDataList: userExpenseDataList,
       editingUser: editingData,
@@ -173,6 +175,7 @@ class AddExpenseController extends GetxController {
     if (recalculateDistribution) {
       for (final data in userExpenseDataList) {
         data.isAmountManuallyEdited = false;
+        data.isPercentageManuallyEdited = false;
       }
     }
     _addExpenseService.updateAmounts(

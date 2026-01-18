@@ -26,16 +26,27 @@ class AddExpenseService {
   }) {
     final selectedUsers =
         userExpenseDataList.where((d) => d.isPaidForSelected.value).toList();
-    final otherUsers = selectedUsers.where((u) => u != editingUser).toList();
+
+    final manuallyEditedUsers = selectedUsers
+        .where((u) => u.isPercentageManuallyEdited && u != editingUser)
+        .toList();
+    final manuallyEditedPercentage = manuallyEditedUsers.fold<double>(
+        0,
+        (prev, u) =>
+            prev + (double.tryParse(u.percentageController.text) ?? 0));
+
+    final otherUsers = selectedUsers
+        .where((u) => !u.isPercentageManuallyEdited && u != editingUser)
+        .toList();
 
     if (otherUsers.isEmpty) return;
 
     final editingUserPercentage =
         double.tryParse(editingUser.percentageController.text) ?? 0;
-    final remainingPercentage = 100 - editingUserPercentage;
+    final remainingPercentage = 100 - editingUserPercentage - manuallyEditedPercentage;
 
     if (remainingPercentage < 0) {
-      editingUser.percentageController.text = "100.00";
+      editingUser.percentageController.text = (100 - manuallyEditedPercentage).toStringAsFixed(2);
       for (final other in otherUsers) {
         other.percentageController.text = "0.00";
       }
@@ -242,11 +253,20 @@ class AddExpenseService {
     }
 
     if (recalculateDistribution) {
-      final evenPercentage = 100 / selectedUsers.length;
-      for (final data in userExpenseDataList) {
-        data.percentageController.text = data.isPaidForSelected.value
-            ? evenPercentage.toStringAsFixed(2)
-            : '';
+      final nonManuallyEditedUsers = selectedUsers.where((u) => !u.isPercentageManuallyEdited).toList();
+      final manuallyEditedPercentage = selectedUsers
+          .where((u) => u.isPercentageManuallyEdited)
+          .fold<double>(0, (prev, u) => prev + (double.tryParse(u.percentageController.text) ?? 0));
+
+      final remainingPercentage = 100 - manuallyEditedPercentage;
+
+      if(nonManuallyEditedUsers.isNotEmpty) {
+        final evenPercentage = remainingPercentage / nonManuallyEditedUsers.length;
+        for (final data in nonManuallyEditedUsers) {
+          data.percentageController.text = data.isPaidForSelected.value
+              ? evenPercentage.toStringAsFixed(2)
+              : '';
+        }
       }
     }
 
