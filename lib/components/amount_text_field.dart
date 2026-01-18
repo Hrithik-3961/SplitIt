@@ -1,6 +1,7 @@
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
+import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/utils/expense_validator.dart';
@@ -33,7 +34,7 @@ class AmountTextField extends StatelessWidget {
       onChanged: onChanged,
       textAlign: TextAlign.center,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      style: _textStyle ?? Theme.of(context).textTheme.bodyMedium,
+      style: _textStyle ?? Get.textTheme.bodyMedium,
       decoration: Styles.expenseInputDecoration,
       inputFormatters: [
         CurrencyInputFormatter(
@@ -41,7 +42,11 @@ class AmountTextField extends StatelessWidget {
           useSymbolPadding: true,
         )
       ],
-      validator: (value) => ExpenseValidator.validateAmount(value),
+      validator: (value) {
+        if (!enabled) {
+          return null;
+        }
+        return ExpenseValidator.validateAmount(value);},
       autovalidateMode: AutovalidateMode.disabled,
     );
   }

@@ -30,7 +30,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
               children: [
                 Text(
                   controller.amountString,
-                  style: Theme.of(context).textTheme.displayLarge,
+                  style: Get.textTheme.displayLarge,
                   textAlign: TextAlign.center,
                 ),
                 Container(
@@ -55,7 +55,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
                         return Text(
                           paidBy.isEmpty ? '--Select--' : paidBy,
                           style:
-                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                              Get.textTheme.labelLarge!.copyWith(
                                     fontStyle: paidBy.isEmpty
                                         ? FontStyle.italic
                                         : FontStyle.normal,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/utils/base_util.dart';
 
@@ -26,7 +27,7 @@ class OverviewTile extends StatelessWidget {
         title: Text(user.name),
         trailing: Text(
           "$prefix ${BaseUtil.getFormattedCurrency(user.totalAmountOwed.abs().toString())}",
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          style: Get.textTheme.bodyMedium?.copyWith(
                 color: color,
                 fontWeight: FontWeight.bold,
               ),

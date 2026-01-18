@@ -19,7 +19,7 @@ class PaidByBottomSheet extends StatelessWidget {
     final addExpenseController = Get.find<AddExpenseController>();
 
     return Container(
-      height: 300,
+      height: Get.height * 0.4,
       width: double.infinity,
       padding: Values.defaultPadding,
       decoration: Styles.paidByBottomSheetDecoration,

@@ -7,6 +7,7 @@ import 'package:splitit/models/user.dart';
 import 'package:splitit/services/add_expense_service.dart';
 import 'package:splitit/utils/base_util.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/utils/expense_validator.dart';
 
 class UserExpenseData {
   final User user;
@@ -136,19 +137,21 @@ class AddExpenseController extends GetxController {
 
   void onSendRequest() {
     double totalSplitAmount = 0;
+    double totalPaidByAmount = 0;
     for (var u in userExpenseDataList) {
-      final amount = BaseUtil.getNumericValue(u.splitAmountController.text);
-      if (amount != null) {
-        totalSplitAmount += amount;
+      final splitAmount = BaseUtil.getNumericValue(u.splitAmountController.text);
+      final paidAmount = BaseUtil.getNumericValue(u.paidByController.text);
+      if (splitAmount != null) {
+        totalSplitAmount += splitAmount;
+      }
+      if (paidAmount != null) {
+        totalPaidByAmount += paidAmount;
       }
     }
 
-    final difference = totalSplitAmount - _totalAmount;
-    if (difference.isNegative) {
-      _showSnackBar("${Strings.shortBy} ${BaseUtil.getFormattedCurrency(difference.abs().toString())}");
-      return;
-    } else if (difference > 0) {
-      _showSnackBar("${Strings.exceedsBy} ${BaseUtil.getFormattedCurrency(difference.toString())}");
+    String? message = ExpenseValidator.validateSplit(totalPaidByAmount, _totalAmount, totalSplitAmount);
+    if (message != null) {
+      _showSnackBar(message);
       return;
     }
 
@@ -158,7 +161,7 @@ class AddExpenseController extends GetxController {
     _addExpenseService.updateUserAmountOwed(
         userExpenseDataList: userExpenseDataList);
     Get.back(
-        result: Expense(title: title, amount: amountString, paidBy: "paidBy"));
+        result: Expense(title: title, amount: amountString, paidBy: paidByText.value));
   }
 
   void _showSnackBar(String message) {

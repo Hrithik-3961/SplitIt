@@ -115,9 +115,13 @@ class AddExpenseService {
   void updateUserAmountOwed(
       {required List<UserExpenseData> userExpenseDataList}) {
     for (var data in userExpenseDataList) {
-      final amount = BaseUtil.getNumericValue(data.splitAmountController.text);
-      if (amount != null) {
-        data.user.addExpense(amount);
+      final splitAmount = BaseUtil.getNumericValue(data.splitAmountController.text);
+      final paidAmount = BaseUtil.getNumericValue(data.paidByController.text);
+      if (splitAmount != null) {
+        data.user.addExpense(splitAmount);
+      }
+      if (paidAmount != null) {
+        data.user.addPayment(paidAmount);
       }
     }
   }

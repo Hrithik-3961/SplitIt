@@ -9,7 +9,7 @@ import 'package:splitit/utils/base_util.dart';
 
 class Styles {
   static get expenseTitleDecoration => InputDecoration(
-    isDense: true,
+      isDense: true,
       filled: true,
       fillColor: Theme.of(Get.context!).colorScheme.surface,
       hintText: Strings.expenseTitleHintText,
@@ -19,12 +19,15 @@ class Styles {
       hintStyle: const TextStyle(color: MyColors.hint));
 
   static get paidByBottomSheetDecoration => const BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-  );
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      );
 
   static get expenseInputDecoration => InputDecoration(
-      hintText: BaseUtil.getFormattedCurrency(""), border: InputBorder.none);
+        hintText: BaseUtil.getFormattedCurrency(""),
+        border: InputBorder.none,
+        errorMaxLines: 2,
+      );
 
   static get shareInputDecoration => const InputDecoration(
         isDense: true,

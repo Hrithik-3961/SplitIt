@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
@@ -47,7 +48,7 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
           children: [
             Text(
               Strings.addExpense,
-              style: Theme.of(context).textTheme.displaySmall,
+              style: Get.textTheme.displaySmall,
             ),
             const Text(Strings.enterAmount),
             Center(
@@ -60,7 +61,7 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
                   child: AmountTextField(
                     textController: widget.textController,
                     focusNode: _focusNode,
-                    textStyle: Theme.of(context).textTheme.displayLarge,
+                    textStyle: Get.textTheme.displayLarge,
                   ),
                 ),
               ),

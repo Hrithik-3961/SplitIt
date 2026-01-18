@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:splitit/models/expense.dart';
 
 class ExpenseTile extends StatelessWidget {
@@ -14,11 +15,11 @@ class ExpenseTile extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.attach_money),
         title: Text(expense.title),
-        titleTextStyle: Theme.of(context).textTheme.titleLarge,
+        titleTextStyle: Get.textTheme.titleLarge,
         subtitle: Text(expense.paidBy),
-        subtitleTextStyle: Theme.of(context).textTheme.titleMedium,
+        subtitleTextStyle: Get.textTheme.titleMedium,
         trailing: Text(expense.amount),
-        leadingAndTrailingTextStyle: Theme.of(context).textTheme.bodyMedium,
+        leadingAndTrailingTextStyle: Get.textTheme.bodyMedium,
       ),
     );
   }
