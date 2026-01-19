@@ -58,7 +58,7 @@ class PaidByBottomSheet extends StatelessWidget {
                 onChanged: (_) =>
                     addExpenseController.onPaidByAmountChanged(data, true),
                 fullWidth: false,
-                textStyle: !isEnabled ? Get.textTheme.bodyMedium?.copyWith(color: Theme.of(context).disabledColor) : null,
+                textStyle: !isEnabled ? Styles.disabledTextStyle : null,
               ),
             );
           },

@@ -59,7 +59,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
                                     fontStyle: paidBy.isEmpty
                                         ? FontStyle.italic
                                         : FontStyle.normal,
-                                color: Theme.of(context).primaryColor
+                                color: Get.theme.primaryColor
                                   ),
                         );
                       }),

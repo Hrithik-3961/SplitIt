@@ -11,16 +11,22 @@ class Styles {
   static get expenseTitleDecoration => InputDecoration(
       isDense: true,
       filled: true,
-      fillColor: Theme.of(Get.context!).colorScheme.surface,
+      fillColor: Get.theme.colorScheme.surface,
       hintText: Strings.expenseTitleHintText,
       contentPadding: Values.defaultPaddingSmall,
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       hintStyle: const TextStyle(color: MyColors.hint));
 
-  static get paidByBottomSheetDecoration => const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  static get defaultTextInputStyle => Get.textTheme.bodyMedium;
+
+  static get disabledTextStyle => defaultTextInputStyle.copyWith(
+    color: Get.theme.disabledColor
+  );
+
+  static get paidByBottomSheetDecoration => BoxDecoration(
+        color: Get.theme.colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       );
 
   static get expenseInputDecoration => InputDecoration(

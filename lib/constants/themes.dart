@@ -6,7 +6,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       primaryColor: MyColors.lightPrimary,
-      disabledColor: MyColors.lightSurface,
+      disabledColor: MyColors.hint,
       colorScheme: const ColorScheme.light(
         primary: MyColors.lightPrimary,
         secondary: MyColors.lightAccent,
@@ -63,7 +63,7 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       primaryColor: MyColors.darkPrimary,
-      disabledColor: MyColors.darkSurface,
+      disabledColor: MyColors.hint,
       colorScheme: const ColorScheme.dark(
         primary: MyColors.darkPrimary,
         secondary: MyColors.darkAccent,

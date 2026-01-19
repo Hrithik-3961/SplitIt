@@ -34,7 +34,7 @@ class AmountTextField extends StatelessWidget {
       onChanged: onChanged,
       textAlign: TextAlign.center,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      style: _textStyle ?? Get.textTheme.bodyMedium,
+      style: _textStyle ?? Styles.defaultTextInputStyle,
       decoration: Styles.expenseInputDecoration,
       inputFormatters: [
         CurrencyInputFormatter(
