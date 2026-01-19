@@ -20,7 +20,7 @@ class AmountTextField extends StatelessWidget {
       this.enabled = true,
       this.focusNode,
       this.onChanged,
-        this.fullWidth = true,
+      this.fullWidth = true,
       TextStyle? textStyle})
       : _textStyle = textStyle;
 
@@ -46,7 +46,8 @@ class AmountTextField extends StatelessWidget {
         if (!enabled) {
           return null;
         }
-        return ExpenseValidator.validateAmount(value);},
+        return ExpenseValidator.validateAmount(value);
+      },
       autovalidateMode: AutovalidateMode.disabled,
     );
   }

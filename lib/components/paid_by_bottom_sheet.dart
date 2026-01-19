@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
+import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
@@ -23,13 +24,25 @@ class PaidByBottomSheet extends StatelessWidget {
       width: double.infinity,
       padding: Values.defaultPadding,
       decoration: Styles.paidByBottomSheetDecoration,
-      child: ListView.builder(
-        itemBuilder: (context, item) {
-          final data = userExpenseDataList[item];
-          final RxBool isSelected = data.isPaidBySelected;
+      child: Obx(() {
+        final allSelectedUsers = userExpenseDataList
+            .where((u) => u.isPaidBySelected.value)
+            .toList();
+        final nonManuallyEditedSelectedUsers = allSelectedUsers
+            .where((u) => !u.isPaidByManuallyEdited)
+            .toList();
+        final lastUser = nonManuallyEditedSelectedUsers.isNotEmpty
+            ? nonManuallyEditedSelectedUsers.last
+            : null;
 
-          return Obx(
-            () => ListTile(
+        return ListView.builder(
+          itemBuilder: (context, item) {
+            final data = userExpenseDataList[item];
+            final isSelected = data.isPaidBySelected;
+            final isLast = data == lastUser;
+            final isEnabled = isSelected.value && !isLast;
+
+            return ListTile(
               leading: Checkbox(
                   value: isSelected.value,
                   onChanged: (value) {
@@ -38,16 +51,20 @@ class PaidByBottomSheet extends StatelessWidget {
                   }),
               title: Text(data.user.name),
               trailing: AmountTextField(
-                textController: data.paidByController,
-                enabled: isSelected.value,
-                onChanged: (_) => addExpenseController.onPaidByAmountChanged(data, true),
+                textController: isLast && allSelectedUsers.length > 1
+                    ? TextEditingController(text: Strings.remainder)
+                    : data.paidByController,
+                enabled: isEnabled,
+                onChanged: (_) =>
+                    addExpenseController.onPaidByAmountChanged(data, true),
                 fullWidth: false,
+                textStyle: !isEnabled ? Get.textTheme.bodyMedium?.copyWith(color: Theme.of(context).disabledColor) : null,
               ),
-            ),
-          );
-        },
-        itemCount: userExpenseDataList.length,
-      ),
+            );
+          },
+          itemCount: userExpenseDataList.length,
+        );
+      }),
     );
   }
 }

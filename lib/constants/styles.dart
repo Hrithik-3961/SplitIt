@@ -25,12 +25,11 @@ class Styles {
 
   static get expenseInputDecoration => InputDecoration(
         hintText: BaseUtil.getFormattedCurrency(""),
-        border: InputBorder.none,
+        border: const UnderlineInputBorder(),
         errorMaxLines: 2,
       );
 
   static get shareInputDecoration => const InputDecoration(
-        isDense: true,
         border: UnderlineInputBorder(),
       );
 

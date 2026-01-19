@@ -130,7 +130,7 @@ class AddExpenseService {
     }
   }
 
-  void distributePaidByAmounts({
+ void distributePaidByAmounts({
     required List<UserExpenseData> userExpenseDataList,
     required double totalAmount,
     required RxString paidByText,
@@ -139,7 +139,6 @@ class AddExpenseService {
         userExpenseDataList.where((d) => d.isPaidBySelected.value).toList();
     paidByText.value = _getPaidByText(selectedUsers);
 
-    // Clear amounts for unselected users and reset their manual edit flag
     for (var user in userExpenseDataList.where((d) => !d.isPaidBySelected.value)) {
       user.paidByController.clear();
       user.isPaidByManuallyEdited = false;
@@ -159,18 +158,32 @@ class AddExpenseService {
         selectedUsers.where((u) => !u.isPaidByManuallyEdited).toList();
 
     if (nonManuallyEditedUsers.isEmpty) {
-      // All selected users have been manually edited, nothing to distribute.
       return;
     }
 
     final remainingAmount = totalAmount - manuallyEditedAmount;
 
-    final splitAmount =
-        remainingAmount > 0 ? remainingAmount / nonManuallyEditedUsers.length : 0;
+    if (nonManuallyEditedUsers.length == 1) {
+      final lastUser = nonManuallyEditedUsers.first;
+      lastUser.paidByController.text =
+          BaseUtil.getFormattedCurrency(remainingAmount.toString());
+    } else {
+      final splitAmount = remainingAmount > 0
+          ? remainingAmount / nonManuallyEditedUsers.length
+          : 0;
 
-    for (final other in nonManuallyEditedUsers) {
-      other.paidByController.text =
-          BaseUtil.getFormattedCurrency(splitAmount.toString());
+      for (int i = 0; i < nonManuallyEditedUsers.length - 1; i++) {
+        final user = nonManuallyEditedUsers[i];
+        user.paidByController.text =
+            BaseUtil.getFormattedCurrency(splitAmount.toString());
+      }
+
+      final lastUser = nonManuallyEditedUsers.last;
+      final amountForLastUser = totalAmount -
+          manuallyEditedAmount -
+          (splitAmount * (nonManuallyEditedUsers.length - 1));
+      lastUser.paidByController.text =
+          BaseUtil.getFormattedCurrency(amountForLastUser.toString());
     }
   }
 

@@ -21,6 +21,7 @@ class Strings {
 
   static const String expenseTitleHintText = "What\'s this for?";
   static const String paidBy = "Paid By";
+  static const String remainder = "Remainder";
   static const String expenseTitleDefaultText = "Expense";
   static const List<String> splitOptions = ["Split evenly", "Split by shares", "Split by percentages", "Split by amounts"];
   static const String paidByError = "Select at least one user who paid the expense";

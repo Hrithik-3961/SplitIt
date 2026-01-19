@@ -86,7 +86,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
                 Expanded(child: Obx(() {
                   // Depend on the trigger to rebuild the list
                   final _ = controller.updateTrigger.value;
-                  return ListView.separated(
+                  return ListView.builder(
                     itemBuilder: (context, item) {
                       final data = controller.userExpenseDataList[item];
                       return UserTile(
@@ -108,7 +108,6 @@ class AddExpensePage extends GetView<AddExpenseController> {
                             controller.onAmountChanged(data),
                       );
                     },
-                    separatorBuilder: (_, __) => const Divider(),
                     itemCount: controller.userExpenseDataList.length,
                   );
                 })),
