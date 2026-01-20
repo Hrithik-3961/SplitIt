@@ -44,7 +44,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
             heroTag: null,
             label: const Text(Strings.recordPayment),
             icon: const Icon(Icons.payment),
-            onPressed: controller.handleRecordPayment,
+            onPressed: controller.navigateToRecordPaymentPage,
           ),
         ],
       ),

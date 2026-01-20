@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:splitit/components/form_button.dart';
 import 'package:splitit/components/user_tile.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
@@ -46,7 +47,7 @@ class AddExpensePage extends GetView<AddExpenseController> {
                   children: [
                     const Text(Strings.paidBy),
                     const SizedBox(
-                      width: Values.defaultGap,
+                      width: Values.defaultHorizontalGap,
                     ),
                     ElevatedButton(
                       onPressed: controller.onPaidByClicked,
@@ -54,13 +55,11 @@ class AddExpensePage extends GetView<AddExpenseController> {
                         String paidBy = controller.paidByText.value;
                         return Text(
                           paidBy.isEmpty ? '--Select--' : paidBy,
-                          style:
-                              Get.textTheme.labelLarge!.copyWith(
-                                    fontStyle: paidBy.isEmpty
-                                        ? FontStyle.italic
-                                        : FontStyle.normal,
-                                color: Get.theme.primaryColor
-                                  ),
+                          style: Get.textTheme.labelLarge!.copyWith(
+                              fontStyle: paidBy.isEmpty
+                                  ? FontStyle.italic
+                                  : FontStyle.normal,
+                              color: Get.theme.primaryColor),
                         );
                       }),
                     ),
@@ -111,19 +110,14 @@ class AddExpensePage extends GetView<AddExpenseController> {
                     itemCount: controller.userExpenseDataList.length,
                   );
                 })),
-                Padding(
-                  padding: Values.bottomPadding,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                        onPressed: () {
-                          if (controller.formKey.currentState!.validate()) {
-                            controller.onSendRequest();
-                          }
-                        },
-                        child: const Text(Strings.sendRequest)),
-                  ),
-                )
+                FormButton(
+                  onPressed: () {
+                    if (controller.formKey.currentState!.validate()) {
+                      controller.onSendRequest();
+                    }
+                  },
+                  text: Strings.sendRequest,
+                ),
               ],
             ),
           ),

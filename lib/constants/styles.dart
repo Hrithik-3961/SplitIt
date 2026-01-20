@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:splitit/constants/colors.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
 
@@ -16,7 +15,7 @@ class Styles {
       contentPadding: Values.defaultPaddingSmall,
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-      hintStyle: const TextStyle(color: MyColors.hint));
+      hintStyle: TextStyle(color: Get.theme.hintColor));
 
   static get defaultTextInputStyle => Get.textTheme.bodyMedium;
 

@@ -108,7 +108,7 @@ class UserTile extends StatelessWidget {
                   ),
                 ),
 
-              if (isSharesEditable || isPercentageEditable) const SizedBox(width: Values.defaultGap),
+              if (isSharesEditable || isPercentageEditable) const SizedBox(width: Values.defaultHorizontalGap),
               Expanded(
                 flex: 20,
                 child: GestureDetector(

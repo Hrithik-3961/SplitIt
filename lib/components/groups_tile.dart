@@ -37,7 +37,7 @@ class GroupsTile extends StatelessWidget {
                     ),
                   )),
             ),
-            const SizedBox(width: Values.defaultGap),
+            const SizedBox(width: Values.defaultHorizontalGap),
             Text(title, style: const TextStyle(fontSize: Values.groupListTextSize),)
           ],
         ),

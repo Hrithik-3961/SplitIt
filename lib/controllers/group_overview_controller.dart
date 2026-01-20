@@ -6,6 +6,7 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/expense.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/pages/add_expense_page.dart';
+import 'package:splitit/pages/record_payment_page.dart';
 import 'package:splitit/services/groups_overview_service.dart';
 
 class GroupOverviewController extends GetxController {
@@ -66,7 +67,9 @@ class GroupOverviewController extends GetxController {
     }
   }
 
-  void handleRecordPayment() {}
+  void navigateToRecordPaymentPage() {
+    Get.toNamed(RecordPaymentPage.route);
+  }
 }
 
 class GroupOverviewBinding extends Bindings {

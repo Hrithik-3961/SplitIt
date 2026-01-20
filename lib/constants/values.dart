@@ -17,7 +17,8 @@ class Values {
   static const EdgeInsets groupsTilePadding = EdgeInsets.symmetric(vertical: 8.0);
   static const EdgeInsets userTilePadding = EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0);
 
-  static const double defaultGap = 8;
+  static const double defaultHorizontalGap = 8;
+  static const double defaultVerticalGap = 16;
 
   static const double dialogHeight = 100;
 }

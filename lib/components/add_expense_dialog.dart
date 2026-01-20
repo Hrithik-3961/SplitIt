@@ -44,7 +44,7 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: Values.defaultGap,
+          spacing: Values.defaultHorizontalGap,
           children: [
             Text(
               Strings.addExpense,
