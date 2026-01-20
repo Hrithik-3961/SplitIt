@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/services/record_payment_service.dart';
+import 'package:splitit/utils/base_util.dart';
 
 class RecordPaymentController extends GetxController{
   late final RecordPaymentService _recordPaymentService;
@@ -23,6 +24,26 @@ class RecordPaymentController extends GetxController{
     _recordPaymentService = Get.put(RecordPaymentService());
     _users = _recordPaymentService.members;
   }
+
+  void onSaveClicked() {
+    if (_formKey.currentState!.validate()) {
+
+      User paidFrom = _users.firstWhere((u) => u.id == paidFromUserId.value);
+      User paidTo = _users.firstWhere((u) => u.id == paidToUserId.value);
+      double amount = BaseUtil.getNumericValue(_paymentAmountController.text) ?? 0;
+
+      _recordPaymentService.savePayment(paidFrom: paidFrom, paidTo: paidTo, amount: amount);
+
+      Get.back(result: null);
+    }
+  }
+
+  @override
+  void onClose() {
+    _paymentAmountController.dispose();
+    super.onClose();
+  }
+
 }
 
 class RecordPaymentBinding extends Bindings {

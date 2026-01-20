@@ -125,8 +125,8 @@ class AddExpenseService {
       {required List<UserExpenseData> userExpenseDataList}) {
     for (var data in userExpenseDataList) {
       final amounts = BaseUtil.getUserAmounts(data);
-      data.user.addExpense(amounts.splitAmount);
-      data.user.addPayment(amounts.paidAmount);
+      data.user.subtractAmountOwed(amounts.splitAmount);
+      data.user.addAmountOwed(amounts.paidAmount);
     }
   }
 

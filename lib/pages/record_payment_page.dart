@@ -52,9 +52,7 @@ class RecordPaymentPage extends GetView<RecordPaymentController> {
                 ),
                 const Spacer(),
                 FormButton(
-                  onPressed: () {
-                    if (controller.formKey.currentState!.validate()) {}
-                  },
+                  onPressed: controller.onSaveClicked,
                   text: Strings.save,
                 ),
               ],
