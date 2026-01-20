@@ -1,7 +1,7 @@
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
-import 'package:splitit/models/expense.dart';
+import 'package:splitit/models/transaction.dart';
 import 'package:splitit/models/group_details.dart';
 import 'package:splitit/models/user.dart';
 
@@ -30,9 +30,9 @@ class GroupsOverviewService {
     }
   }
 
-  void addExpense(Expense? expense) {
-    if (expense != null) {
-      _groupDetails.expenses.add(expense);
+  void addTransaction(Transaction? transaction) {
+    if (transaction != null) {
+      _groupDetails.transactions.add(transaction);
       _groupDetails.members.refresh();
     }
   }

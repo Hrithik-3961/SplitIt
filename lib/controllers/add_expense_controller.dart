@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/paid_by_bottom_sheet.dart';
 import 'package:splitit/constants/values.dart';
-import 'package:splitit/models/expense.dart';
+import 'package:splitit/models/transaction.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/services/add_expense_service.dart';
 import 'package:splitit/utils/base_util.dart';
@@ -158,7 +158,7 @@ class AddExpenseController extends GetxController {
     _addExpenseService.updateUserAmountOwed(
         userExpenseDataList: userExpenseDataList);
     Get.back(
-        result: Expense(title: title, amount: amountString, paidBy: paidByText.value));
+        result: Transaction(title: title, amount: amountString, paidBy: paidByText.value, type: TransactionType.expense));
   }
 
   void _showSnackBar(String message) {

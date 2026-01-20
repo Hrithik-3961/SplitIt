@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:splitit/models/user.dart';
-import 'package:splitit/models/expense.dart';
+import 'package:splitit/models/transaction.dart';
 
 class GroupDetails {
   final int _id;
   final String _title;
   final RxList<User> _members;
-  final RxList<Expense> _expenses = <Expense>[].obs;
+  final RxList<Transaction> _transactions = <Transaction>[].obs;
 
   GroupDetails({required id, required title, required members})
       : _id = id,
@@ -19,5 +19,5 @@ class GroupDetails {
 
   RxList<User> get members => _members;
 
-  RxList<Expense> get expenses => _expenses;
+  RxList<Transaction> get transactions => _transactions;
 }

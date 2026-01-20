@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
-import 'package:splitit/components/expense_tile.dart';
+import 'package:splitit/components/transaction_tile.dart';
 import 'package:splitit/components/overview_tile.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
@@ -55,7 +55,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
             const TabBar(
               tabs: [
                 Tab(text: Strings.overview,),
-                Tab(text: Strings.expense,)
+                Tab(text: Strings.transactions,)
               ],
             ),
             Expanded(
@@ -73,7 +73,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
                   separatorBuilder: (BuildContext context, int index) =>
                   const Divider(),
                 ),),
-                Obx(() => controller.expenses.isEmpty
+                Obx(() => controller.transactions.isEmpty
                     ? const Center(
                         child: Text(
                           Strings.noExpensesMsg,
@@ -82,13 +82,13 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
                     : ListView.separated(
                         padding: Values.defaultListPadding,
                         itemBuilder: (context, item) {
-                          final expense = controller.expenses[item];
-                          return ExpenseTile(
-                            expense: expense,
+                          final expense = controller.transactions[item];
+                          return TransactionTile(
+                            transaction: expense,
                             onTap: () {},
                           );
                         },
-                        itemCount: controller.expenses.length,
+                        itemCount: controller.transactions.length,
                         separatorBuilder: (BuildContext context, int index) =>
                             const Divider(),
                       ))

@@ -3,7 +3,7 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/add_expense_dialog.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:splitit/models/expense.dart';
+import 'package:splitit/models/transaction.dart';
 import 'package:splitit/models/user.dart';
 import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/pages/record_payment_page.dart';
@@ -13,7 +13,7 @@ class GroupOverviewController extends GetxController {
   late GroupsOverviewService _groupsOverviewService;
 
   late RxList<User> members = <User>[].obs;
-  late RxList<Expense> expenses = <Expense>[].obs;
+  late RxList<Transaction> transactions = <Transaction>[].obs;
 
   String get groupName => Get.arguments ?? "";
 
@@ -29,7 +29,7 @@ class GroupOverviewController extends GetxController {
     int groupId = int.parse(Get.currentRoute.split('/').last);
     _groupsOverviewService = Get.put(GroupsOverviewService(groupId));
     members = _groupsOverviewService.groupDetails.members;
-    expenses = _groupsOverviewService.groupDetails.expenses;
+    transactions = _groupsOverviewService.groupDetails.transactions;
   }
 
   @override
@@ -62,13 +62,14 @@ class GroupOverviewController extends GetxController {
     _groupsOverviewService.closeFAB(fabState);
 
     if (result != null) {
-      final newExpense = await Get.toNamed(AddExpensePage.route, arguments: result);
-      _groupsOverviewService.addExpense(newExpense);
+      final newTransaction = await Get.toNamed(AddExpensePage.route, arguments: result);
+      _groupsOverviewService.addTransaction(newTransaction);
     }
   }
 
-  void navigateToRecordPaymentPage() {
-    Get.toNamed(RecordPaymentPage.route);
+  void navigateToRecordPaymentPage() async {
+    final newTransaction = await Get.toNamed(RecordPaymentPage.route);
+    _groupsOverviewService.addTransaction(newTransaction);
   }
 }
 

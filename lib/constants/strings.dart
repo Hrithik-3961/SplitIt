@@ -6,7 +6,7 @@ class Strings {
   static const String joinAGroup = "Join a group";
 
   static const String overview = "Overview";
-  static const String expense = "Expense";
+  static const String transactions = "Transactions";
 
   static const String noExpensesMsg = "No expenses added";
   static const String addExpense = "Add Expense";

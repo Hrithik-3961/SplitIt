@@ -4,6 +4,8 @@ import 'package:splitit/models/user.dart';
 import 'package:splitit/services/record_payment_service.dart';
 import 'package:splitit/utils/base_util.dart';
 
+import '../models/transaction.dart';
+
 class RecordPaymentController extends GetxController{
   late final RecordPaymentService _recordPaymentService;
   late final List<User> _users;
@@ -34,7 +36,7 @@ class RecordPaymentController extends GetxController{
 
       _recordPaymentService.savePayment(paidFrom: paidFrom, paidTo: paidTo, amount: amount);
 
-      Get.back(result: null);
+      Get.back(result: Transaction(title: paidFrom.name, amount: _paymentAmountController.text, paidBy: paidTo.name, type: TransactionType.payment));
     }
   }
 

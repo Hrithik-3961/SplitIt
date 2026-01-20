@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:splitit/models/expense.dart';
+import 'package:splitit/models/transaction.dart';
 
-class ExpenseTile extends StatelessWidget {
-  final Expense expense;
+class TransactionTile extends StatelessWidget {
+  final Transaction transaction;
   final VoidCallback onTap;
 
-  const ExpenseTile({super.key, required this.expense, required this.onTap});
+  const TransactionTile({super.key, required this.transaction, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +14,11 @@ class ExpenseTile extends StatelessWidget {
       onTap: onTap,
       child: ListTile(
         leading: const Icon(Icons.attach_money),
-        title: Text(expense.title),
+        title: Text(transaction.title),
         titleTextStyle: Get.textTheme.titleLarge,
-        subtitle: Text(expense.paidBy),
+        subtitle: Text(transaction.paidBy),
         subtitleTextStyle: Get.textTheme.titleMedium,
-        trailing: Text(expense.amount),
+        trailing: Text(transaction.amount),
         leadingAndTrailingTextStyle: Get.textTheme.bodyMedium,
       ),
     );
