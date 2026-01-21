@@ -16,7 +16,7 @@ class RecordPaymentService {
   }
 
   void savePayment({required User paidFrom, required User paidTo, required double amount}) {
-    paidFrom.subtractAmountOwed(amount);
-    paidTo.addAmountOwed(amount);
+    paidFrom.addAmount(amount);
+    paidTo.subtractAmount(amount);
   }
 }

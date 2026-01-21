@@ -16,11 +16,11 @@ class User {
 
   double get totalAmountOwed => _totalAmountOwed;
 
-  void subtractAmountOwed(double value) {
+  void subtractAmount(double value) {
     _totalAmountOwed -= value;
   }
 
-  void addAmountOwed(double value) {
+  void addAmount(double value) {
     _totalAmountOwed += value;
   }
 
