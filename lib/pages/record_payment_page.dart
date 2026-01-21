@@ -39,7 +39,7 @@ class RecordPaymentPage extends GetView<RecordPaymentController> {
                 ),
                 RecordPaymentRow(
                   initialValue: controller.paidFromUserId,
-                  users: controller.users,
+                  users: controller.paidFromUsers,
                   label: Strings.from,
                 ),
                 const SizedBox(
@@ -47,7 +47,7 @@ class RecordPaymentPage extends GetView<RecordPaymentController> {
                 ),
                 RecordPaymentRow(
                   initialValue: controller.paidToUserId,
-                  users: controller.users,
+                  users: controller.paidToUsers,
                   label: Strings.to,
                 ),
                 const Spacer(),
