@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
@@ -11,7 +12,13 @@ import 'package:splitit/pages/group_overview_page.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
 import 'package:splitit/pages/record_payment_page.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

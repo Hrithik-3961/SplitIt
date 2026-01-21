@@ -1,0 +1,30 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "splitit-76427",
+          "appId": "1:483939828969:android:044dfec49b890f677d1c78",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "splitit-76427",
+          "appId": "1:483939828969:ios:42105d7a298663637d1c78",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "splitit-76427",
+          "configurations": {
+            "android": "1:483939828969:android:044dfec49b890f677d1c78",
+            "ios": "1:483939828969:ios:42105d7a298663637d1c78"
+          }
+        }
+      }
+    }
+  }
+}
