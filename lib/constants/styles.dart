@@ -7,6 +7,27 @@ import 'package:splitit/constants/values.dart';
 import 'package:splitit/utils/base_util.dart';
 
 class Styles {
+  static get phoneNumberInputDecoration => InputDecoration(
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        labelText: Strings.phoneNumber,
+        prefixText: Strings.phoneNumberPrefix,
+        prefixStyle: Get.textTheme.bodyMedium,
+        hintText: Strings.phoneNumberHint,
+        hintStyle: Get.textTheme.bodyMedium?.copyWith(
+          color: Get.theme.hintColor,
+        ),
+      );
+
+  static get phoneNumberInputFormatters => [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(Values.phoneNumberLength),
+      ];
+
+  static get otpInputFormatters => [
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(Values.otpLength),
+  ];
+
   static get expenseTitleDecoration => InputDecoration(
       isDense: true,
       filled: true,
@@ -19,9 +40,8 @@ class Styles {
 
   static get defaultTextInputStyle => Get.textTheme.bodyMedium;
 
-  static get disabledTextStyle => defaultTextInputStyle.copyWith(
-    color: Get.theme.disabledColor
-  );
+  static get disabledTextStyle =>
+      defaultTextInputStyle.copyWith(color: Get.theme.disabledColor);
 
   static get paidByBottomSheetDecoration => BoxDecoration(
         color: Get.theme.colorScheme.surface,

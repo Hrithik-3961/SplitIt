@@ -1,6 +1,19 @@
 class Strings {
   static const String appName = "Split It";
 
+  static const String welcome = "Welcome!";
+  static const String login = "Login";
+  static const String otp = "OTP";
+  static const String loginMsg = "Log in to continue";
+  static const String sendOtp = "Send OTP";
+  static const String phoneNumber = "Phone Number";
+  static const String phoneNumberPrefix = "+91 ";
+  static const String phoneNumberHint = "12345 67890";
+  static const String otpText = "Enter the code sent to the number";
+  static const String editNumberMsg = "Incorrect number. Edit the number?";
+  static const String yes = "Yes";
+  static const String cancel = "Cancel";
+
   static const String noGroupsMsg = "No groups found.\nPlease a join a group to continue";
   static const String createAGroup = "Create a group";
   static const String joinAGroup = "Join a group";

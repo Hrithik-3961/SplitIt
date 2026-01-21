@@ -5,6 +5,8 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/themes.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
+import 'package:splitit/controllers/login_controller.dart';
+import 'package:splitit/pages/login_page.dart';
 import 'controllers/record_payment_controller.dart';
 import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/pages/all_groups_page.dart';
@@ -34,8 +36,9 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      initialRoute: AllGroupsPage.route,
+      initialRoute: LoginPage.route,
       getPages: [
+        GetPage(name: LoginPage.route, page: () => const LoginPage(), binding: LoginBinding()),
         GetPage(name: AllGroupsPage.route, page: () => const AllGroupsPage(), binding: HomeBinding()),
         GetPage(name: GroupOverviewPage.route, page: () => const GroupOverviewPage(), binding: GroupOverviewBinding()),
         GetPage(name: AddExpensePage.route, page: () => const AddExpensePage(), binding: AddExpenseBinding()),
