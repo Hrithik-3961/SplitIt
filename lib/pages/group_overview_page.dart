@@ -14,87 +14,93 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(controller.groupName),
-        actions: [
-          PopupMenuButton(
-              onSelected: (item) => controller.handleAddMember(item),
-              itemBuilder: (context) => [
-                    const PopupMenuItem(
-                        value: Strings.addMember,
-                        child: Text(Strings.addMember))
-                  ])
-        ],
-      ),
-      floatingActionButtonLocation: ExpandableFab.location,
-      floatingActionButton: ExpandableFab(
-        key: controller.fabKey,
-        type: ExpandableFabType.up,
-        childrenAnimation: ExpandableFabAnimation.none,
-        children: [
-          FloatingActionButton.extended(
-            heroTag: null,
-            label: const Text(Strings.addExpense),
-            icon: const Icon(Icons.add),
-            onPressed: controller.navigateToAddExpensePage,
-          ),
-          FloatingActionButton.extended(
-            heroTag: null,
-            label: const Text(Strings.recordPayment),
-            icon: const Icon(Icons.payment),
-            onPressed: controller.navigateToRecordPaymentPage,
-          ),
-        ],
-      ),
-      body: DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            const TabBar(
-              tabs: [
-                Tab(text: Strings.overview,),
-                Tab(text: Strings.transactions,)
-              ],
-            ),
-            Expanded(
-              child: TabBarView(children: [
-                Obx(() => ListView.separated(
-                  padding: Values.defaultListPadding,
-                  itemBuilder: (context, item) {
-                    final user = controller.members[item];
-                    return OverviewTile(
-                      user: user,
-                      onTap: () {},
-                    );
-                  },
-                  itemCount: controller.members.length,
-                  separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-                ),),
-                Obx(() => controller.transactions.isEmpty
-                    ? const Center(
-                        child: Text(
-                          Strings.noExpensesMsg,
-                        ),
-                      )
-                    : ListView.separated(
-                        padding: Values.defaultListPadding,
-                        itemBuilder: (context, item) {
-                          final expense = controller.transactions[item];
-                          return TransactionTile(
-                            transaction: expense,
-                            onTap: () {},
-                          );
-                        },
-                        itemCount: controller.transactions.length,
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(),
-                      ))
-              ]),
-            )
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(controller.groupName),
+          actions: [
+            PopupMenuButton(
+                onSelected: (item) => controller.handleAddMember(item),
+                itemBuilder: (context) => [
+                      const PopupMenuItem(
+                          value: Strings.addMember,
+                          child: Text(Strings.addMember))
+                    ])
           ],
+        ),
+        floatingActionButtonLocation: ExpandableFab.location,
+        floatingActionButton: ExpandableFab(
+          key: controller.fabKey,
+          type: ExpandableFabType.up,
+          childrenAnimation: ExpandableFabAnimation.none,
+          children: [
+            FloatingActionButton.extended(
+              heroTag: null,
+              label: const Text(Strings.addExpense),
+              icon: const Icon(Icons.add),
+              onPressed: controller.navigateToAddExpensePage,
+            ),
+            FloatingActionButton.extended(
+              heroTag: null,
+              label: const Text(Strings.recordPayment),
+              icon: const Icon(Icons.payment),
+              onPressed: controller.navigateToRecordPaymentPage,
+            ),
+          ],
+        ),
+        body: DefaultTabController(
+          length: 2,
+          child: Column(
+            children: [
+              const TabBar(
+                tabs: [
+                  Tab(text: Strings.overview,),
+                  Tab(text: Strings.transactions,)
+                ],
+              ),
+              Expanded(
+                child: TabBarView(children: [
+                  Obx(() => ListView.separated(
+                    padding: Values.defaultListPadding,
+                    itemBuilder: (context, item) {
+                      final user = controller.members[item];
+                      return OverviewTile(
+                        user: user,
+                        onTap: () {},
+                      );
+                    },
+                    itemCount: controller.members.length,
+                    separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
+                  ),),
+                  Obx(() => controller.transactions.isEmpty
+                      ? const Center(
+                          child: Text(
+                            Strings.noExpensesMsg,
+                          ),
+                        )
+                      : ListView.separated(
+                          padding: Values.defaultListPadding,
+                          itemBuilder: (context, index) {
+                            final reversedIndex = controller.transactions.length - 1 - index;
+                            final expense = controller.transactions[reversedIndex];
+                            return TransactionTile(
+                              transaction: expense,
+                              onTap: () {},
+                            );
+                          },
+                          itemCount: controller.transactions.length,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(),
+                        ))
+                ]),
+              )
+            ],
+          ),
         ),
       ),
     );

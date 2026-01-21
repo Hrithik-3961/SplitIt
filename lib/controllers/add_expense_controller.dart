@@ -158,7 +158,7 @@ class AddExpenseController extends GetxController {
     _addExpenseService.updateUserAmountOwed(
         userExpenseDataList: userExpenseDataList);
     Get.back(
-        result: Transaction(title: title, amount: amountString, paidBy: paidByText.value, type: TransactionType.expense));
+        result: Transaction(title: title, amount: amountString, subtitle: paidByText.value, type: TransactionType.expense));
   }
 
   void _showSnackBar(String message) {

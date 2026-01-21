@@ -36,7 +36,7 @@ class RecordPaymentController extends GetxController{
 
       _recordPaymentService.savePayment(paidFrom: paidFrom, paidTo: paidTo, amount: amount);
 
-      Get.back(result: Transaction(title: paidFrom.name, amount: _paymentAmountController.text, paidBy: paidTo.name, type: TransactionType.payment));
+      Get.back(result: Transaction(title: paidFrom.name, amount: _paymentAmountController.text, subtitle: paidTo.name, type: TransactionType.payment));
     }
   }
 
