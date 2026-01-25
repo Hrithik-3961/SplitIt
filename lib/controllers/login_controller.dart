@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:splitit/components/edit_phone_number_dialog.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
+import 'package:splitit/exceptions/invalid_code_exception.dart';
+import 'package:splitit/exceptions/send_code_exception.dart';
 import 'package:splitit/services/login_service.dart';
 
 class LoginController extends GetxController {
@@ -29,6 +31,8 @@ class LoginController extends GetxController {
   final isLoading = false.obs;
   final otpSent = false.obs;
 
+  String _verificationId = '';
+
   @override
   void onInit() {
     super.onInit();
@@ -48,10 +52,18 @@ class LoginController extends GetxController {
       return;
     }
     isLoading.value = true;
-    await _loginService.sendOtp(_phoneController.text);
-    isLoading.value = false;
+    try {
+      await _loginService.sendOtp(_phoneController.text, _onCodeSent);
+    } on SendCodeException catch (_) {
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void _onCodeSent(String verId) {
+    _verificationId = verId;
     otpSent.value = true;
-    Get.snackbar('Success', 'OTP sent to ${_phoneController.text}');
   }
 
   void editNumber() async {
@@ -75,16 +87,18 @@ class LoginController extends GetxController {
       return;
     }
     isLoading.value = true;
-    final success = await _loginService.verifyOtp(
-      _phoneController.text,
-      _otpController.text,
-    );
-    isLoading.value = false;
-
-    if (success) {
+    try {
+      await _loginService.verifyOtp(
+          _otpController.text,
+          _verificationId
+      );
       Get.snackbar('Success', 'Login successful!');
-    } else {
+    } on InvalidCodeException catch (_) {
       Get.snackbar('Error', 'Invalid OTP. Please try again.');
+    } on Exception catch (_) {
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
     }
   }
 

@@ -1,0 +1,1 @@
+class SendCodeException implements Exception {}

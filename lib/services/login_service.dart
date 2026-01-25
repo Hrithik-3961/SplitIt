@@ -1,22 +1,19 @@
-import 'dart:developer';
+import 'package:splitit/constants/strings.dart';
+import 'package:splitit/services/firebase_service.dart';
 
 class LoginService {
-  LoginService();
+  late final FirebaseService _firebaseService;
 
-  Future<void> sendOtp(String phoneNumber) async {
-    // In a real app, this would involve a backend service to send an OTP.
-    // For now, we'll just simulate a delay.
-    log('Sending OTP to $phoneNumber');
-    await Future.delayed(const Duration(seconds: 2));
-    log('OTP sent!');
+  LoginService() {
+    _firebaseService = FirebaseService();
   }
 
-  Future<bool> verifyOtp(String phoneNumber, String otp) async {
-    // In a real app, this would involve a backend service to verify the OTP.
-    // For now, we'll just simulate a delay and a successful verification.
-    log('Verifying OTP $otp for $phoneNumber');
-    await Future.delayed(const Duration(seconds: 2));
-    log('OTP verified!');
-    return true;
+  Future<void> sendOtp(String phoneNumber, Function(String) onCodeSent) async {
+    return _firebaseService
+        .sendOtp('${Strings.phoneNumberPrefix.trim()}${phoneNumber.trim()}', onCodeSent);
+  }
+
+  Future<void> verifyOtp(String otp, String verificationId) async {
+    return _firebaseService.verifyOtp(otp, verificationId);
   }
 }
