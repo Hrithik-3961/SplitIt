@@ -1,20 +1,20 @@
 import 'package:get/get.dart';
 
 import '../controllers/group_overview_controller.dart';
-import '../models/user.dart';
+import '../models/my_user.dart';
 import '../models/transaction.dart';
 import '../utils/base_util.dart';
 
 class RecordPaymentService {
-  late final List<User> _users;
+  late final List<MyUser> _users;
 
   late final RxString paidFromUserId;
   late final RxString paidToUserId;
 
-  final RxList<User> paidFromUsers = <User>[].obs;
-  final RxList<User> paidToUsers = <User>[].obs;
+  final RxList<MyUser> paidFromUsers = <MyUser>[].obs;
+  final RxList<MyUser> paidToUsers = <MyUser>[].obs;
 
-  List<User> get members => _users;
+  List<MyUser> get members => _users;
 
   RecordPaymentService() {
     _init();
@@ -58,8 +58,8 @@ class RecordPaymentService {
     double amount = BaseUtil.getNumericValue(amountText) ?? 0;
 
     if (amount > 0) {
-      User paidFrom = _users.firstWhere((u) => u.id == paidFromUserId.value);
-      User paidTo = _users.firstWhere((u) => u.id == paidToUserId.value);
+      MyUser paidFrom = _users.firstWhere((u) => u.id == paidFromUserId.value);
+      MyUser paidTo = _users.firstWhere((u) => u.id == paidToUserId.value);
       paidFrom.addAmount(amount);
       paidTo.subtractAmount(amount);
 

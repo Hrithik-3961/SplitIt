@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:splitit/models/user.dart';
+import 'package:splitit/models/my_user.dart';
 import 'package:splitit/utils/base_util.dart';
 
 class OverviewTile extends StatelessWidget {
-  final User user;
+  final MyUser user;
   final VoidCallback onTap;
 
   const OverviewTile({super.key, required this.user, required this.onTap});

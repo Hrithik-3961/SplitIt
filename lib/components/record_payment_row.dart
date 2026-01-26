@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:splitit/models/user.dart';
+import 'package:splitit/models/my_user.dart';
 import '../constants/styles.dart';
 import '../constants/values.dart';
 
 class RecordPaymentRow extends StatelessWidget {
   final String label;
   final RxString initialValue;
-  final List<User> users;
+  final List<MyUser> users;
 
   const RecordPaymentRow(
       {super.key,

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:splitit/models/group_details.dart';
-import 'package:splitit/models/user.dart';
+import 'package:splitit/models/my_user.dart';
 
 class AllGroupsService {
   late List<GroupDetails> _groups;
@@ -12,7 +12,7 @@ class AllGroupsService {
 
   void _init() {
     _groups = [
-      GroupDetails(id: 1, title: "Group 1", members: [User(name: "Name 1"), User(name: "Name 2")].obs)
+      GroupDetails(id: 1, title: "Group 1", members: [MyUser(name: "Name 1"), MyUser(name: "Name 2")].obs)
     ].obs;
   }
 
@@ -21,7 +21,7 @@ class AllGroupsService {
       GroupDetails(
           id: _groups.length + 1,
           title: "New Group",
-          members: [User(name: "New Name 1"), User(name: "New Name 2")].obs),
+          members: [MyUser(name: "New Name 1"), MyUser(name: "New Name 2")].obs),
     );
   }
 }

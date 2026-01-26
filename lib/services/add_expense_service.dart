@@ -2,13 +2,13 @@ import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
-import 'package:splitit/models/user.dart';
+import 'package:splitit/models/my_user.dart';
 import 'package:splitit/utils/base_util.dart';
 
 class AddExpenseService {
-  late List<User> _members;
+  late List<MyUser> _members;
 
-  List<User> get members => _members;
+  List<MyUser> get members => _members;
 
   List<String> get splitOptions => Strings.splitOptions;
 

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
 import 'package:splitit/models/transaction.dart';
 import 'package:splitit/models/group_details.dart';
-import 'package:splitit/models/user.dart';
+import 'package:splitit/models/my_user.dart';
 
 class GroupsOverviewService {
   late GroupDetails _groupDetails;
@@ -21,7 +21,7 @@ class GroupsOverviewService {
   }
 
   void addMember() {
-    _groupDetails.members.add(User(name: "New Memberrrrrrrr"));
+    _groupDetails.members.add(MyUser(name: "New Memberrrrrrrr"));
   }
 
   void closeFAB(ExpandableFabState? fabState) {

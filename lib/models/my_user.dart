@@ -1,11 +1,11 @@
 import 'dart:math';
 
-class User {
+class MyUser {
   final String _id;
   final String _name;
   double _totalAmountOwed;
 
-  User({required String name, double totalAmountOwed = 0})
+  MyUser({required String name, double totalAmountOwed = 0})
       :_id = _generateSaltedId(),
         _name = name,
         _totalAmountOwed = totalAmountOwed;

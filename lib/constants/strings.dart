@@ -13,6 +13,9 @@ class Strings {
   static const String editNumberMsg = "Incorrect number. Edit the number?";
   static const String yes = "Yes";
   static const String cancel = "Cancel";
+  static const String error = "Error";
+  static const String invalidOtpMsg = "Invalid OTP. Please try again.";
+  static const String unknownErrorMsg = "Something went wrong. Please try again.";
 
   static const String noGroupsMsg = "No groups found.\nPlease a join a group to continue";
   static const String createAGroup = "Create a group";

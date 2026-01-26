@@ -3,14 +3,14 @@ import 'package:get/get.dart';
 import 'package:splitit/components/paid_by_bottom_sheet.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/transaction.dart';
-import 'package:splitit/models/user.dart';
+import 'package:splitit/models/my_user.dart';
 import 'package:splitit/services/add_expense_service.dart';
 import 'package:splitit/utils/base_util.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/utils/expense_validator.dart';
 
 class UserExpenseData {
-  final User user;
+  final MyUser user;
   final TextEditingController splitAmountController = TextEditingController();
   final TextEditingController shareController =
       TextEditingController(text: '1');

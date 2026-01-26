@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/edit_phone_number_dialog.dart';
@@ -5,6 +6,7 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/exceptions/invalid_code_exception.dart';
 import 'package:splitit/exceptions/send_code_exception.dart';
+import 'package:splitit/pages/all_groups_page.dart';
 import 'package:splitit/services/login_service.dart';
 
 class LoginController extends GetxController {
@@ -33,9 +35,15 @@ class LoginController extends GetxController {
 
   String _verificationId = '';
 
+  final firebaseUser = Rxn<User>();
+
+  bool get isLoggedIn => firebaseUser.value != null;
+  bool get isGuest => firebaseUser.value?.isAnonymous == true;
+
   @override
   void onInit() {
     super.onInit();
+    firebaseUser.bindStream(FirebaseAuth.instance.authStateChanges());
     _loginService = Get.put(LoginService());
     _phoneController.addListener(() {
       isEnableSendOtp.value =
@@ -47,15 +55,11 @@ class LoginController extends GetxController {
   }
 
   Future<void> sendOtp() async {
-    if (_phoneController.text.length != Values.phoneNumberLength) {
-      Get.snackbar('Error', 'Please enter a valid 10-digit phone number');
-      return;
-    }
     isLoading.value = true;
     try {
       await _loginService.sendOtp(_phoneController.text, _onCodeSent);
     } on SendCodeException catch (_) {
-      Get.snackbar('Error', 'Something went wrong. Please try again.');
+      Get.snackbar(Strings.error, Strings.unknownErrorMsg);
     } finally {
       isLoading.value = false;
     }
@@ -82,21 +86,17 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
-    if (_otpController.text.length < 4) {
-      Get.snackbar('Error', 'Please enter a valid OTP');
-      return;
-    }
     isLoading.value = true;
     try {
       await _loginService.verifyOtp(
           _otpController.text,
           _verificationId
       );
-      Get.snackbar('Success', 'Login successful!');
+      Get.toNamed(AllGroupsPage.route);
     } on InvalidCodeException catch (_) {
-      Get.snackbar('Error', 'Invalid OTP. Please try again.');
+      Get.snackbar(Strings.error, Strings.invalidOtpMsg);
     } on Exception catch (_) {
-      Get.snackbar('Error', 'Something went wrong. Please try again.');
+      Get.snackbar(Strings.error, Strings.unknownErrorMsg);
     } finally {
       isLoading.value = false;
     }
@@ -113,6 +113,7 @@ class LoginController extends GetxController {
 class LoginBinding extends Bindings {
   @override
   void dependencies() {
+    Get.lazyPut(() => LoginService());
     Get.lazyPut(() => LoginController());
   }
 }
