@@ -21,7 +21,7 @@ class GroupsOverviewService {
   }
 
   void addMember() {
-    _groupDetails.members.add(MyUser(name: "New Memberrrrrrrr"));
+    _groupDetails.members.add(MyUser(name: "New Memberrrrrrrr", uid: '5', isGuest: true));
   }
 
   void closeFAB(ExpandableFabState? fabState) {

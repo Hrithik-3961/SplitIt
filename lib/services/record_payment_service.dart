@@ -24,8 +24,8 @@ class RecordPaymentService {
     _users = Get.find<GroupOverviewController>().members;
 
     // Initialize with first two users, if available
-    paidFromUserId = (_users.isNotEmpty ? _users[0].id : '').obs;
-    paidToUserId = (_users.length > 1 ? _users[1].id : '').obs;
+    paidFromUserId = (_users.isNotEmpty ? _users[0].uid : '').obs;
+    paidToUserId = (_users.length > 1 ? _users[1].uid : '').obs;
 
     // Set up listeners to update the lists reactively
     paidFromUserId.listen((_) => _updatePaidToUsers());
@@ -37,20 +37,20 @@ class RecordPaymentService {
   }
 
   void _updatePaidFromUsers() {
-    final newUsers = _users.where((u) => u.id != paidToUserId.value).toList();
+    final newUsers = _users.where((u) => u.uid != paidToUserId.value).toList();
     paidFromUsers.assignAll(newUsers);
-    if (!paidFromUsers.any((u) => u.id == paidFromUserId.value) &&
+    if (!paidFromUsers.any((u) => u.uid == paidFromUserId.value) &&
         paidFromUsers.isNotEmpty) {
-      paidFromUserId.value = paidFromUsers[0].id;
+      paidFromUserId.value = paidFromUsers[0].uid;
     }
   }
 
   void _updatePaidToUsers() {
-    final newUsers = _users.where((u) => u.id != paidFromUserId.value).toList();
+    final newUsers = _users.where((u) => u.uid != paidFromUserId.value).toList();
     paidToUsers.assignAll(newUsers);
-    if (!paidToUsers.any((u) => u.id == paidToUserId.value) &&
+    if (!paidToUsers.any((u) => u.uid == paidToUserId.value) &&
         paidToUsers.isNotEmpty) {
-      paidToUserId.value = paidToUsers[0].id;
+      paidToUserId.value = paidToUsers[0].uid;
     }
   }
 
@@ -58,8 +58,8 @@ class RecordPaymentService {
     double amount = BaseUtil.getNumericValue(amountText) ?? 0;
 
     if (amount > 0) {
-      MyUser paidFrom = _users.firstWhere((u) => u.id == paidFromUserId.value);
-      MyUser paidTo = _users.firstWhere((u) => u.id == paidToUserId.value);
+      MyUser paidFrom = _users.firstWhere((u) => u.uid == paidFromUserId.value);
+      MyUser paidTo = _users.firstWhere((u) => u.uid == paidToUserId.value);
       paidFrom.addAmount(amount);
       paidTo.subtractAmount(amount);
 

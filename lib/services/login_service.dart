@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/services/firebase_service.dart';
 
@@ -5,7 +6,7 @@ class LoginService {
   late final FirebaseService _firebaseService;
 
   LoginService() {
-    _firebaseService = FirebaseService();
+    _firebaseService = Get.find<FirebaseService>();
   }
 
   Future<void> sendOtp(String phoneNumber, Function(String) onCodeSent) async {

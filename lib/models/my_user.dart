@@ -1,18 +1,14 @@
-import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyUser {
-  final String _id;
-  final String _name;
+  final String uid;
+  final String? phone;
+  final String name;
+  final bool isGuest;
   double _totalAmountOwed;
 
-  MyUser({required String name, double totalAmountOwed = 0})
-      :_id = _generateSaltedId(),
-        _name = name,
-        _totalAmountOwed = totalAmountOwed;
-
-  String get id => _id;
-
-  String get name => _name;
+  MyUser({required this.uid, this.name = "My User", this.phone, required this.isGuest, double totalAmountOwed = 0})
+      :_totalAmountOwed = totalAmountOwed;
 
   double get totalAmountOwed => _totalAmountOwed;
 
@@ -24,11 +20,23 @@ class MyUser {
     _totalAmountOwed += value;
   }
 
-  static String _generateSaltedId() {
-    final time = DateTime.now().millisecondsSinceEpoch;
-    final salt = Random.secure().nextInt(1 << 32);
-
-    final mixed = time ^ salt; // XOR salting
-    return mixed.toUnsigned(64).toString();
+  factory MyUser.fromJson(Map<String, dynamic> json) {
+    return MyUser(
+      uid: json['uid'],
+      name: json['name'],
+      phone: json['phone'],
+      isGuest: json['isGuest'] ?? false,
+    );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'name': name,
+      'phone': phone,
+      'isGuest': isGuest,
+      'createdAt': FieldValue.serverTimestamp(),
+    };
+  }
+
 }

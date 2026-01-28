@@ -32,7 +32,7 @@ class RecordPaymentRow extends StatelessWidget {
                 initialValue: initialValue.value,
                 items: users
                     .map((u) => DropdownMenuItem(
-                        value: u.id,
+                        value: u.uid,
                         child: Text(
                           u.name,
                           style: Get.textTheme.labelLarge
