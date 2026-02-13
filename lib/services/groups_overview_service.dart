@@ -10,11 +10,11 @@ class GroupsOverviewService {
 
   GroupDetails get groupDetails => _groupDetails;
 
-  GroupsOverviewService(int groupId) {
+  GroupsOverviewService(String groupId) {
     _init(groupId);
   }
 
-  void _init(int groupId) {
+  void _init(String groupId) {
     _groupDetails = Get.find<AllGroupsController>()
         .groupDetails
         .firstWhere((group) => group.id == groupId);

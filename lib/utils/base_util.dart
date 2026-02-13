@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
@@ -20,6 +22,14 @@ class BaseUtil {
     double paidAmount = getNumericValue(expenseData.paidByController.text) ?? 0;
 
     return (splitAmount: splitAmount, paidAmount: paidAmount);
+  }
+
+  static String generateInviteCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    final rnd = Random();
+    return String.fromCharCodes(
+      Iterable.generate(6, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))),
+    );
   }
 
 }

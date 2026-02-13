@@ -18,15 +18,15 @@ class AllGroupsController extends GetxController {
   void handlePopUpMenuClick(String name) {
     switch (name) {
       case Strings.createAGroup:
-        _groupsService.addGroup();
+        _groupsService.addGroup("New Group");
         break;
       case Strings.joinAGroup:
-        _groupsService.addGroup();
+        _groupsService.joinGroup("123456");
         break;
     }
   }
 
-  void navigateToGroupsOverview(int groupId) {
+  void navigateToGroupsOverview(String groupId) {
     final group = _groupsService.groupDetails.firstWhere((group) => group.id == groupId);
     Get.toNamed("${GroupOverviewPage.route}/$groupId", arguments: group.title);
   }
