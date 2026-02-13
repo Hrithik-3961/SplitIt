@@ -37,14 +37,21 @@ class FirebaseService extends GetxService {
   }
 
   Future<void> sendOtp(String phone, Function(String) onCodeSent) async {
-    await _auth.verifyPhoneNumber(
+     return _auth.verifyPhoneNumber(
       phoneNumber: phone,
       verificationCompleted: (credential) async {
         await _auth.signInWithCredential(credential);
         await _createUserIfNeeded();
       },
       verificationFailed: (FirebaseAuthException e) {
-        throw SendCodeException();
+        if (e.code == 'network-request-failed') {
+          throw SendCodeException(message: 'Network error. Please check your internet connection and try again.');
+        } else if (e.code == 'too-many-requests') {
+          throw SendCodeException(message: 'Too many attempts. Please try again later.');
+        } else {
+          debugPrint(e.message);
+          throw SendCodeException();
+        }
       },
       codeSent: (verId, _) => onCodeSent(verId),
       codeAutoRetrievalTimeout: (verId) => onCodeSent(verId),
@@ -97,13 +104,25 @@ class FirebaseService extends GetxService {
     });
   }
 
+  Future<bool> setCurrentUser() async {
+    final user = _auth.currentUser!;
+    final ref = _usersRef.doc(user.uid);
+
+    final snapshot = await ref.get();
+    if (snapshot.exists) {
+      Get.put(snapshot.data()!, permanent: true);
+      return true;
+    }
+    return false;
+  }
+
   Future<void> _createUserIfNeeded() async {
     final user = _auth.currentUser!;
     final ref = _usersRef.doc(user.uid);
 
     final snapshot = await ref.get();
     if (snapshot.exists) {
-      Get.put(snapshot.data());
+      Get.put(snapshot.data()!);
       return;
     }
 

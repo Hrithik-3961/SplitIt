@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashScreen.route,
       getPages: [
         GetPage(name: SplashScreen.route, page: () => const SplashScreen(), binding: SplashBinding()),
-        GetPage(name: LoginPage.route, page: () => const LoginPage(), binding: LoginBinding()),
+        GetPage(name: LoginPage.route, page: () => const LoginPage()),
         GetPage(name: AllGroupsPage.route, page: () => const AllGroupsPage(), binding: HomeBinding(), middlewares: [AuthMiddleware()]),
         GetPage(name: GroupOverviewPage.route, page: () => const GroupOverviewPage(), binding: GroupOverviewBinding()),
         GetPage(name: AddExpensePage.route, page: () => const AddExpensePage(), binding: AddExpenseBinding()),

@@ -44,7 +44,7 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
     firebaseUser.bindStream(FirebaseAuth.instance.authStateChanges());
-    _loginService = Get.put(LoginService());
+    _loginService = Get.find<LoginService>();
     _phoneController.addListener(() {
       isEnableSendOtp.value =
           _phoneController.text.length == Values.phoneNumberLength;
@@ -58,8 +58,8 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       await _loginService.sendOtp(_phoneController.text, _onCodeSent);
-    } on SendCodeException catch (_) {
-      Get.snackbar(Strings.error, Strings.unknownErrorMsg);
+    } on SendCodeException catch (e) {
+      Get.snackbar(Strings.error, e.message);
     } finally {
       isLoading.value = false;
     }
@@ -92,7 +92,7 @@ class LoginController extends GetxController {
           _otpController.text,
           _verificationId
       );
-      Get.toNamed(AllGroupsPage.route);
+      Get.offAllNamed(AllGroupsPage.route);
     } on InvalidCodeException catch (_) {
       Get.snackbar(Strings.error, Strings.invalidOtpMsg);
     } on Exception catch (_) {
@@ -107,13 +107,5 @@ class LoginController extends GetxController {
     _phoneController.dispose();
     _otpController.dispose();
     super.onClose();
-  }
-}
-
-class LoginBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => LoginService());
-    Get.lazyPut(() => LoginController());
   }
 }
