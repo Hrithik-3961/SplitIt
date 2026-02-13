@@ -2,13 +2,14 @@ import 'package:get/get.dart';
 import 'package:splitit/models/group_details.dart';
 import 'package:splitit/models/my_user.dart';
 
+import '../models/groups.dart';
 import 'firebase_service.dart';
 
 class AllGroupsService {
   late final FirebaseService _firebaseService;
-  late List<GroupDetails> _groups;
+  final _groups = <Groups>[].obs;
 
-  List<GroupDetails> get groupDetails => _groups;
+  List<Groups> get groups => _groups;
 
   AllGroupsService() {
     _init();
@@ -16,21 +17,23 @@ class AllGroupsService {
 
   void _init() {
     _firebaseService = Get.find<FirebaseService>();
-    _groups = [
-      GroupDetails(
-          id: "1",
-          title: "Group 1",
-          members: [
-            MyUser(name: "Name 1", uid: '1', isGuest: true),
-            MyUser(name: "Name 2", uid: '2', isGuest: true)
-          ].obs)
-    ].obs;
+    final currentUser = Get.find<MyUser>();
+
+    _firebaseService.usersRef
+        .doc(currentUser.uid)
+        .collection('groups')
+        .get()
+        .then((userGroupsSnap) => userGroupsSnap.docs.map((doc) {
+              final data = doc.data();
+              return Groups.fromJson(data);
+            }).toList())
+    .then((groups) => _groups.addAll(groups));
   }
 
   void addGroup(String title) async {
     GroupDetails newGroup =
         await _firebaseService.createGroup(groupName: title);
-    _groups.add(newGroup);
+    // _groups.add(newGroup);
   }
 
   void joinGroup(String inviteCode) async {

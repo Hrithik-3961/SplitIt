@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:splitit/models/group_details.dart';
+import 'package:splitit/models/groups.dart';
 import 'package:splitit/pages/group_overview_page.dart';
 import 'package:splitit/services/all_groups_service.dart';
 
 class AllGroupsController extends GetxController {
 
   late AllGroupsService _groupsService;
-  List<GroupDetails> get groupDetails => _groupsService.groupDetails;
+  List<Groups> get groups => _groupsService.groups;
 
   @override
   void onInit() {
@@ -27,8 +27,8 @@ class AllGroupsController extends GetxController {
   }
 
   void navigateToGroupsOverview(String groupId) {
-    final group = _groupsService.groupDetails.firstWhere((group) => group.id == groupId);
-    Get.toNamed("${GroupOverviewPage.route}/$groupId", arguments: group.title);
+    final group = _groupsService.groups.firstWhere((group) => group.groupId == groupId);
+    Get.toNamed("${GroupOverviewPage.route}/$groupId", arguments: group.groupName);
   }
 }
 

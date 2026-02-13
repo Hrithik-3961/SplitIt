@@ -29,7 +29,7 @@ class AllGroupsPage extends GetView<AllGroupsController> {
         ],
       ),
       body: Obx(
-        () => controller.groupDetails.isEmpty
+        () => controller.groups.isEmpty
             ? const Center(
                 child: Text(
                   Strings.noGroupsMsg,
@@ -39,13 +39,13 @@ class AllGroupsPage extends GetView<AllGroupsController> {
             : ListView.builder(
                 padding: Values.defaultListPadding,
                 itemBuilder: (context, item) {
-                  final group = controller.groupDetails[item];
+                  final group = controller.groups[item];
                   return GroupsTile(
-                      title: group.title,
+                      title: group.groupName,
                       onTap: () =>
-                          controller.navigateToGroupsOverview(group.id));
+                          controller.navigateToGroupsOverview(group.groupId));
                 },
-                itemCount: controller.groupDetails.length),
+                itemCount: controller.groups.length),
       ),
     );
   }

@@ -5,7 +5,6 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/themes.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
-import 'package:splitit/controllers/login_controller.dart';
 import 'package:splitit/controllers/splash_controller.dart';
 import 'package:splitit/middleware/auth_middleware.dart';
 import 'package:splitit/pages/login_page.dart';

@@ -15,9 +15,9 @@ class GroupsOverviewService {
   }
 
   void _init(String groupId) {
-    _groupDetails = Get.find<AllGroupsController>()
-        .groupDetails
-        .firstWhere((group) => group.id == groupId);
+    // _groupDetails = Get.find<AllGroupsController>()
+    //     .groups
+    //     .firstWhere((group) => group.id == groupId);
   }
 
   void addMember() {
