@@ -24,8 +24,9 @@ class MyUser {
     return MyUser(
       uid: json['uid'],
       name: json['name'],
-      phone: json['phone'],
+      phone: json['phone'] ?? '',
       isGuest: json['isGuest'] ?? false,
+      totalAmountOwed: json['balance'] != null ? json['balance'].toDouble() : 0.0
     );
   }
 

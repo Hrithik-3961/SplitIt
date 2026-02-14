@@ -3,21 +3,29 @@ import 'package:splitit/models/my_user.dart';
 import 'package:splitit/models/transaction.dart';
 
 class GroupDetails {
-  final String _id;
-  final String _title;
-  final RxList<MyUser> _members;
-  final RxList<Transaction> _transactions = <Transaction>[].obs;
+  final String id;
+  final String title;
+  final RxList<MyUser> members;
+  final RxList<Transaction> transactions;
 
-  GroupDetails({required id, required title, required members})
-      : _id = id,
-        _title = title,
-        _members = members;
+  GroupDetails({required this.id, required this.title, required this.members, RxList<Transaction>? transactions})
+  : transactions = transactions ?? <Transaction>[].obs;
 
-  String get id => _id;
+  factory GroupDetails.fromJson(Map<String, dynamic> json) {
+    return GroupDetails(
+      id: json['groupId'],
+      title: json['name'],
+      members: <MyUser>[].obs
+    );
+  }
 
-  String get title => _title;
-
-  RxList<MyUser> get members => _members;
-
-  RxList<Transaction> get transactions => _transactions;
+  Map<String, dynamic> toJson() {
+    return {
+      // 'groupId': id,
+      // 'name': title,
+      // 'phone': phone,
+      // 'isGuest': isGuest,
+      // 'createdAt': FieldValue.serverTimestamp(),
+    };
+  }
 }

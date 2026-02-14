@@ -1,29 +1,40 @@
 class Transaction {
-  final String _title;
-  final String _amount;
-  final String _subtitle;
-  final TransactionType _type;
+  final String title;
+  final String amount;
+  final String subtitle;
+  final TransactionType type;
 
-  Transaction(
-      {required String title,
-      required String amount,
-      required String subtitle,
-      required TransactionType type})
-      : _title = title,
-        _amount = amount,
-        _subtitle = subtitle,
-        _type = type;
+  Transaction({
+    required this.title,
+    required this.amount,
+    required this.subtitle,
+    required this.type,
+  });
 
-  String get title => _title;
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      title: json['title'],
+      amount: json['amount'],
+      subtitle: json['subtitle'],
+      type: TransactionType.from(json['type']),
+    );
+  }
 
-  String get amount => _amount;
 
-  String get subtitle => _subtitle;
-
-  TransactionType get type => _type;
 }
 
 enum TransactionType {
   expense,
-  payment,
+  payment;
+
+  factory TransactionType.from(String value) {
+    switch (value) {
+      case 'expense':
+        return TransactionType.expense;
+      case 'payment':
+        return TransactionType.payment;
+      default:
+        throw Exception('Invalid transaction type: $value');
+    }
+  }
 }

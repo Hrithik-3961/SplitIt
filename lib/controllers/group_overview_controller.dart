@@ -27,9 +27,14 @@ class GroupOverviewController extends GetxController {
   void onInit() {
     super.onInit();
     String groupId = Get.currentRoute.split('/').last;
-    _groupsOverviewService = Get.put(GroupsOverviewService(groupId));
-    members = _groupsOverviewService.groupDetails.members;
-    transactions = _groupsOverviewService.groupDetails.transactions;
+    _groupsOverviewService = Get.put(GroupsOverviewService(groupId, groupName));
+
+    ever(_groupsOverviewService.groupDetailsRx, (group) {
+      if (group != null) {
+        members.assignAll(group.members);
+        transactions.assignAll(group.transactions);
+      }
+    });
   }
 
   @override

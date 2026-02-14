@@ -1,27 +1,56 @@
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
-import 'package:splitit/controllers/all_groups_controller.dart';
 import 'package:splitit/models/transaction.dart';
 import 'package:splitit/models/group_details.dart';
 import 'package:splitit/models/my_user.dart';
 
+import 'firebase_service.dart';
+
 class GroupsOverviewService {
-  late GroupDetails _groupDetails;
+  late final FirebaseService _firebaseService;
+  final Rxn<GroupDetails> _groupDetails = Rxn<GroupDetails>();
 
-  GroupDetails get groupDetails => _groupDetails;
+  Rxn<GroupDetails> get groupDetailsRx => _groupDetails;
 
-  GroupsOverviewService(String groupId) {
-    _init(groupId);
+  GroupsOverviewService(String groupId, String groupName) {
+    _init(groupId, groupName);
   }
 
-  void _init(String groupId) {
-    // _groupDetails = Get.find<AllGroupsController>()
-    //     .groups
-    //     .firstWhere((group) => group.id == groupId);
+  Future<void> _init(String groupId, String groupName) async {
+    _firebaseService = Get.find<FirebaseService>();
+
+    final membersFuture = _firebaseService.groupMembersRef
+        .where('groupId', isEqualTo: groupId)
+        .get();
+
+    final expensesFuture = _firebaseService.expensesRef
+        .where('groupId', isEqualTo: groupId)
+        .where('isDeleted', isEqualTo: false)
+        .orderBy('createdAt', descending: true)
+        .get();
+
+    final results = await Future.wait([
+      membersFuture,
+      expensesFuture,
+    ]);
+    final membersSnap = results[0];
+    final expensesSnap = results[1];
+
+    final members = membersSnap.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      return MyUser.fromJson(data);
+    }).toList();
+    final expenses = expensesSnap.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      return Transaction.fromJson(data);
+    }).toList();
+
+    _groupDetails.value = GroupDetails(id: groupId, title: groupName, members: members.obs, transactions: expenses.obs);
   }
 
   void addMember() {
-    _groupDetails.members.add(MyUser(name: "New Memberrrrrrrr", uid: '5', isGuest: true));
+    _groupDetails.value?.members
+        .add(MyUser(name: "New Memberrrrrrrr", uid: '5', isGuest: true));
   }
 
   void closeFAB(ExpandableFabState? fabState) {
@@ -32,8 +61,8 @@ class GroupsOverviewService {
 
   void addTransaction(Transaction? transaction) {
     if (transaction != null) {
-      _groupDetails.transactions.add(transaction);
-      _groupDetails.members.refresh();
+      _groupDetails.value?.transactions.add(transaction);
+      _groupDetails.refresh();
     }
   }
 }
