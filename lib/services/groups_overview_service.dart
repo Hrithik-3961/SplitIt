@@ -7,12 +7,14 @@ import 'package:splitit/models/my_user.dart';
 import 'firebase_service.dart';
 
 class GroupsOverviewService {
+  late final String _groupId;
   late final FirebaseService _firebaseService;
   final Rxn<GroupDetails> _groupDetails = Rxn<GroupDetails>();
 
   Rxn<GroupDetails> get groupDetailsRx => _groupDetails;
 
   GroupsOverviewService(String groupId, String groupName) {
+    _groupId = groupId;
     _init(groupId, groupName);
   }
 
@@ -42,7 +44,7 @@ class GroupsOverviewService {
     }).toList();
     final expenses = expensesSnap.docs.map((doc) {
       final data = doc.data() as Map<String, dynamic>;
-      return Transaction.fromJson(data);
+      return MyTransaction.fromJson(data);
     }).toList();
 
     _groupDetails.value = GroupDetails(id: groupId, title: groupName, members: members.obs, transactions: expenses.obs);
@@ -59,10 +61,14 @@ class GroupsOverviewService {
     }
   }
 
-  void addTransaction(Transaction? transaction) {
+  void addTransaction(MyTransaction? transaction) {
     if (transaction != null) {
-      _groupDetails.value?.transactions.add(transaction);
+      _groupDetails.value?.transactions.insert(0, transaction);
       _groupDetails.refresh();
+      _firebaseService.addTransaction(
+          groupId: _groupId,
+        transaction: transaction,
+      );
     }
   }
 }

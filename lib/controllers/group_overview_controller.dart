@@ -13,7 +13,7 @@ class GroupOverviewController extends GetxController {
   late GroupsOverviewService _groupsOverviewService;
 
   late RxList<MyUser> members = <MyUser>[].obs;
-  late RxList<Transaction> transactions = <Transaction>[].obs;
+  late RxList<MyTransaction> transactions = <MyTransaction>[].obs;
 
   String get groupName => Get.arguments ?? "";
 

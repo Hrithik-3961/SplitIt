@@ -7,6 +7,7 @@ import 'package:splitit/exceptions/invalid_code_exception.dart';
 import 'package:splitit/models/group_details.dart';
 import 'package:splitit/models/groups.dart';
 import 'package:splitit/models/my_user.dart';
+import 'package:splitit/models/transaction.dart';
 import 'package:splitit/pages/login_page.dart';
 import 'package:splitit/utils/base_util.dart';
 
@@ -18,15 +19,20 @@ class FirebaseService extends GetxService {
   late final CollectionReference<MyUser> _usersRef;
   late final CollectionReference<GroupDetails> _groupsRef;
   late final CollectionReference _groupMembersRef;
-  late final CollectionReference _expensesRef;
+  late final CollectionReference _transactionsRef;
   late final CollectionReference _expensePayersRef;
   late final CollectionReference _expenseSplitsRef;
 
   CollectionReference<MyUser> get usersRef => _usersRef;
+
   CollectionReference get groupsRef => _groupsRef;
+
   CollectionReference get groupMembersRef => _groupMembersRef;
-  CollectionReference get expensesRef => _expensesRef;
+
+  CollectionReference get expensesRef => _transactionsRef;
+
   CollectionReference get expensePayersRef => _expensePayersRef;
+
   CollectionReference get expenseSplitsRef => _expenseSplitsRef;
 
   Future<FirebaseService> init() async {
@@ -43,7 +49,7 @@ class FirebaseService extends GetxService {
         },
         toFirestore: (group, _) => group.toJson());
     _groupMembersRef = _firestore.collection('groupMembers');
-    _expensesRef = _firestore.collection("expenses");
+    _transactionsRef = _firestore.collection("transactions");
     _expensePayersRef = _firestore.collection("expensePayers");
     _expenseSplitsRef = _firestore.collection("expenseSplits");
 
@@ -246,54 +252,46 @@ class FirebaseService extends GetxService {
     });
   }
 
-  Future<void> addExpense({
+  Future<void> addTransaction({
     required String groupId,
-    required String title,
-    required double totalAmount,
-    required String splitType,
-
-    /// computed from your split engine
-    required Map<String, double> paidMap, // userId -> amountPaid
-    required Map<String, double> owedMap, // userId -> amountOwed
-
-    required String createdBy,
+    required MyTransaction transaction,
   }) async {
-    final expenseId = _expensesRef.doc().id;
+    final transactionId = _transactionsRef.doc().id;
 
-    final expenseRef = _expensesRef.doc(expenseId);
+    final transactionRef = _transactionsRef.doc(transactionId);
     final groupRef = _groupsRef.doc(groupId);
 
     await _firestore.runTransaction((txn) async {
       /// 1. create expense
-      txn.set(expenseRef, {
-        'groupId': groupId,
-        'title': title,
-        'totalAmount': totalAmount,
-        'splitType': splitType,
-        'createdBy': createdBy,
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-        'isDeleted': false,
-      });
+      var transactionData = transaction.toJson();
+      transactionData['groupId'] = groupId;
+      transactionData['isDeleted'] = false;
+      txn.set(transactionRef, transactionData);
+
+      final paidMap = transaction.paidMap;
 
       /// 2. create payer docs
       for (final entry in paidMap.entries) {
-        final payerRef = _expensePayersRef.doc('${expenseId}_${entry.key}');
+        if (entry.value == 0) continue;
+        final payerRef = _expensePayersRef.doc('${transactionId}_${entry.key}');
 
         txn.set(payerRef, {
-          'expenseId': expenseId,
+          'transactionId': transactionId,
           'groupId': groupId,
           'userId': entry.key,
           'amountPaid': entry.value,
         });
       }
 
+      final owedMap = transaction.owedMap;
+
       /// 3. create split docs
       for (final entry in owedMap.entries) {
-        final splitRef = _expenseSplitsRef.doc('${expenseId}_${entry.key}');
+        if (entry.value == 0) continue;
+        final splitRef = _expenseSplitsRef.doc('${transactionId}_${entry.key}');
 
         txn.set(splitRef, {
-          'expenseId': expenseId,
+          'transactionId': transactionId,
           'groupId': groupId,
           'userId': entry.key,
           'owedAmount': entry.value,
@@ -318,9 +316,12 @@ class FirebaseService extends GetxService {
       }
 
       /// 5. update group total expense
-      txn.update(groupRef, {
-        'totalExpense': FieldValue.increment(totalAmount),
-      });
+      if (transaction.transactionType == TransactionType.expense) {
+        txn.update(groupRef, {
+          'totalExpense': FieldValue.increment(
+              BaseUtil.getNumericValue(transaction.totalAmount)!),
+        });
+      }
     });
   }
 

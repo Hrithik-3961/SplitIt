@@ -86,8 +86,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
                       : ListView.separated(
                           padding: Values.defaultListPadding,
                           itemBuilder: (context, index) {
-                            final reversedIndex = controller.transactions.length - 1 - index;
-                            final expense = controller.transactions[reversedIndex];
+                            final expense = controller.transactions[index];
                             return TransactionTile(
                               transaction: expense,
                               onTap: () {},

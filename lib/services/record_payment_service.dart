@@ -46,7 +46,8 @@ class RecordPaymentService {
   }
 
   void _updatePaidToUsers() {
-    final newUsers = _users.where((u) => u.uid != paidFromUserId.value).toList();
+    final newUsers =
+        _users.where((u) => u.uid != paidFromUserId.value).toList();
     paidToUsers.assignAll(newUsers);
     if (!paidToUsers.any((u) => u.uid == paidToUserId.value) &&
         paidToUsers.isNotEmpty) {
@@ -54,7 +55,7 @@ class RecordPaymentService {
     }
   }
 
-  Transaction? savePayment({required String amountText}) {
+  MyTransaction? savePayment({required String amountText}) {
     double amount = BaseUtil.getNumericValue(amountText) ?? 0;
 
     if (amount > 0) {
@@ -63,11 +64,13 @@ class RecordPaymentService {
       paidFrom.addAmount(amount);
       paidTo.subtractAmount(amount);
 
-      return Transaction(
+      return MyTransaction(
           title: paidFrom.name,
-          amount: amountText,
+          totalAmount: amountText,
           subtitle: paidTo.name,
-          type: TransactionType.payment);
+          transactionType: TransactionType.payment,
+          paidMap: {paidFrom.uid: amount},
+          owedMap: {paidTo.uid: amount});
     }
     return null;
   }

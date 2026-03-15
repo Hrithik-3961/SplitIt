@@ -26,7 +26,7 @@ class RecordPaymentController extends GetxController {
 
   void onSaveClicked() {
     if (_formKey.currentState!.validate()) {
-      Transaction? transaction = _recordPaymentService.savePayment(
+      MyTransaction? transaction = _recordPaymentService.savePayment(
           amountText: _paymentAmountController.text);
       if (transaction != null) {
         Get.back(result: transaction);

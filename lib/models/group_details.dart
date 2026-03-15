@@ -6,10 +6,10 @@ class GroupDetails {
   final String id;
   final String title;
   final RxList<MyUser> members;
-  final RxList<Transaction> transactions;
+  final RxList<MyTransaction> transactions;
 
-  GroupDetails({required this.id, required this.title, required this.members, RxList<Transaction>? transactions})
-  : transactions = transactions ?? <Transaction>[].obs;
+  GroupDetails({required this.id, required this.title, required this.members, RxList<MyTransaction>? transactions})
+  : transactions = transactions ?? <MyTransaction>[].obs;
 
   factory GroupDetails.fromJson(Map<String, dynamic> json) {
     return GroupDetails(

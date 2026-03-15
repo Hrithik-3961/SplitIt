@@ -4,7 +4,7 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/transaction.dart';
 
 class TransactionTile extends StatelessWidget {
-  final Transaction transaction;
+  final MyTransaction transaction;
   final VoidCallback onTap;
 
   const TransactionTile(
@@ -15,12 +15,12 @@ class TransactionTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: ListTile(
-        leading: Icon(transaction.type == TransactionType.payment
+        leading: Icon(transaction.transactionType == TransactionType.payment
             ? Icons.money
             : Icons.attach_money),
         title: Text.rich(TextSpan(
             text:
-                "${transaction.type == TransactionType.payment ? Strings.from : ""} ",
+                "${transaction.transactionType == TransactionType.payment ? Strings.from : ""} ",
             style: TextStyle(color: Get.theme.hintColor),
             children: [
               TextSpan(
@@ -31,16 +31,16 @@ class TransactionTile extends StatelessWidget {
         titleTextStyle: Get.textTheme.titleLarge,
         subtitle: Text.rich(TextSpan(
             text:
-            "${transaction.type == TransactionType.payment ? Strings.to : transaction.subtitle} ",
+            "${transaction.transactionType == TransactionType.payment ? Strings.to : transaction.subtitle} ",
             style: TextStyle(color: Get.theme.hintColor),
-            children: transaction.type == TransactionType.payment ? [
+            children: transaction.transactionType == TransactionType.payment ? [
               TextSpan(
                   text: transaction.subtitle,
                   style: TextStyle(color: Get.theme.colorScheme.onSurface))
             ] : []),
         ),
         subtitleTextStyle: Get.textTheme.titleMedium,
-        trailing: Text(transaction.amount),
+        trailing: Text(transaction.totalAmount),
         leadingAndTrailingTextStyle: Get.textTheme.bodyMedium?.copyWith(
           fontWeight: FontWeight.bold,
         ),

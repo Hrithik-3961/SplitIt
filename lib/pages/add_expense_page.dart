@@ -6,6 +6,7 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
+import 'package:splitit/models/transaction.dart';
 
 class AddExpensePage extends GetView<AddExpenseController> {
   const AddExpensePage({super.key});
@@ -69,11 +70,11 @@ class AddExpensePage extends GetView<AddExpenseController> {
                   children: [
                     const Spacer(),
                     Obx(
-                      () => DropdownButton<String>(
+                      () => DropdownButton<SplitType>(
                         value: controller.splitOption.value,
                         items: controller.splitOptions
-                            .map((option) => DropdownMenuItem<String>(
-                                value: option, child: Text(option)))
+                            .map((option) => DropdownMenuItem<SplitType>(
+                                value: option, child: Text(option.value)))
                             .toList(),
                         onChanged: (newValue) {
                           controller.splitOption.value = newValue!;

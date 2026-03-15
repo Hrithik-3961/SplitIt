@@ -41,7 +41,7 @@ class UserExpenseData {
 class AddExpenseController extends GetxController {
   late AddExpenseService _addExpenseService;
 
-  List<String> get splitOptions => _addExpenseService.splitOptions;
+  List<SplitType> get splitOptions => _addExpenseService.splitOptions;
 
   late final String amountString;
 
@@ -60,11 +60,11 @@ class AddExpenseController extends GetxController {
   final updateTrigger = 0.obs;
   final RxString paidByText = ''.obs;
 
-  bool get isSplitByShares => splitOption.value == Strings.splitOptions[1];
+  bool get isSplitByShares => splitOption.value == splitOptions[1];
 
-  bool get isSplitByPercentage => splitOption.value == Strings.splitOptions[2];
+  bool get isSplitByPercentage => splitOption.value == splitOptions[2];
 
-  bool get isSplitUnevenly => splitOption.value == Strings.splitOptions[3];
+  bool get isSplitUnevenly => splitOption.value == splitOptions[3];
 
   bool get isAmountManuallyEditable => isSplitUnevenly;
 
@@ -140,10 +140,14 @@ class AddExpenseController extends GetxController {
   void onSendRequest() {
     double totalSplitAmount = 0;
     double totalPaidByAmount = 0;
-    for (var u in userExpenseDataList) {
-      final amounts = BaseUtil.getUserAmounts(u);
+    Map<String, double> paidMap = {}; // userId -> amountPaid
+    Map<String, double> owedMap = {};
+    for (var expenseData in userExpenseDataList) {
+      final amounts = BaseUtil.getUserAmounts(expenseData);
       totalSplitAmount += amounts.splitAmount;
       totalPaidByAmount += amounts.paidAmount;
+      paidMap[expenseData.user.uid] = amounts.paidAmount;
+      owedMap[expenseData.user.uid] = amounts.splitAmount;
     }
 
     String? message = ExpenseValidator.validateSplit(totalPaidByAmount, _totalAmount, totalSplitAmount);
@@ -158,7 +162,7 @@ class AddExpenseController extends GetxController {
     _addExpenseService.updateUserAmountOwed(
         userExpenseDataList: userExpenseDataList);
     Get.back(
-        result: Transaction(title: title, amount: amountString, subtitle: paidByText.value, type: TransactionType.expense));
+        result: MyTransaction(title: title, totalAmount: amountString, subtitle: paidByText.value, transactionType: TransactionType.expense, splitType: splitOption.value, paidMap: paidMap, owedMap: owedMap));
   }
 
   void _showSnackBar(String message) {

@@ -3,6 +3,7 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
 import 'package:splitit/models/my_user.dart';
+import 'package:splitit/models/transaction.dart';
 import 'package:splitit/utils/base_util.dart';
 
 class AddExpenseService {
@@ -10,7 +11,7 @@ class AddExpenseService {
 
   List<MyUser> get members => _members;
 
-  List<String> get splitOptions => Strings.splitOptions;
+  List<SplitType> get splitOptions => SplitType.values;
 
   AddExpenseService() {
     _init();
@@ -103,18 +104,18 @@ class AddExpenseService {
 
   void updateAmounts({
     required List<UserExpenseData> userExpenseDataList,
-    required String splitOption,
+    required SplitType splitOption,
     required double totalAmount,
     bool recalculateDistribution = false,
   }) {
-    if (splitOption == Strings.splitOptions[0]) {
+    if (splitOption == splitOptions[0]) {
       _splitEvenly(userExpenseDataList, totalAmount);
-    } else if (splitOption == Strings.splitOptions[1]) {
+    } else if (splitOption == splitOptions[1]) {
       _splitByShares(userExpenseDataList, totalAmount);
-    } else if (splitOption == Strings.splitOptions[2]) {
+    } else if (splitOption == splitOptions[2]) {
       _splitByPercentage(
           userExpenseDataList, totalAmount, recalculateDistribution);
-    } else if (splitOption == Strings.splitOptions[3]) {
+    } else if (splitOption == splitOptions[3]) {
       _splitUnevenly(userExpenseDataList, totalAmount, recalculateDistribution);
     } else {
       _clearAllAmounts(userExpenseDataList);
