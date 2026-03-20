@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:splitit/models/group_details.dart';
 import 'package:splitit/models/my_user.dart';
 
 import '../models/groups.dart';
@@ -31,12 +30,13 @@ class AllGroupsService {
   }
 
   void addGroup(String title) async {
-    GroupDetails newGroup =
+    Groups newGroup =
         await _firebaseService.createGroup(groupName: title);
-    // _groups.add(newGroup);
+    _groups.add(newGroup);
   }
 
   void joinGroup(String inviteCode) async {
-    await _firebaseService.joinGroup(inviteCode: inviteCode);
+    Groups newGroup = await _firebaseService.joinGroup(inviteCode: inviteCode);
+    _groups.add(newGroup);
   }
 }

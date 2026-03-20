@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:splitit/enums/group_role.dart';
 import 'package:splitit/exceptions/invalid_code_exception.dart';
 import 'package:splitit/models/group_details.dart';
+import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/groups.dart';
 import 'package:splitit/models/my_user.dart';
 import 'package:splitit/models/transaction.dart';
 import 'package:splitit/pages/login_page.dart';
 import 'package:splitit/utils/base_util.dart';
 
+import '../enums/transaction_type.dart';
 import '../exceptions/send_code_exception.dart';
 
 class FirebaseService extends GetxService {
@@ -18,7 +21,7 @@ class FirebaseService extends GetxService {
   late final FirebaseFirestore _firestore;
   late final CollectionReference<MyUser> _usersRef;
   late final CollectionReference<GroupDetails> _groupsRef;
-  late final CollectionReference _groupMembersRef;
+  late final CollectionReference<GroupMembers> _groupMembersRef;
   late final CollectionReference _transactionsRef;
   late final CollectionReference _expensePayersRef;
   late final CollectionReference _expenseSplitsRef;
@@ -29,7 +32,7 @@ class FirebaseService extends GetxService {
 
   CollectionReference get groupMembersRef => _groupMembersRef;
 
-  CollectionReference get expensesRef => _transactionsRef;
+  CollectionReference get transactionsRef => _transactionsRef;
 
   CollectionReference get expensePayersRef => _expensePayersRef;
 
@@ -48,7 +51,9 @@ class FirebaseService extends GetxService {
           return GroupDetails.fromJson(data);
         },
         toFirestore: (group, _) => group.toJson());
-    _groupMembersRef = _firestore.collection('groupMembers');
+    _groupMembersRef = _firestore.collection('groupMembers').withConverter<GroupMembers>(
+        fromFirestore: (snap, _) => GroupMembers.fromJson(snap.data()!),
+        toFirestore: (groupMember, _) => groupMember.toJson());
     _transactionsRef = _firestore.collection("transactions");
     _expensePayersRef = _firestore.collection("expensePayers");
     _expenseSplitsRef = _firestore.collection("expenseSplits");
@@ -156,7 +161,7 @@ class FirebaseService extends GetxService {
     ));
   }
 
-  Future<GroupDetails> createGroup({required String groupName}) async {
+  Future<Groups> createGroup({required String groupName}) async {
     final user = Get.find<MyUser>();
     final groupId = _groupsRef.doc().id;
     final inviteCode = BaseUtil.generateInviteCode();
@@ -166,39 +171,32 @@ class FirebaseService extends GetxService {
     final userGroupRef =
         _usersRef.doc(user.uid).collection('groups').doc(groupId);
 
-    return await _firestore.runTransaction<GroupDetails>((txn) async {
+    return await _firestore.runTransaction<Groups>((txn) async {
       /// 1. create group
-      txn.set(newGroupRef, {
-        'name': groupName,
-        'createdBy': user.uid,
-        'createdAt': FieldValue.serverTimestamp(),
-        'currency': 'INR',
-        'memberCount': 1,
-        'totalExpense': 0,
-        'inviteCode': inviteCode,
-      });
+      GroupMembers admin = GroupMembers(groupId: groupId, uid: user.uid, name: user.name, role: GroupRole.admin);
+      GroupDetails groupDetails = GroupDetails(
+          id: groupId,
+          title: groupName,
+          createdBy: user.uid,
+          memberCount: 1,
+          totalExpense: 0,
+          inviteCode: inviteCode,
+          members: [admin].obs);
+
+      txn.set(newGroupRef, groupDetails);
 
       /// 2. add user as member
-      txn.set(membersRef, {
-        'groupId': groupId,
-        'uid': user.uid,
-        'name': user.name,
-        'role': 'admin',
-        'balance': 0,
-        'joinedAt': FieldValue.serverTimestamp(),
-      });
+      txn.set(membersRef, admin);
 
       /// 3. add group ref to user
-      txn.set(
-          userGroupRef,
-          Groups(groupId: groupId, groupName: groupName, role: 'admin')
-              .toJson());
+      Groups newGroup = Groups(groupId: groupId, groupName: groupName, role: GroupRole.admin);
+      txn.set(userGroupRef, newGroup.toJson());
 
-      return GroupDetails(id: groupId, title: groupName, members: [user].obs);
+      return newGroup;
     });
   }
 
-  Future<void> joinGroup({
+  Future<Groups> joinGroup({
     required String inviteCode,
   }) async {
     final user = Get.find<MyUser>();
@@ -219,7 +217,7 @@ class FirebaseService extends GetxService {
     final userGroupRef =
         _usersRef.doc(user.uid).collection('groups').doc(groupId);
 
-    await _firestore.runTransaction((txn) async {
+    return await _firestore.runTransaction<Groups>((txn) async {
       /// check if already member
       final existingMember = await txn.get(memberRef);
       if (existingMember.exists) {
@@ -227,14 +225,8 @@ class FirebaseService extends GetxService {
       }
 
       /// add member entry
-      txn.set(memberRef, {
-        'groupId': groupId,
-        'uid': user.uid,
-        'name': user.name,
-        'role': 'member',
-        'balance': 0,
-        'joinedAt': FieldValue.serverTimestamp(),
-      });
+      GroupMembers member = GroupMembers(groupId: groupId, uid: user.uid, name: user.name, role: GroupRole.member);
+      txn.set(memberRef, member);
 
       /// increment group count
       txn.update(groupRef, {
@@ -242,13 +234,10 @@ class FirebaseService extends GetxService {
       });
 
       /// add reference to user
-      txn.set(
-          userGroupRef,
-          Groups(
-                  groupId: groupId,
-                  groupName: groupDoc.data().title,
-                  role: 'member')
-              .toJson());
+      Groups newGroup = Groups(groupId: groupId, groupName: groupDoc.data().title, role: GroupRole.member);
+      txn.set(userGroupRef, newGroup.toJson());
+
+      return newGroup;
     });
   }
 

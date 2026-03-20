@@ -1,15 +1,15 @@
 import 'package:get/get.dart';
-import 'package:splitit/constants/strings.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
-import 'package:splitit/models/my_user.dart';
-import 'package:splitit/models/transaction.dart';
+import 'package:splitit/models/group_members.dart';
 import 'package:splitit/utils/base_util.dart';
 
-class AddExpenseService {
-  late List<MyUser> _members;
+import '../enums/split_type.dart';
 
-  List<MyUser> get members => _members;
+class AddExpenseService {
+  late List<GroupMembers> _members;
+
+  List<GroupMembers> get members => _members;
 
   List<SplitType> get splitOptions => SplitType.values;
 

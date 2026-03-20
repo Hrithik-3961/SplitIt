@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
-import 'package:splitit/models/my_user.dart';
+import 'package:splitit/models/group_members.dart';
 
 class UserTile extends StatelessWidget {
-  final MyUser user;
+  final GroupMembers user;
   final TextEditingController amountController;
   final TextEditingController shareController;
   final TextEditingController percentageController;

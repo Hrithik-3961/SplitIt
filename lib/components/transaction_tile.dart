@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/transaction.dart';
 
+import '../enums/transaction_type.dart';
+
 class TransactionTile extends StatelessWidget {
   final MyTransaction transaction;
   final VoidCallback onTap;

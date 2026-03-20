@@ -3,8 +3,8 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/add_expense_dialog.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/transaction.dart';
-import 'package:splitit/models/my_user.dart';
 import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/pages/record_payment_page.dart';
 import 'package:splitit/services/groups_overview_service.dart';
@@ -12,7 +12,7 @@ import 'package:splitit/services/groups_overview_service.dart';
 class GroupOverviewController extends GetxController {
   late GroupsOverviewService _groupsOverviewService;
 
-  late RxList<MyUser> members = <MyUser>[].obs;
+  late RxList<GroupMembers> members = <GroupMembers>[].obs;
   late RxList<MyTransaction> transactions = <MyTransaction>[].obs;
 
   String get groupName => Get.arguments ?? "";
@@ -27,7 +27,7 @@ class GroupOverviewController extends GetxController {
   void onInit() {
     super.onInit();
     String groupId = Get.currentRoute.split('/').last;
-    _groupsOverviewService = Get.put(GroupsOverviewService(groupId, groupName));
+    _groupsOverviewService = Get.put(GroupsOverviewService(groupId));
 
     ever(_groupsOverviewService.groupDetailsRx, (group) {
       if (group != null) {

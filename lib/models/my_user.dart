@@ -12,14 +12,6 @@ class MyUser {
 
   double get totalAmountOwed => _totalAmountOwed;
 
-  void subtractAmount(double value) {
-    _totalAmountOwed -= value;
-  }
-
-  void addAmount(double value) {
-    _totalAmountOwed += value;
-  }
-
   factory MyUser.fromJson(Map<String, dynamic> json) {
     return MyUser(
       uid: json['uid'],

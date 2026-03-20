@@ -6,7 +6,8 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
-import 'package:splitit/models/transaction.dart';
+
+import '../enums/split_type.dart';
 
 class AddExpensePage extends GetView<AddExpenseController> {
   const AddExpensePage({super.key});
