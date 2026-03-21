@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:splitit/components/paid_by_bottom_sheet.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/group_members.dart';
-import 'package:splitit/models/transaction.dart';
+import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/services/add_expense_service.dart';
 import 'package:splitit/utils/base_util.dart';
 import 'package:splitit/constants/strings.dart';

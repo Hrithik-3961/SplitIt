@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:splitit/models/transaction.dart';
+import 'package:splitit/models/my_transaction.dart';
 
 import '../enums/transaction_type.dart';
 

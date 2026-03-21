@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:splitit/models/group_members.dart';
-import 'package:splitit/models/transaction.dart';
+import 'package:splitit/models/my_transaction.dart';
 
 class GroupDetails {
   final String id;

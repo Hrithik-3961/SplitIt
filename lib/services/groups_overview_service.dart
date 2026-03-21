@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/models/group_members.dart';
-import 'package:splitit/models/transaction.dart';
+import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/models/group_details.dart';
 
 import '../enums/group_role.dart';
@@ -44,14 +44,11 @@ class GroupsOverviewService {
 
     final groupSnap = results[0] as DocumentSnapshot<GroupDetails>;
     final membersSnap = results[1] as QuerySnapshot<GroupMembers>;
-    final transactionsSnap = results[2] as QuerySnapshot;
+    final transactionsSnap = results[2] as QuerySnapshot<MyTransaction>;
 
     final group = groupSnap.data();
     final members = membersSnap.docs.map((doc) => doc.data()).toList();
-    final transactions = transactionsSnap.docs.map((doc) {
-      final data = doc.data() as Map<String, dynamic>;
-      return MyTransaction.fromJson(data);
-    }).toList();
+    final transactions = transactionsSnap.docs.map((doc) => doc.data()).toList();
 
     group?.members.addAll(members);
     group?.transactions.addAll(transactions);

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:splitit/services/record_payment_service.dart';
 
-import '../models/transaction.dart';
+import '../models/my_transaction.dart';
 
 class RecordPaymentController extends GetxController {
   late final RecordPaymentService _recordPaymentService;

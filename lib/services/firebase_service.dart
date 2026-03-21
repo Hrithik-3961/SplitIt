@@ -5,11 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:splitit/enums/group_role.dart';
 import 'package:splitit/exceptions/invalid_code_exception.dart';
+import 'package:splitit/models/expense.dart';
 import 'package:splitit/models/group_details.dart';
 import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/groups.dart';
 import 'package:splitit/models/my_user.dart';
-import 'package:splitit/models/transaction.dart';
+import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/pages/login_page.dart';
 import 'package:splitit/utils/base_util.dart';
 
@@ -22,21 +23,21 @@ class FirebaseService extends GetxService {
   late final CollectionReference<MyUser> _usersRef;
   late final CollectionReference<GroupDetails> _groupsRef;
   late final CollectionReference<GroupMembers> _groupMembersRef;
-  late final CollectionReference _transactionsRef;
-  late final CollectionReference _expensePayersRef;
-  late final CollectionReference _expenseSplitsRef;
+  late final CollectionReference<MyTransaction> _transactionsRef;
+  late final CollectionReference<Expense> _expensePayersRef;
+  late final CollectionReference<Expense> _expenseSplitsRef;
 
   CollectionReference<MyUser> get usersRef => _usersRef;
 
-  CollectionReference get groupsRef => _groupsRef;
+  CollectionReference<GroupDetails> get groupsRef => _groupsRef;
 
-  CollectionReference get groupMembersRef => _groupMembersRef;
+  CollectionReference<GroupMembers> get groupMembersRef => _groupMembersRef;
 
-  CollectionReference get transactionsRef => _transactionsRef;
+  CollectionReference<MyTransaction> get transactionsRef => _transactionsRef;
 
-  CollectionReference get expensePayersRef => _expensePayersRef;
+  CollectionReference<Expense> get expensePayersRef => _expensePayersRef;
 
-  CollectionReference get expenseSplitsRef => _expenseSplitsRef;
+  CollectionReference<Expense> get expenseSplitsRef => _expenseSplitsRef;
 
   Future<FirebaseService> init() async {
     _auth = FirebaseAuth.instance;
@@ -51,12 +52,20 @@ class FirebaseService extends GetxService {
           return GroupDetails.fromJson(data);
         },
         toFirestore: (group, _) => group.toJson());
-    _groupMembersRef = _firestore.collection('groupMembers').withConverter<GroupMembers>(
-        fromFirestore: (snap, _) => GroupMembers.fromJson(snap.data()!),
-        toFirestore: (groupMember, _) => groupMember.toJson());
-    _transactionsRef = _firestore.collection("transactions");
-    _expensePayersRef = _firestore.collection("expensePayers");
-    _expenseSplitsRef = _firestore.collection("expenseSplits");
+    _groupMembersRef = _firestore
+        .collection('groupMembers')
+        .withConverter<GroupMembers>(
+            fromFirestore: (snap, _) => GroupMembers.fromJson(snap.data()!),
+            toFirestore: (groupMember, _) => groupMember.toJson());
+    _transactionsRef = _firestore.collection("transactions").withConverter(
+        fromFirestore: (snap, _) => MyTransaction.fromJson(snap.data()!),
+        toFirestore: (transaction, _) => transaction.toJson());
+    _expensePayersRef = _firestore.collection("expensePayers").withConverter(
+        fromFirestore: (snap, _) => Expense.fromJson(snap.data()!),
+        toFirestore: (expense, _) => expense.toJson(true));
+    _expenseSplitsRef = _firestore.collection("expenseSplits").withConverter(
+        fromFirestore: (snap, _) => Expense.fromJson(snap.data()!),
+        toFirestore: (expense, _) => expense.toJson(false));
 
     return this;
   }
@@ -173,7 +182,11 @@ class FirebaseService extends GetxService {
 
     return await _firestore.runTransaction<Groups>((txn) async {
       /// 1. create group
-      GroupMembers admin = GroupMembers(groupId: groupId, uid: user.uid, name: user.name, role: GroupRole.admin);
+      GroupMembers admin = GroupMembers(
+          groupId: groupId,
+          uid: user.uid,
+          name: user.name,
+          role: GroupRole.admin);
       GroupDetails groupDetails = GroupDetails(
           id: groupId,
           title: groupName,
@@ -189,7 +202,8 @@ class FirebaseService extends GetxService {
       txn.set(membersRef, admin);
 
       /// 3. add group ref to user
-      Groups newGroup = Groups(groupId: groupId, groupName: groupName, role: GroupRole.admin);
+      Groups newGroup =
+          Groups(groupId: groupId, groupName: groupName, role: GroupRole.admin);
       txn.set(userGroupRef, newGroup.toJson());
 
       return newGroup;
@@ -225,7 +239,11 @@ class FirebaseService extends GetxService {
       }
 
       /// add member entry
-      GroupMembers member = GroupMembers(groupId: groupId, uid: user.uid, name: user.name, role: GroupRole.member);
+      GroupMembers member = GroupMembers(
+          groupId: groupId,
+          uid: user.uid,
+          name: user.name,
+          role: GroupRole.member);
       txn.set(memberRef, member);
 
       /// increment group count
@@ -234,7 +252,10 @@ class FirebaseService extends GetxService {
       });
 
       /// add reference to user
-      Groups newGroup = Groups(groupId: groupId, groupName: groupDoc.data().title, role: GroupRole.member);
+      Groups newGroup = Groups(
+          groupId: groupId,
+          groupName: groupDoc.data().title,
+          role: GroupRole.member);
       txn.set(userGroupRef, newGroup.toJson());
 
       return newGroup;
@@ -264,12 +285,12 @@ class FirebaseService extends GetxService {
         if (entry.value == 0) continue;
         final payerRef = _expensePayersRef.doc('${transactionId}_${entry.key}');
 
-        txn.set(payerRef, {
-          'transactionId': transactionId,
-          'groupId': groupId,
-          'userId': entry.key,
-          'amountPaid': entry.value,
-        });
+        Expense expense = Expense(
+            transactionId: transactionId,
+            groupId: groupId,
+            userId: entry.key,
+            amount: entry.value);
+        txn.set(payerRef, expense);
       }
 
       final owedMap = transaction.owedMap;
@@ -279,12 +300,12 @@ class FirebaseService extends GetxService {
         if (entry.value == 0) continue;
         final splitRef = _expenseSplitsRef.doc('${transactionId}_${entry.key}');
 
-        txn.set(splitRef, {
-          'transactionId': transactionId,
-          'groupId': groupId,
-          'userId': entry.key,
-          'owedAmount': entry.value,
-        });
+        Expense expense = Expense(
+            transactionId: transactionId,
+            groupId: groupId,
+            userId: entry.key,
+            amount: entry.value);
+        txn.set(splitRef, expense);
       }
 
       /// 4. update balances

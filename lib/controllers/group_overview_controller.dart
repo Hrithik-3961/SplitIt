@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:splitit/components/add_expense_dialog.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/group_members.dart';
-import 'package:splitit/models/transaction.dart';
+import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/pages/record_payment_page.dart';
 import 'package:splitit/services/groups_overview_service.dart';

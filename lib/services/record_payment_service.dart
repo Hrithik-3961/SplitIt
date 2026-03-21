@@ -3,7 +3,7 @@ import 'package:splitit/models/group_members.dart';
 
 import '../controllers/group_overview_controller.dart';
 import '../enums/transaction_type.dart';
-import '../models/transaction.dart';
+import '../models/my_transaction.dart';
 import '../utils/base_util.dart';
 
 class RecordPaymentService {
