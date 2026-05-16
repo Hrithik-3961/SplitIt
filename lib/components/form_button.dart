@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:splitit/constants/strings.dart';
 
 import '../constants/values.dart';
 
@@ -30,9 +29,9 @@ class FormButton extends StatelessWidget {
                 ? Get.theme.primaryColor
                 : Get.theme.disabledColor,
           ),
-          child: const Text(
-            Strings.sendRequest,
-            style: TextStyle(fontSize: Values.defaultTextSize, fontWeight: FontWeight.bold),
+          child: Text(
+            text,
+            style: const TextStyle(fontSize: Values.defaultTextSize, fontWeight: FontWeight.bold),
           ),
         ),
       ),

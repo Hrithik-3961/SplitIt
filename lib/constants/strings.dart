@@ -20,8 +20,12 @@ class Strings {
   static const String noGroupsMsg = "No groups found.\nPlease a join a group to continue";
   static const String createFirstGroupMsg = "Create your first group";
   static const String newGroup = "New Group";
-  static const String createAGroup = "Create a group";
-  static const String joinAGroup = "Join a group";
+  static const String createAGroup = "Create a Group";
+  static const String joinAGroup = "Join a Group";
+  static const String enterGroupName = "Enter Group Name";
+  static const String enterGroupCode = "Enter Join Code";
+  static const String create = "Create";
+  static const String join = "Join";
 
   static const String overview = "Overview";
   static const String transactions = "Transactions";

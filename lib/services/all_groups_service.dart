@@ -29,13 +29,13 @@ class AllGroupsService {
     .then((groups) => _groups.addAll(groups));
   }
 
-  void addGroup(String title) async {
+  Future<void> addGroup(String title) async {
     Groups newGroup =
         await _firebaseService.createGroup(groupName: title);
     _groups.add(newGroup);
   }
 
-  void joinGroup(String inviteCode) async {
+  Future<void> joinGroup(String inviteCode) async {
     Groups newGroup = await _firebaseService.joinGroup(inviteCode: inviteCode);
     _groups.add(newGroup);
   }
