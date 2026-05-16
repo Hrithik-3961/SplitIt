@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ApplicationExtension
+
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
@@ -8,7 +10,7 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-android {
+extensions.configure<ApplicationExtension> {
     namespace = "com.hrithik.splitit"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
