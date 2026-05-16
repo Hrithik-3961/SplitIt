@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:splitit/constants/strings.dart';
 
 import '../constants/values.dart';
 
@@ -17,17 +18,23 @@ class FormButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: Values.bottomPadding,
+      padding: Values.defaultPadding,
       child: SizedBox(
         width: double.infinity,
-        child: TextButton(
-            onPressed: onPressed,
-            style: TextButton.styleFrom(
-              backgroundColor: enabled == true
-                  ? Get.theme.primaryColor
-                  : Get.theme.disabledColor,
-            ),
-            child: Text(text)),
+        height: 56,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Values.borderRadius)),
+            backgroundColor: enabled == true
+                ? Get.theme.primaryColor
+                : Get.theme.disabledColor,
+          ),
+          child: const Text(
+            Strings.sendRequest,
+            style: TextStyle(fontSize: Values.defaultTextSize, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
     );
   }

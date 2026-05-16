@@ -1,8 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:splitit/constants/values.dart';
+import 'package:splitit/constants/styles.dart';
 
 class GroupsTile extends StatelessWidget {
   final String title;
@@ -11,36 +9,39 @@ class GroupsTile extends StatelessWidget {
   const GroupsTile({super.key, required this.title, required this.onTap});
 
   String _getInitials(String text) {
-    List<String> words =
-        text.isNotEmpty ? text.trim().split(RegExp(' +')) : List.empty();
-
-    return "${words.first[0].capitalize}${words.last[0].capitalize}";
+    if (text.isEmpty) return "";
+    List<String> words = text.trim().split(RegExp(' +'));
+    if (words.length == 1) return words.first[0].toUpperCase();
+    return "${words.first[0]}${words.last[0]}".toUpperCase();
   }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: Values.groupsTilePadding,
-        child: Row(
-          children: [
-            Card(
-              color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-              child: SizedBox(
-                  width: Values.groupIconSize,
-                  height: Values.groupIconSize,
-                  child: Center(
-                    child: Text(
-                      _getInitials(title),
-                      style: const TextStyle(fontSize: Values.groupsIconFontSize),
-                    ),
-                  )),
+    final colorIndex = title.hashCode % Colors.primaries.length;
+    final avatarColor = Colors.primaries[colorIndex];
+
+    return Card(
+      margin: Values.bottomPaddingSmall,
+      child: ListTile(
+        onTap: onTap,
+        contentPadding: Values.defaultPaddingMedium,
+        leading: CircleAvatar(
+          radius: Values.mediumIconSize,
+          backgroundColor: avatarColor.withValues(alpha: 0.1),
+          child: Text(
+            _getInitials(title),
+            style: TextStyle(
+              fontSize: Values.mediumTextSize,
+              fontWeight: FontWeight.bold,
+              color: avatarColor,
             ),
-            const SizedBox(width: Values.defaultHorizontalGap),
-            Text(title, style: const TextStyle(fontSize: Values.groupListTextSize),)
-          ],
+          ),
         ),
+        title: Text(
+          title,
+          style: Styles.titleStyle,
+        ),
+        trailing: const Icon(Icons.chevron_right),
       ),
     );
   }

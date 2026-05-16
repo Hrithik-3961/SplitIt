@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
+import 'package:splitit/components/empty_list_view.dart';
 import 'package:splitit/components/transaction_tile.dart';
 import 'package:splitit/components/overview_tile.dart';
 import 'package:splitit/constants/strings.dart';
@@ -20,32 +21,30 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
       },
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
           title: Text(controller.groupName),
           actions: [
-            PopupMenuButton(
-                onSelected: (item) => controller.handleAddMember(item),
-                itemBuilder: (context) => [
-                      const PopupMenuItem(
-                          value: Strings.addMember,
-                          child: Text(Strings.addMember))
-                    ])
+            IconButton(
+              icon: const Icon(Icons.person_add_outlined),
+              onPressed: () => controller.handleAddMember(Strings.addMember),
+            ),
           ],
         ),
         floatingActionButtonLocation: ExpandableFab.location,
         floatingActionButton: ExpandableFab(
           key: controller.fabKey,
           type: ExpandableFabType.up,
+          distance: 70,
           childrenAnimation: ExpandableFabAnimation.none,
+          overlayStyle: const ExpandableFabOverlayStyle(blur: 2),
           children: [
             FloatingActionButton.extended(
-              heroTag: null,
+              heroTag: Strings.addExpense,
               label: const Text(Strings.addExpense),
               icon: const Icon(Icons.add),
               onPressed: controller.navigateToAddExpensePage,
             ),
             FloatingActionButton.extended(
-              heroTag: null,
+              heroTag: Strings.recordPayment,
               label: const Text(Strings.recordPayment),
               icon: const Icon(Icons.payment),
               onPressed: controller.navigateToRecordPaymentPage,
@@ -57,15 +56,37 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
           child: Column(
             children: [
               const TabBar(
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight: 3,
+                labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
                 tabs: [
-                  Tab(text: Strings.overview,),
-                  Tab(text: Strings.transactions,)
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.pie_chart_outline, size: Values.smallIconSize),
+                        SizedBox(width: Values.defaultHorizontalGap),
+                        Text(Strings.overview),
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.list_alt, size: Values.smallIconSize),
+                        SizedBox(width: Values.defaultHorizontalGap),
+                        Text(Strings.transactions),
+                      ],
+                    ),
+                  )
                 ],
               ),
               Expanded(
                 child: TabBarView(children: [
-                  Obx(() => ListView.separated(
-                    padding: Values.defaultListPadding,
+                  Obx(() => ListView.builder(
+                    padding: Values.defaultPadding,
                     itemBuilder: (context, item) {
                       final user = controller.members[item];
                       return OverviewTile(
@@ -74,17 +95,11 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
                       );
                     },
                     itemCount: controller.members.length,
-                    separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(),
                   ),),
                   Obx(() => controller.transactions.isEmpty
-                      ? const Center(
-                          child: Text(
-                            Strings.noExpensesMsg,
-                          ),
-                        )
-                      : ListView.separated(
-                          padding: Values.defaultListPadding,
+                      ? const EmptyListView(icon: Icons.receipt_outlined, text: Strings.noExpensesMsg)
+                      : ListView.builder(
+                          padding: const EdgeInsets.all(16),
                           itemBuilder: (context, index) {
                             final expense = controller.transactions[index];
                             return TransactionTile(
@@ -93,8 +108,6 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
                             );
                           },
                           itemCount: controller.transactions.length,
-                          separatorBuilder: (BuildContext context, int index) =>
-                              const Divider(),
                         ))
                 ]),
               )

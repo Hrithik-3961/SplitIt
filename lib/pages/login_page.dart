@@ -41,7 +41,7 @@ class LoginPage extends GetView<LoginController> {
                       color: Get.theme.hintColor,
                     ),
                   ),
-                  const SizedBox(height: 2 * Values.defaultVerticalGap),
+                  const SizedBox(height: Values.defaultVerticalGap),
                   Obx(
                     () => AnimatedSwitcher(
                       duration: Values.defaultAnimationDuration,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
 import 'package:splitit/components/form_button.dart';
+import 'package:splitit/constants/styles.dart';
 import 'package:splitit/controllers/record_payment_controller.dart';
 
 import '../components/record_payment_row.dart';
@@ -24,39 +25,51 @@ class RecordPaymentPage extends GetView<RecordPaymentController> {
           centerTitle: true,
           title: const Text(Strings.recordPayment),
         ),
-        body: Padding(
-          padding: Values.defaultPadding,
-          child: Form(
-            key: controller.formKey,
-            child: Column(
-              children: [
-                AmountTextField(
-                  textController: controller.paymentAmountController,
-                  textStyle: Get.textTheme.displayLarge,
+        body: Form(
+          key: controller.formKey,
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: Values.defaultPadding,
+                decoration: Styles.expenseContainerDecoration,
+                child: Column(
+                  children: [
+                    const SizedBox(height: Values.defaultHorizontalGap),
+                    AmountTextField(
+                      textController: controller.paymentAmountController,
+                      textStyle: Styles.headerAmountStyle,
+                    ),
+                    const SizedBox(height: Values.defaultVerticalGap * 2),
+                  ],
                 ),
-                const SizedBox(
-                  height: Values.defaultVerticalGap,
+              ),
+              Padding(
+                padding: Values.defaultPaddingLarge,
+                child: Column(
+                  children: [
+                    RecordPaymentRow(
+                      initialValue: controller.paidFromUserId,
+                      users: controller.paidFromUsers,
+                      label: Strings.from,
+                    ),
+                    const SizedBox(
+                      height: Values.defaultVerticalGap,
+                    ),
+                    RecordPaymentRow(
+                      initialValue: controller.paidToUserId,
+                      users: controller.paidToUsers,
+                      label: Strings.to,
+                    ),
+                  ],
                 ),
-                RecordPaymentRow(
-                  initialValue: controller.paidFromUserId,
-                  users: controller.paidFromUsers,
-                  label: Strings.from,
-                ),
-                const SizedBox(
-                  height: Values.defaultVerticalGap,
-                ),
-                RecordPaymentRow(
-                  initialValue: controller.paidToUserId,
-                  users: controller.paidToUsers,
-                  label: Strings.to,
-                ),
-                const Spacer(),
-                FormButton(
-                  onPressed: controller.onSaveClicked,
-                  text: Strings.save,
-                ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              FormButton(
+                onPressed: controller.onSaveClicked,
+                text: Strings.save,
+              ),
+            ],
           ),
         ),
       ),

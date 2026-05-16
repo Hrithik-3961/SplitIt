@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/amount_text_field.dart';
+import 'package:splitit/constants/colors.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/group_members.dart';
@@ -62,23 +63,39 @@ class UserTile extends StatelessWidget {
       }
     }
 
-    return InkWell(
-      onTap: handleTap,
-      child: Padding(
-        padding: Values.userTilePadding,
-        child: Obx(
-          () => Row(
+    return Obx(
+      () => AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        margin: Values.bottomPaddingSmall,
+        decoration: BoxDecoration(
+          color: isSelected.value 
+              ? Get.theme.primaryColor.withValues(alpha: 0.05)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(Values.borderRadius),
+          border: Border.all(
+            color: isSelected.value 
+                ? Get.theme.primaryColor.withValues(alpha: 0.2)
+                : Colors.grey.withValues(alpha: 0.1),
+          ),
+        ),
+        child: ListTile(
+          onTap: handleTap,
+          contentPadding: Values.defaultContentPadding,
+          leading: Checkbox(
+            visualDensity: VisualDensity.compact,
+            value: isSelected.value,
+            onChanged: (value) => handleTap(),
+          ),
+          title: Text(
+            user.name,
+            style: TextStyle(
+              fontWeight: isSelected.value ? FontWeight.bold : FontWeight.normal,
+              color: isSelected.value ? Get.theme.primaryColor : Get.theme.colorScheme.onSurface,
+            ),
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Checkbox(
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: isSelected.value,
-                onChanged: (value) => handleTap(),
-              ),
-              Expanded(
-                flex: 50,
-                child: Text(user.name, overflow: TextOverflow.ellipsis),
-              ),
-              const Spacer(),
               if (isSharesEditable)
                 SizedBox(
                   width: 50,
@@ -92,10 +109,9 @@ class UserTile extends StatelessWidget {
                     decoration: Styles.shareInputDecoration,
                   ),
                 ),
-
               if (isPercentageEditable)
                 SizedBox(
-                  width: 70,
+                  width: 100,
                   child: TextFormField(
                     controller: percentageController,
                     enabled: isSelected.value,
@@ -107,20 +123,17 @@ class UserTile extends StatelessWidget {
                     onChanged: onPercentageChanged,
                   ),
                 ),
-
-              if (isSharesEditable || isPercentageEditable) const SizedBox(width: Values.defaultHorizontalGap),
-              Expanded(
-                flex: 20,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: handleTap,
-                  child: AmountTextField(
-                    textController: amountController,
-                    enabled: isSelected.value && isAmountManuallyEditable,
-                    focusNode: amountFocusNode,
-                    onChanged: onAmountChanged,
-                    fullWidth: false,
-                  ),
+              if (isSharesEditable || isPercentageEditable) 
+                const SizedBox(width: Values.defaultHorizontalGap),
+              AmountTextField(
+                textController: amountController,
+                enabled: isSelected.value && isAmountManuallyEditable,
+                focusNode: amountFocusNode,
+                onChanged: onAmountChanged,
+                fullWidth: false,
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isSelected.value ? MyColors.success : MyColors.hint,
                 ),
               ),
             ],

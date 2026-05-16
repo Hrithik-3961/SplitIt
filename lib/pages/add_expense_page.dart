@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/form_button.dart';
 import 'package:splitit/components/user_tile.dart';
+import 'package:splitit/constants/colors.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
@@ -22,72 +23,90 @@ class AddExpensePage extends GetView<AddExpenseController> {
       },
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
           title: const Text(Strings.addExpense),
         ),
-        body: Padding(
-          padding: Values.defaultListPadding,
-          child: Form(
-            key: controller.formKey,
-            child: Column(
-              children: [
-                Text(
-                  controller.amountString,
-                  style: Get.textTheme.displayLarge,
-                  textAlign: TextAlign.center,
-                ),
-                Container(
-                  padding: Values.defaultPaddingSmall,
-                  width: Get.width * 0.6,
-                  child: TextFormField(
-                    controller: controller.expenseTitleController,
-                    decoration: Styles.expenseTitleDecoration,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Row(
+        body: Form(
+          key: controller.formKey,
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: Values.defaultPaddingLarge,
+                decoration: Styles.expenseContainerDecoration,
+                child: Column(
                   children: [
-                    const Text(Strings.paidBy),
-                    const SizedBox(
-                      width: Values.defaultHorizontalGap,
+                    Text(
+                      controller.amountString,
+                      style: Styles.headerAmountStyle,
                     ),
-                    ElevatedButton(
-                      onPressed: controller.onPaidByClicked,
-                      child: Obx(() {
-                        String paidBy = controller.paidByText.value;
-                        return Text(
-                          paidBy.isEmpty ? '--Select--' : paidBy,
-                          style: Get.textTheme.labelLarge!.copyWith(
-                              fontStyle: paidBy.isEmpty
-                                  ? FontStyle.italic
-                                  : FontStyle.normal,
-                              color: Get.theme.primaryColor),
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Spacer(),
-                    Obx(
-                      () => DropdownButton<SplitType>(
-                        value: controller.splitOption.value,
-                        items: controller.splitOptions
-                            .map((option) => DropdownMenuItem<SplitType>(
-                                value: option, child: Text(option.value)))
-                            .toList(),
-                        onChanged: (newValue) {
-                          controller.splitOption.value = newValue!;
-                        },
+                    const SizedBox(height: Values.defaultVerticalGap),
+                    Container(
+                      padding: Values.defaultPadding,
+                      decoration: Styles.expenseTitleContainerDecoration,
+                      child: TextFormField(
+                        controller: controller.expenseTitleController,
+                        decoration: Styles.expenseTitleDecoration,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],
                 ),
-                Expanded(child: Obx(() {
-                  // Depend on the trigger to rebuild the list
+              ),
+              Padding(
+                padding: Values.defaultPaddingMedium,
+                child: Row(
+                  children: [
+                    const Icon(Icons.account_balance_wallet_outlined, size: Values.smallIconSize, color: MyColors.hint),
+                    const SizedBox(width: Values.defaultHorizontalGap),
+                    const Text(Strings.paidBy, style: TextStyle(fontWeight: FontWeight.w500, fontSize: Values.smallTextSize)),
+                    const SizedBox(width: Values.defaultHorizontalGap * 2),
+                    ActionChip(
+                      onPressed: controller.onPaidByClicked,
+                      label: Obx(() {
+                        String paidBy = controller.paidByText.value;
+                        return Text(
+                          paidBy.isEmpty ? Strings.select : paidBy,
+                          style: TextStyle(
+                            color: paidBy.isEmpty ? MyColors.hint : Get.theme.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }),
+                      backgroundColor: Get.theme.primaryColor.withValues(alpha: 0.1),
+                      side: BorderSide.none,
+                    ),
+                    const Spacer(),
+                    Obx(
+                      () => Container(
+                        padding: Values.defaultMargin,
+                        decoration: Styles.splitOptionDecoration,
+                        child: DropdownButton<SplitType>(
+                          value: controller.splitOption.value,
+                          underline: const SizedBox(),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          items: controller.splitOptions
+                              .map((option) => DropdownMenuItem<SplitType>(
+                                  value: option,
+                                  child: Text(option.value, style: const TextStyle(fontSize: Values.smallTextSize))))
+                              .toList(),
+                          onChanged: (newValue) {
+                            controller.splitOption.value = newValue!;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: Values.defaultPaddingSmall,
+                child: Divider(),
+              ),
+              Expanded(
+                child: Obx(() {
                   final _ = controller.updateTrigger.value;
-                  return ListView.builder(
+                  return ListView.separated(
+                    padding: Values.defaultPaddingMedium,
                     itemBuilder: (context, item) {
                       final data = controller.userExpenseDataList[item];
                       return UserTile(
@@ -109,19 +128,20 @@ class AddExpensePage extends GetView<AddExpenseController> {
                             controller.onAmountChanged(data),
                       );
                     },
+                    separatorBuilder: (context, index) => const SizedBox(height: Values.defaultHorizontalGap),
                     itemCount: controller.userExpenseDataList.length,
                   );
-                })),
-                FormButton(
-                  onPressed: () {
-                    if (controller.formKey.currentState!.validate()) {
-                      controller.onSendRequest();
-                    }
-                  },
-                  text: Strings.sendRequest,
-                ),
-              ],
-            ),
+                }),
+              ),
+              FormButton(
+                onPressed: () {
+                  if (controller.formKey.currentState!.validate()) {
+                    controller.onSendRequest();
+                  }
+                },
+                text: Strings.sendRequest,
+              ),
+            ],
           ),
         ),
       ),

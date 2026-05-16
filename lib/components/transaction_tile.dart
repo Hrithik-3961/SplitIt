@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:splitit/constants/colors.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/styles.dart';
+import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/my_transaction.dart';
 
 import '../enums/transaction_type.dart';
@@ -14,37 +16,46 @@ class TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
+    final isPayment = transaction.transactionType == TransactionType.payment;
+
+    return Card(
+      margin: Values.defaultMarginSmall,
+      elevation: 0,
+      color: Colors.transparent,
       child: ListTile(
-        leading: Icon(transaction.transactionType == TransactionType.payment
-            ? Icons.money
-            : Icons.attach_money),
-        title: Text.rich(TextSpan(
-            text:
-                "${transaction.transactionType == TransactionType.payment ? Strings.from : ""} ",
-            style: TextStyle(color: Get.theme.hintColor),
-            children: [
-              TextSpan(
-                  text: transaction.title,
-                  style: TextStyle(color: Get.theme.colorScheme.onSurface))
-            ]),
+        onTap: onTap,
+        contentPadding: Values.defaultContentPadding,
+        leading: Container(
+          padding: Values.defaultPaddingSmall,
+          decoration: BoxDecoration(
+            color: (isPayment ? MyColors.success : MyColors.info).withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            isPayment ? Icons.payment : Icons.receipt_long,
+            color: isPayment ? MyColors.success : MyColors.info,
+          ),
         ),
-        titleTextStyle: Get.textTheme.titleLarge,
-        subtitle: Text.rich(TextSpan(
-            text:
-            "${transaction.transactionType == TransactionType.payment ? Strings.to : transaction.subtitle} ",
-            style: TextStyle(color: Get.theme.hintColor),
-            children: transaction.transactionType == TransactionType.payment ? [
-              TextSpan(
-                  text: transaction.subtitle,
-                  style: TextStyle(color: Get.theme.colorScheme.onSurface))
-            ] : []),
+        title: Text(
+          isPayment ? "${Strings.from}: ${transaction.title}" : transaction.title,
+          style: Styles.titleStyle,
         ),
-        subtitleTextStyle: Get.textTheme.titleMedium,
-        trailing: Text(transaction.totalAmount),
-        leadingAndTrailingTextStyle: Get.textTheme.bodyMedium?.copyWith(
-          fontWeight: FontWeight.bold,
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              isPayment ? "${Strings.to}: ${transaction.subtitle}" : "${Strings.paidBy}: ${transaction.subtitle}",
+              style: Styles.subtitleStyle,
+            ),
+            const SizedBox(height: 2),
+          ],
+        ),
+        trailing: Text(
+          transaction.totalAmount,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
       ),
     );

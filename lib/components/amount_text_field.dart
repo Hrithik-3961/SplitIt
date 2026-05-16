@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
+import 'package:splitit/constants/values.dart';
 import 'package:splitit/utils/expense_validator.dart';
 
 class AmountTextField extends StatelessWidget {
@@ -27,6 +28,8 @@ class AmountTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return AutoSizeTextFormField(
       fullwidth: fullWidth,
+      minFontSize: Values.defaultTextSize,
+      minWidth: fullWidth ? null : 100,
       controller: textController,
       enabled: enabled,
       focusNode: focusNode,

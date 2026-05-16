@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:splitit/constants/colors.dart';
+import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/styles.dart';
+import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/group_members.dart';
 import 'package:splitit/utils/base_util.dart';
 
@@ -11,26 +15,56 @@ class OverviewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String prefix = "";
-    Color color = Colors.black;
+    Color balanceColor = MyColors.hint;
+    String balanceText = BaseUtil.getFormattedCurrency(user.balance.abs().toString());
+    IconData balanceIcon = Icons.remove;
+
     if (user.balance > 0) {
-      prefix = "+";
-      color = Colors.green;
+      balanceColor = MyColors.success;
+      balanceText = "+ $balanceText";
+      balanceIcon = Icons.arrow_upward;
     } else if (user.balance < 0) {
-      prefix = "-";
-      color = Colors.red;
+      balanceColor = MyColors.error;
+      balanceText = "- $balanceText";
+      balanceIcon = Icons.arrow_downward;
     }
 
-    return InkWell(
-      onTap: onTap,
+    return Card(
+      margin: Values.defaultMarginSmall,
+      elevation: 0,
+      color: Colors.transparent,
       child: ListTile(
-        title: Text(user.name),
-        trailing: Text(
-          "$prefix ${BaseUtil.getFormattedCurrency(user.balance.abs().toString())}",
-          style: Get.textTheme.bodyMedium?.copyWith(
-                color: color,
+        onTap: onTap,
+        contentPadding: Values.defaultContentPadding,
+        leading: CircleAvatar(
+          backgroundColor: Get.theme.colorScheme.primary.withValues(alpha: 0.1),
+          child: Text(
+            user.name[0].toUpperCase(),
+            style: TextStyle(color: Get.theme.colorScheme.primary, fontWeight: FontWeight.bold),
+          ),
+        ),
+        title: Text(
+          user.name,
+          style: Styles.titleStyle,
+        ),
+        subtitle: Text(
+          user.balance == 0 ? Strings.settledUp : (user.balance > 0 ? Strings.lentMoney : Strings.borrowedMoney),
+          style: Styles.subtitleStyle,
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              balanceText,
+              style: TextStyle(
+                color: balanceColor,
                 fontWeight: FontWeight.bold,
+                fontSize: Values.defaultTextSize,
               ),
+            ),
+            if (user.balance != 0)
+              Icon(balanceIcon, size: Values.extraSmallIconSize, color: balanceColor),
+          ],
         ),
       ),
     );

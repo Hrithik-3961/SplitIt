@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:splitit/components/group_options_bottom_sheet.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/groups.dart';
 import 'package:splitit/pages/group_overview_page.dart';
@@ -15,7 +16,12 @@ class AllGroupsController extends GetxController {
     _groupsService = Get.put(AllGroupsService());
   }
 
-  void handlePopUpMenuClick(String name) {
+  void onNewGroupOptionsClicked() {
+    Get.bottomSheet(const GroupOptionsBottomSheet());
+  }
+
+  void onGroupOptionClicked(String name) {
+    Get.back();
     switch (name) {
       case Strings.createAGroup:
         _groupsService.addGroup("New Group");

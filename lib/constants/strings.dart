@@ -18,11 +18,17 @@ class Strings {
   static const String unknownErrorMsg = "Something went wrong. Please try again.";
 
   static const String noGroupsMsg = "No groups found.\nPlease a join a group to continue";
+  static const String createFirstGroupMsg = "Create your first group";
+  static const String newGroup = "New Group";
   static const String createAGroup = "Create a group";
   static const String joinAGroup = "Join a group";
 
   static const String overview = "Overview";
   static const String transactions = "Transactions";
+
+  static const String settledUp = "Settled Up";
+  static const String lentMoney = "Lent Money";
+  static const String borrowedMoney = "Borrowed Money";
 
   static const String noExpensesMsg = "No expenses added";
   static const String addExpense = "Add Expense";
@@ -36,7 +42,8 @@ class Strings {
   static const String rupeeSign = '₹';
 
   static const String expenseTitleHintText = "What's this for?";
-  static const String paidBy = "Paid By";
+  static const String paidBy = "Paid by";
+  static const String select = "--Select--";
   static const String remainder = "Remainder";
   static const String expenseTitleDefaultText = "Expense";
   static const String paidByError = "Select at least one user who paid the expense";

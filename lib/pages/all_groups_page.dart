@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:splitit/components/empty_list_view.dart';
 import 'package:splitit/components/groups_tile.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
@@ -16,28 +17,31 @@ class AllGroupsPage extends GetView<AllGroupsController> {
       appBar: AppBar(
         title: const Text(Strings.appName),
         actions: [
-          PopupMenuButton(
-              onSelected: (item) => controller.handlePopUpMenuClick(item),
-              itemBuilder: (context) => [
-                    const PopupMenuItem(
-                        value: Strings.createAGroup,
-                        child: Text(Strings.createAGroup)),
-                    const PopupMenuItem(
-                        value: Strings.joinAGroup,
-                        child: Text(Strings.joinAGroup))
-                  ])
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () {
+              // Settings or profile
+            },
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: controller.onNewGroupOptionsClicked,
+        label: const Text(Strings.newGroup),
+        icon: const Icon(Icons.add),
       ),
       body: Obx(
         () => controller.groups.isEmpty
-            ? const Center(
-                child: Text(
-                  Strings.noGroupsMsg,
-                  textAlign: TextAlign.center,
+            ? EmptyListView(
+                icon: Icons.group_outlined,
+                text: Strings.noGroupsMsg,
+                child: ElevatedButton(
+                  onPressed: controller.onNewGroupOptionsClicked,
+                  child: const Text(Strings.createFirstGroupMsg),
                 ),
               )
             : ListView.builder(
-                padding: Values.defaultListPadding,
+                padding: Values.defaultPadding,
                 itemBuilder: (context, item) {
                   final group = controller.groups[item];
                   return GroupsTile(
