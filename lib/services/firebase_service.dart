@@ -61,7 +61,11 @@ class FirebaseService extends GetxService {
             toFirestore: (groupMember, _) => groupMember.toJson());
     _transactionsRef = _firestore.collection("transactions").withConverter(
         fromFirestore: (snap, _) => MyTransaction.fromJson(snap.data()!),
-        toFirestore: (transaction, _) => transaction.toJson());
+        toFirestore: (transaction, _) {
+          final json = transaction.toJson();
+          json['isDeleted'] = false;
+          return json;
+        });
     _expensePayersRef = _firestore.collection("expensePayers").withConverter(
         fromFirestore: (snap, _) => Expense.fromJson(snap.data()!),
         toFirestore: (expense, _) => expense.toJson(true));
@@ -405,10 +409,8 @@ class FirebaseService extends GetxService {
 
     await _firestore.runTransaction((txn) async {
       /// 1. create expense
-      var transactionData = transaction.toJson();
-      transactionData['groupId'] = groupId;
-      transactionData['isDeleted'] = false;
-      txn.set(transactionRef, transactionData);
+      transaction.groupId = groupId;
+      txn.set(transactionRef, transaction);
 
       final paidMap = transaction.paidMap;
 

@@ -4,6 +4,7 @@ import '../enums/split_type.dart';
 import '../enums/transaction_type.dart';
 
 class MyTransaction {
+  String? groupId;
   final String title;
   final String totalAmount;
   final String subtitle;
@@ -17,6 +18,7 @@ class MyTransaction {
     required this.totalAmount,
     required this.subtitle,
     required this.transactionType,
+    this.groupId,
     this.splitType,
     this.paidMap = const {},
     this.owedMap = const {},
@@ -24,6 +26,7 @@ class MyTransaction {
 
   factory MyTransaction.fromJson(Map<String, dynamic> json) {
     return MyTransaction(
+        groupId: json['groupId'],
         title: json['title'],
         totalAmount: json['totalAmount'],
         subtitle: json['subtitle'],
@@ -43,6 +46,7 @@ class MyTransaction {
 
   Map<String, dynamic> toJson() {
     return {
+      'groupId': groupId,
       'title': title,
       'totalAmount': totalAmount,
       'subtitle': subtitle,
