@@ -55,11 +55,9 @@ class AppTheme {
         fillColor: MyColors.lightSurface,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Values.borderRadius),
-          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Values.borderRadius),
-          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Values.borderRadius),
@@ -121,7 +119,11 @@ class AppTheme {
         fillColor: MyColors.darkSurface,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Values.borderRadius),
-          borderSide: BorderSide.none,
+          borderSide: const BorderSide(color: MyColors.darkOnSurface, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Values.borderRadius),
+          borderSide: const BorderSide(color: MyColors.darkOnSurface, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Values.borderRadius),

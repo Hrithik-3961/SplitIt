@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
+import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/models/group_details.dart';
 
-import '../enums/group_role.dart';
 import 'firebase_service.dart';
 
 class GroupsOverviewService {
@@ -55,9 +55,14 @@ class GroupsOverviewService {
     _groupDetails.value = group;
   }
 
-  void addMember() {
-    _groupDetails.value?.members
-        .add(GroupMembers(groupId: _groupId, uid: '5', name: 'New Memberrrrrr', role: GroupRole.member));
+  Future<void> addMember({required String phone, required String name}) async {
+    final newMember = await _firebaseService.addMemberByPhone(
+        groupId: _groupId,
+        phone: '${Strings.phoneNumberPrefix.trim()}${phone.trim()}',
+        name: name);
+
+    _groupDetails.value?.members.add(newMember);
+    _groupDetails.refresh();
   }
 
   void closeFAB(ExpandableFabState? fabState) {

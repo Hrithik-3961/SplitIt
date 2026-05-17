@@ -33,12 +33,12 @@ class GroupDetails {
     return GroupDetails(
         id: json['groupId'],
         title: json['name'],
-        createdBy: json['createdBy'],
+        createdBy: json['createdBy'] ?? '',
         createdAt: (json['createdAt'] as Timestamp).toDate(),
-        currency: json['currency'],
-        memberCount: json['memberCount'],
-        totalExpense: json['totalExpense'],
-        inviteCode: json['inviteCode'],
+        currency: json['currency'] ?? 'INR',
+        memberCount: json['memberCount'] ?? 0,
+        totalExpense: (json['totalExpense'] as num?)?.toDouble() ?? 0.0,
+        inviteCode: json['inviteCode'] ?? '',
         members: <GroupMembers>[].obs);
   }
 

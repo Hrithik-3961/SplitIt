@@ -9,8 +9,8 @@ import '../utils/base_util.dart';
 class RecordPaymentService {
   late final List<GroupMembers> _users;
 
-  late final RxString paidFromUserId;
-  late final RxString paidToUserId;
+  late final RxString paidFromMemberId;
+  late final RxString paidToMemberId;
 
   final RxList<GroupMembers> paidFromUsers = <GroupMembers>[].obs;
   final RxList<GroupMembers> paidToUsers = <GroupMembers>[].obs;
@@ -25,12 +25,12 @@ class RecordPaymentService {
     _users = Get.find<GroupOverviewController>().members;
 
     // Initialize with first two users, if available
-    paidFromUserId = (_users.isNotEmpty ? _users[0].uid : '').obs;
-    paidToUserId = (_users.length > 1 ? _users[1].uid : '').obs;
+    paidFromMemberId = (_users.isNotEmpty ? _users[0].memberId : '').obs;
+    paidToMemberId = (_users.length > 1 ? _users[1].memberId : '').obs;
 
     // Set up listeners to update the lists reactively
-    paidFromUserId.listen((_) => _updatePaidToUsers());
-    paidToUserId.listen((_) => _updatePaidFromUsers());
+    paidFromMemberId.listen((_) => _updatePaidToUsers());
+    paidToMemberId.listen((_) => _updatePaidFromUsers());
 
     // Initial population of the lists
     _updatePaidFromUsers();
@@ -38,21 +38,22 @@ class RecordPaymentService {
   }
 
   void _updatePaidFromUsers() {
-    final newUsers = _users.where((u) => u.uid != paidToUserId.value).toList();
+    final newUsers =
+        _users.where((u) => u.memberId != paidToMemberId.value).toList();
     paidFromUsers.assignAll(newUsers);
-    if (!paidFromUsers.any((u) => u.uid == paidFromUserId.value) &&
+    if (!paidFromUsers.any((u) => u.memberId == paidFromMemberId.value) &&
         paidFromUsers.isNotEmpty) {
-      paidFromUserId.value = paidFromUsers[0].uid;
+      paidFromMemberId.value = paidFromUsers[0].memberId;
     }
   }
 
   void _updatePaidToUsers() {
     final newUsers =
-        _users.where((u) => u.uid != paidFromUserId.value).toList();
+        _users.where((u) => u.memberId != paidFromMemberId.value).toList();
     paidToUsers.assignAll(newUsers);
-    if (!paidToUsers.any((u) => u.uid == paidToUserId.value) &&
+    if (!paidToUsers.any((u) => u.memberId == paidToMemberId.value) &&
         paidToUsers.isNotEmpty) {
-      paidToUserId.value = paidToUsers[0].uid;
+      paidToMemberId.value = paidToUsers[0].memberId;
     }
   }
 
@@ -60,8 +61,10 @@ class RecordPaymentService {
     double amount = BaseUtil.getNumericValue(amountText) ?? 0;
 
     if (amount > 0) {
-      GroupMembers paidFrom = _users.firstWhere((u) => u.uid == paidFromUserId.value);
-      GroupMembers paidTo = _users.firstWhere((u) => u.uid == paidToUserId.value);
+      GroupMembers paidFrom =
+          _users.firstWhere((u) => u.memberId == paidFromMemberId.value);
+      GroupMembers paidTo =
+          _users.firstWhere((u) => u.memberId == paidToMemberId.value);
       paidFrom.addAmount(amount);
       paidTo.subtractAmount(amount);
 
@@ -70,8 +73,8 @@ class RecordPaymentService {
           totalAmount: amountText,
           subtitle: paidTo.name,
           transactionType: TransactionType.payment,
-          paidMap: {paidFrom.uid: amount},
-          owedMap: {paidTo.uid: amount});
+          paidMap: {paidFrom.memberId: amount},
+          owedMap: {paidTo.memberId: amount});
     }
     return null;
   }

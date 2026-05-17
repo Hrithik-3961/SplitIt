@@ -43,7 +43,7 @@ class RecordPaymentRow extends StatelessWidget {
                     icon: const Icon(Icons.keyboard_arrow_down),
                     items: users
                         .map((u) => DropdownMenuItem(
-                            value: u.uid,
+                            value: u.memberId,
                             child: Text(
                               u.name,
                               style: TextStyle(

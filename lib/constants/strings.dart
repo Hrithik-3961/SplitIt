@@ -7,6 +7,10 @@ class Strings {
   static const String loginMsg = "Log in to continue";
   static const String sendOtp = "Send OTP";
   static const String phoneNumber = "Phone Number";
+  static const String name = "Name";
+  static const String nameHint = "John Doe";
+  static const String enterValidName = "Enter a valid name";
+  static const String enterValidPhoneNumber = "Enter a valid phone number";
   static const String phoneNumberPrefix = "+91 ";
   static const String phoneNumberHint = "12345 67890";
   static const String otpText = "Enter the code sent to the number";
@@ -42,6 +46,9 @@ class Strings {
   static const String recordPayment = "Record Payment";
 
   static const String addMember = "Add a member";
+  static const String or = "OR";
+  static const String joinByCodeInfo = "Share this code with your friends to let them join the group";
+  static const String addByPhoneInfo = "You can also add them manually by phone number. They will see all group history when they sign in.";
 
   static const String rupeeSign = '₹';
 

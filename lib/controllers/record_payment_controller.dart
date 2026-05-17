@@ -10,8 +10,8 @@ class RecordPaymentController extends GetxController {
   get formKey => _formKey;
   get paymentAmountController => _paymentAmountController;
 
-  get paidFromUserId => _recordPaymentService.paidFromUserId;
-  get paidToUserId => _recordPaymentService.paidToUserId;
+  get paidFromUserId => _recordPaymentService.paidFromMemberId;
+  get paidToUserId => _recordPaymentService.paidToMemberId;
   get paidFromUsers => _recordPaymentService.paidFromUsers;
   get paidToUsers => _recordPaymentService.paidToUsers;
 

@@ -11,12 +11,24 @@ class Styles {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         labelText: Strings.phoneNumber,
         prefixText: Strings.phoneNumberPrefix,
+        prefixIcon: const Icon(Icons.phone),
         prefixStyle: Get.textTheme.bodyMedium,
         hintText: Strings.phoneNumberHint,
         hintStyle: Get.textTheme.bodyMedium?.copyWith(
           color: Get.theme.hintColor,
         ),
       );
+
+  static get nameInputDecoration => InputDecoration(
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    labelText: Strings.name,
+    prefixIcon: const Icon(Icons.person_outline),
+    prefixStyle: Get.textTheme.bodyMedium,
+    hintText: Strings.nameHint,
+    hintStyle: Get.textTheme.bodyMedium?.copyWith(
+      color: Get.theme.hintColor,
+    ),
+  );
 
   static get phoneNumberInputFormatters => [
         FilteringTextInputFormatter.digitsOnly,
@@ -120,4 +132,10 @@ class Styles {
         fontSize: Values.defaultTextSize,
         color: MyColors.hint,
       );
+
+  static TextStyle get codeTextStyle => const TextStyle(
+    fontSize: Values.mediumTextSize,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 2,
+  );
 }

@@ -143,14 +143,14 @@ class AddExpenseController extends GetxController {
   void onSendRequest() {
     double totalSplitAmount = 0;
     double totalPaidByAmount = 0;
-    Map<String, double> paidMap = {}; // userId -> amountPaid
-    Map<String, double> owedMap = {};
+    Map<String, double> paidMap = {}; // memberId -> amountPaid
+    Map<String, double> owedMap = {}; // memberId -> amountOwed
     for (var expenseData in userExpenseDataList) {
       final amounts = BaseUtil.getUserAmounts(expenseData);
       totalSplitAmount += amounts.splitAmount;
       totalPaidByAmount += amounts.paidAmount;
-      paidMap[expenseData.user.uid] = amounts.paidAmount;
-      owedMap[expenseData.user.uid] = amounts.splitAmount;
+      paidMap[expenseData.user.memberId] = amounts.paidAmount;
+      owedMap[expenseData.user.memberId] = amounts.splitAmount;
     }
 
     String? message = ExpenseValidator.validateSplit(totalPaidByAmount, _totalAmount, totalSplitAmount);

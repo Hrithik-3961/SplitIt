@@ -9,8 +9,8 @@ class MyTransaction {
   final String subtitle;
   final TransactionType transactionType;
   final SplitType? splitType;
-  final Map<String, double> paidMap; // userId -> amountPaid
-  final Map<String, double> owedMap; // userId -> amountOwed
+  final Map<String, double> paidMap; // memberId -> amountPaid
+  final Map<String, double> owedMap; // memberId -> amountOwed
 
   MyTransaction({
     required this.title,

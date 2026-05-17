@@ -1,13 +1,13 @@
 class Expense {
   final String transactionId;
   final String groupId;
-  final String userId;
+  final String memberId;
   final double amount;
 
   Expense({
     required this.transactionId,
     required this.groupId,
-    required this.userId,
+    required this.memberId,
     required this.amount,
   });
 
@@ -15,7 +15,7 @@ class Expense {
     return Expense(
       transactionId: json['transactionId'],
       groupId: json['groupId'],
-      userId: json['userId'],
+      memberId: json['memberId'] ?? json['userId'],
       amount: json['amountPaid'] != null
           ? (json['amountPaid'] as num).toDouble()
           : (json['owedAmount'] as num).toDouble(),
@@ -26,8 +26,8 @@ class Expense {
     return {
       'transactionId': transactionId,
       'groupId': groupId,
-      'userId': userId,
-      isPayer ? 'amountPaid': 'owedAmount' : amount,
+      'memberId': memberId,
+      isPayer ? 'amountPaid' : 'owedAmount': amount,
     };
   }
 }

@@ -7,7 +7,7 @@ class Values {
 
   static const double borderRadius = 12.0;
 
-  static const double smallTextSize = 14;
+  static const double smallTextSize = 12;
   static const double defaultTextSize = 16;
   static const double mediumTextSize = 22;
   static const double largeTextSize = 48;
