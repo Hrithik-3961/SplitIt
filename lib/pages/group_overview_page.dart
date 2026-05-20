@@ -49,6 +49,12 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
               icon: const Icon(Icons.payment),
               onPressed: controller.navigateToRecordPaymentPage,
             ),
+            FloatingActionButton.extended(
+              heroTag: Strings.settleUp,
+              label: const Text(Strings.settleUp),
+              icon: const Icon(Icons.done_all),
+              onPressed: controller.navigateToSettleUpPage,
+            ),
           ],
         ),
         body: DefaultTabController(

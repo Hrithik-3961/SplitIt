@@ -10,11 +10,13 @@ import 'package:splitit/middleware/auth_middleware.dart';
 import 'package:splitit/pages/login_page.dart';
 import 'package:splitit/pages/splash_screen.dart';
 import 'controllers/record_payment_controller.dart';
+import 'controllers/settle_up_controller.dart';
 import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/pages/all_groups_page.dart';
 import 'package:splitit/pages/group_overview_page.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
 import 'package:splitit/pages/record_payment_page.dart';
+import 'package:splitit/pages/settle_up_page.dart';
 
 import 'firebase_options.dart';
 
@@ -45,7 +47,8 @@ class MyApp extends StatelessWidget {
         GetPage(name: AllGroupsPage.route, page: () => const AllGroupsPage(), binding: HomeBinding(), middlewares: [AuthMiddleware()]),
         GetPage(name: GroupOverviewPage.route, page: () => const GroupOverviewPage(), binding: GroupOverviewBinding()),
         GetPage(name: AddExpensePage.route, page: () => const AddExpensePage(), binding: AddExpenseBinding()),
-        GetPage(name: RecordPaymentPage.route, page: () => const RecordPaymentPage(), binding: RecordPaymentBinding())
+        GetPage(name: RecordPaymentPage.route, page: () => const RecordPaymentPage(), binding: RecordPaymentBinding()),
+        GetPage(name: SettleUpPage.route, page: () => const SettleUpPage(), binding: SettleUpBinding())
       ],
     );
   }

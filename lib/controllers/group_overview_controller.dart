@@ -9,6 +9,7 @@ import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/pages/record_payment_page.dart';
+import 'package:splitit/pages/settle_up_page.dart';
 import 'package:splitit/services/groups_overview_service.dart';
 
 class GroupOverviewController extends GetxController {
@@ -103,6 +104,11 @@ class GroupOverviewController extends GetxController {
 
   void navigateToRecordPaymentPage() async {
     final newTransaction = await Get.toNamed(RecordPaymentPage.route);
+    _groupsOverviewService.addTransaction(newTransaction);
+  }
+
+  void navigateToSettleUpPage() async {
+    final newTransaction = await Get.toNamed(SettleUpPage.route);
     _groupsOverviewService.addTransaction(newTransaction);
   }
 }

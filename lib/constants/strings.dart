@@ -34,7 +34,7 @@ class Strings {
   static const String overview = "Overview";
   static const String transactions = "Transactions";
 
-  static const String settledUp = "Settled Up";
+  static const String settledUp = "You are all Settled Up!";
   static const String lentMoney = "Lent Money";
   static const String borrowedMoney = "Borrowed Money";
 
@@ -44,6 +44,7 @@ class Strings {
   static const String enterAmount = "Enter amount to split";
   static const String sendRequest = "Send Request";
   static const String recordPayment = "Record Payment";
+  static const String settleUp = "Settle Up";
 
   static const String addMember = "Add a member";
   static const String or = "OR";
