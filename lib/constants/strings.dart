@@ -45,6 +45,8 @@ class Strings {
   static const String sendRequest = "Send Request";
   static const String recordPayment = "Record Payment";
   static const String settleUp = "Settle Up";
+  static const String crossGroupSettleUp = "Global Settle Up";
+  static const String unknownGroup = "Unknown Group";
 
   static const String addMember = "Add a member";
   static const String or = "OR";
@@ -65,4 +67,5 @@ class Strings {
   static const String from = "From";
   static const String to = "To";
   static const String save = "Save";
+  static const String group = "Group";
 }

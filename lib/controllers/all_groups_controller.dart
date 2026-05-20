@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:splitit/components/group_options_bottom_sheet.dart';
 import 'package:splitit/models/groups.dart';
 import 'package:splitit/pages/group_overview_page.dart';
+import 'package:splitit/pages/cross_group_settle_up_page.dart';
 import 'package:splitit/services/all_groups_service.dart';
 
 class AllGroupsController extends GetxController {
@@ -73,6 +74,10 @@ class AllGroupsController extends GetxController {
   void navigateToGroupsOverview(String groupId) {
     final group = _groupsService.groups.firstWhere((group) => group.groupId == groupId);
     Get.toNamed("${GroupOverviewPage.route}/$groupId", arguments: group.groupName);
+  }
+
+  void navigateToCrossGroupSettleUp() {
+    Get.toNamed(CrossGroupSettleUpPage.route);
   }
 }
 

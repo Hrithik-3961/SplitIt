@@ -18,6 +18,11 @@ class AllGroupsPage extends GetView<AllGroupsController> {
         title: const Text(Strings.appName),
         actions: [
           IconButton(
+            icon: const Icon(Icons.account_balance_wallet_outlined),
+            onPressed: controller.navigateToCrossGroupSettleUp,
+            tooltip: Strings.crossGroupSettleUp,
+          ),
+          IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
               // Settings or profile

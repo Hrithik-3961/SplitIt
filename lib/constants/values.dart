@@ -23,6 +23,7 @@ class Values {
   static const EdgeInsets defaultMargin = EdgeInsets.symmetric(horizontal: 16.0);
 
   static const EdgeInsets defaultContentPadding = EdgeInsets.symmetric(horizontal: 8);
+  static const EdgeInsets largeContentPadding = EdgeInsets.symmetric(horizontal: 24);
 
   static const EdgeInsets defaultPadding = EdgeInsets.all(18.0);
   static const EdgeInsets defaultPaddingMedium = EdgeInsets.symmetric(horizontal: 16, vertical: 12);
