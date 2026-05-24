@@ -119,7 +119,6 @@ class Styles {
   static TextStyle get headerAmountStyle => const TextStyle(
         fontSize: Values.largeTextSize,
         fontWeight: FontWeight.bold,
-        color: Colors.white,
       );
 
   static TextStyle get titleStyle => TextStyle(

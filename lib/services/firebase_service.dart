@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:splitit/constants/strings.dart';
 import 'package:splitit/enums/group_role.dart';
 import 'package:splitit/exceptions/invalid_code_exception.dart';
 import 'package:splitit/models/expense.dart';
@@ -112,10 +113,10 @@ class FirebaseService extends GetxService {
       await _createUserIfNeeded();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {
-        throw InvalidCodeException;
+        throw InvalidCodeException();
       } else {
         debugPrint(e.message);
-        throw Exception();
+        throw Exception(e.message ?? Strings.unknownErrorMsg);
       }
     }
   }

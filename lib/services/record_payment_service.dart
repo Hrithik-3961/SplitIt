@@ -29,31 +29,23 @@ class RecordPaymentService {
     paidToMemberId = (_users.length > 1 ? _users[1].memberId : '').obs;
 
     // Set up listeners to update the lists reactively
-    paidFromMemberId.listen((_) => _updatePaidToUsers());
-    paidToMemberId.listen((_) => _updatePaidFromUsers());
+    paidFromMemberId.listen((newFromId) => _updatePaidFromUsers(newFromId));
+    paidToMemberId.listen((newToId) => _updatePaidToUsers(newToId));
 
-    // Initial population of the lists
-    _updatePaidFromUsers();
-    _updatePaidToUsers();
+    // Initial population of the lists (show all users)
+    paidFromUsers.assignAll(_users);
+    paidToUsers.assignAll(_users);
   }
 
-  void _updatePaidFromUsers() {
-    final newUsers =
-        _users.where((u) => u.memberId != paidToMemberId.value).toList();
-    paidFromUsers.assignAll(newUsers);
-    if (!paidFromUsers.any((u) => u.memberId == paidFromMemberId.value) &&
-        paidFromUsers.isNotEmpty) {
-      paidFromMemberId.value = paidFromUsers[0].memberId;
+  void _updatePaidFromUsers(newFromId) {
+    if (newFromId == paidToMemberId.value) {
+      paidToMemberId.value = _users.firstWhere((u) => u.memberId != newFromId).memberId;
     }
   }
 
-  void _updatePaidToUsers() {
-    final newUsers =
-        _users.where((u) => u.memberId != paidFromMemberId.value).toList();
-    paidToUsers.assignAll(newUsers);
-    if (!paidToUsers.any((u) => u.memberId == paidToMemberId.value) &&
-        paidToUsers.isNotEmpty) {
-      paidToMemberId.value = paidToUsers[0].memberId;
+  void _updatePaidToUsers(newToId) {
+    if (newToId == paidFromMemberId.value) {
+      paidFromMemberId.value = _users.firstWhere((u) => u.memberId != newToId).memberId;
     }
   }
 
