@@ -61,7 +61,11 @@ class FirebaseService extends GetxService {
             fromFirestore: (snap, _) => GroupMembers.fromJson(snap.data()!),
             toFirestore: (groupMember, _) => groupMember.toJson());
     _transactionsRef = _firestore.collection("transactions").withConverter(
-        fromFirestore: (snap, _) => MyTransaction.fromJson(snap.data()!),
+        fromFirestore: (snap, _) {
+          var data = snap.data()!;
+          data['id'] = snap.id;
+          return MyTransaction.fromJson(data);
+        },
         toFirestore: (transaction, _) {
           final json = transaction.toJson();
           json['isDeleted'] = false;
@@ -403,15 +407,43 @@ class FirebaseService extends GetxService {
     required String groupId,
     required MyTransaction transaction,
   }) async {
-    final transactionId = _transactionsRef.doc().id;
+    final isUpdate = transaction.id != null;
+    final transactionId = isUpdate ? transaction.id! : _transactionsRef.doc().id;
 
     final transactionRef = _transactionsRef.doc(transactionId);
     final groupRef = _groupsRef.doc(groupId);
 
     await _firestore.runTransaction((txn) async {
-      /// 1. create expense
+      double totalExpenseDelta = 0;
+      Map<String, double> oldPaidMap = {};
+      Map<String, double> oldOwedMap = {};
+      double oldTotalAmount = 0;
+      TransactionType? oldTransactionType;
+
+      if (isUpdate) {
+        final oldTransactionSnap = await txn.get(transactionRef);
+        if (oldTransactionSnap.exists) {
+          final oldTransaction = oldTransactionSnap.data()!;
+          oldPaidMap = oldTransaction.paidMap;
+          oldOwedMap = oldTransaction.owedMap;
+          oldTotalAmount = BaseUtil.getNumericValue(oldTransaction.totalAmount) ?? 0;
+          oldTransactionType = oldTransaction.transactionType;
+        }
+      }
+
+      /// 1. create/update expense
       transaction.groupId = groupId;
       txn.set(transactionRef, transaction);
+
+      /// Delete old payers and splits if updating
+      if (isUpdate) {
+        for (final memberId in oldPaidMap.keys) {
+          txn.delete(_expensePayersRef.doc('${transactionId}_$memberId'));
+        }
+        for (final memberId in oldOwedMap.keys) {
+          txn.delete(_expenseSplitsRef.doc('${transactionId}_$memberId'));
+        }
+      }
 
       final paidMap = transaction.paidMap;
 
@@ -444,12 +476,20 @@ class FirebaseService extends GetxService {
       }
 
       /// 4. update balances
-      final allMembers = {...paidMap.keys, ...owedMap.keys};
+      final allMembers = {
+        ...paidMap.keys,
+        ...owedMap.keys,
+        ...oldPaidMap.keys,
+        ...oldOwedMap.keys
+      };
 
       for (final memberId in allMembers) {
-        final paid = paidMap[memberId] ?? 0;
-        final owed = owedMap[memberId] ?? 0;
-        final delta = paid - owed;
+        final oldPaid = oldPaidMap[memberId] ?? 0;
+        final oldOwed = oldOwedMap[memberId] ?? 0;
+        final newPaid = paidMap[memberId] ?? 0;
+        final newOwed = owedMap[memberId] ?? 0;
+
+        final delta = (newPaid - newOwed) - (oldPaid - oldOwed);
 
         if (delta == 0) continue;
 
@@ -462,9 +502,18 @@ class FirebaseService extends GetxService {
 
       /// 5. update group total expense
       if (transaction.transactionType == TransactionType.expense) {
+        double newTotalAmount = BaseUtil.getNumericValue(transaction.totalAmount) ?? 0;
+        double oldExpenseAmount = (oldTransactionType == TransactionType.expense) ? oldTotalAmount : 0;
+        totalExpenseDelta = newTotalAmount - oldExpenseAmount;
+        if (totalExpenseDelta != 0) {
+          txn.update(groupRef, {
+            'totalExpense': FieldValue.increment(totalExpenseDelta),
+          });
+        }
+      } else if (isUpdate && oldTransactionType == TransactionType.expense) {
+        // If it was an expense but changed to a payment (or something else)
         txn.update(groupRef, {
-          'totalExpense': FieldValue.increment(
-              BaseUtil.getNumericValue(transaction.totalAmount)!),
+          'totalExpense': FieldValue.increment(-oldTotalAmount),
         });
       }
     });

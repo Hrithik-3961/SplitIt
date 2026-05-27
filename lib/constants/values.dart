@@ -15,6 +15,7 @@ class Values {
   static const double extraSmallIconSize = 12;
   static const double smallIconSize = 18;
   static const double mediumIconSize = 28;
+  static const double largeIconSize = 48;
   static const double extraLargeIconSize = 80;
 
   static const Duration defaultAnimationDuration = Duration(milliseconds: 400);

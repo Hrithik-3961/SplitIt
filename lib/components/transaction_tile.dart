@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:splitit/constants/colors.dart';
+import 'package:splitit/components/transaction_icon.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
@@ -25,17 +25,7 @@ class TransactionTile extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         contentPadding: Values.defaultContentPadding,
-        leading: Container(
-          padding: Values.defaultPaddingSmall,
-          decoration: BoxDecoration(
-            color: (isPayment ? MyColors.success : MyColors.info).withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            isPayment ? Icons.payment : Icons.receipt_long,
-            color: isPayment ? MyColors.success : MyColors.info,
-          ),
-        ),
+        leading: TransactionIcon(isPayment: isPayment),
         title: Text(
           isPayment ? "${Strings.from}: ${transaction.title}" : transaction.title,
           style: Styles.titleStyle,
@@ -54,7 +44,7 @@ class TransactionTile extends StatelessWidget {
           transaction.totalAmount,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: Values.defaultTextSize,
           ),
         ),
       ),

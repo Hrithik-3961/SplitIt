@@ -110,7 +110,7 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
                             final expense = controller.transactions[index];
                             return TransactionTile(
                               transaction: expense,
-                              onTap: () {},
+                              onTap: () => controller.navigateToTransactionDetails(expense),
                             );
                           },
                           itemCount: controller.transactions.length,

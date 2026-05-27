@@ -8,6 +8,7 @@ import 'package:splitit/controllers/record_payment_controller.dart';
 import '../components/record_payment_row.dart';
 import '../constants/strings.dart';
 import '../constants/values.dart';
+import '../models/my_transaction.dart';
 
 class RecordPaymentPage extends GetView<RecordPaymentController> {
   const RecordPaymentPage({super.key});
@@ -16,8 +17,9 @@ class RecordPaymentPage extends GetView<RecordPaymentController> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = Get.arguments is MyTransaction;
     return ActionPageLayout(
-      title: Strings.recordPayment,
+      title: isEditing ? Strings.edit : Strings.recordPayment,
       formKey: controller.formKey,
       buttonText: Strings.save,
       onButtonPressed: controller.onSaveClicked,

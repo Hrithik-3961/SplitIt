@@ -4,6 +4,7 @@ import 'package:splitit/enums/transaction_type.dart';
 import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/models/suggested_payment.dart';
+import 'package:splitit/utils/base_util.dart';
 import 'package:splitit/utils/debt_simplifier.dart';
 
 class SettleUpService {
@@ -29,7 +30,7 @@ class SettleUpService {
 
     return MyTransaction(
       title: suggestion.fromName,
-      totalAmount: suggestion.amount.toStringAsFixed(2),
+      totalAmount: BaseUtil.getFormattedCurrency(suggestion.amount.toString()),
       subtitle: suggestion.toName,
       transactionType: TransactionType.payment,
       paidMap: {suggestion.fromId: suggestion.amount},

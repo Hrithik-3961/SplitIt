@@ -9,6 +9,7 @@ import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/add_expense_controller.dart';
 
 import '../enums/split_type.dart';
+import '../models/my_transaction.dart';
 
 class AddExpensePage extends GetView<AddExpenseController> {
   const AddExpensePage({super.key});
@@ -17,10 +18,11 @@ class AddExpensePage extends GetView<AddExpenseController> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = controller.amountString.isNotEmpty && (Get.arguments is MyTransaction);
     return ActionPageLayout(
-      title: Strings.addExpense,
+      title: isEditing ? Strings.edit : Strings.addExpense,
       formKey: controller.formKey,
-      buttonText: Strings.sendRequest,
+      buttonText: isEditing ? Strings.save : Strings.sendRequest,
       onButtonPressed: () {
         if (controller.formKey.currentState!.validate()) {
           controller.onSendRequest();

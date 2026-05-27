@@ -78,27 +78,88 @@ class AddExpenseController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    amountString = Get.arguments ?? "";
+    final args = Get.arguments;
+    MyTransaction? editingTransaction;
+
+    if (args is String) {
+      amountString = args;
+    } else if (args is MyTransaction) {
+      editingTransaction = args;
+      amountString = editingTransaction.totalAmount;
+      _expenseTitleController.text = editingTransaction.title;
+    } else {
+      amountString = "";
+    }
+
     _addExpenseService = Get.put(AddExpenseService());
     userExpenseDataList = _addExpenseService.members
         .map((user) => UserExpenseData(user: user))
         .toList();
 
+    if (editingTransaction != null) {
+      _updateExistingTransactionState(editingTransaction);
+    }
+
     // Add listeners to react to state changes
-    ever(splitOption, (_) => _updateAmounts(recalculateDistribution: true));
+    ever(splitOption, (_) => _updateAmounts(recalculateDistribution: editingTransaction == null));
     for (final data in userExpenseDataList) {
       ever(data.isPaidForSelected,
-          (_) => _updateAmounts(recalculateDistribution: true));
+          (_) => _updateAmounts(recalculateDistribution: editingTransaction == null));
       data.shareController.addListener(() => _updateAmounts());
       // Listen for changes in who paid
       ever(data.isPaidBySelected, (_) => _distributePaidByAmounts());
     }
-    // Set initial state
-    _updateAmounts(recalculateDistribution: true);
 
-    // Set initial paid by state
-    if (userExpenseDataList.isNotEmpty) {
-      userExpenseDataList.first.isPaidBySelected.value = true;
+    if (editingTransaction == null) {
+      // Set initial state for new expense
+      _updateAmounts(recalculateDistribution: true);
+
+      // Set initial paid by state
+      if (userExpenseDataList.isNotEmpty) {
+        userExpenseDataList.first.isPaidBySelected.value = true;
+      }
+    } else {
+      // For editing, we already set the values, just update the paidByText
+      _distributePaidByAmounts();
+      _updateAmounts(recalculateDistribution: false);
+    }
+  }
+
+  void _updateExistingTransactionState(MyTransaction editingTransaction) {
+    if (editingTransaction.splitType != null) {
+      splitOption.value = editingTransaction.splitType!;
+    }
+
+    for (var data in userExpenseDataList) {
+      final memberId = data.user.memberId;
+      final paidAmount = editingTransaction.paidMap[memberId] ?? 0;
+      final owedAmount = editingTransaction.owedMap[memberId] ?? 0;
+
+      if (paidAmount > 0) {
+        data.isPaidBySelected.value = true;
+        data.paidByController.text = BaseUtil.getFormattedCurrency(paidAmount.toString());
+        data.isPaidByManuallyEdited = true;
+      } else {
+        data.isPaidBySelected.value = false;
+      }
+
+      if (owedAmount > 0) {
+        data.isPaidForSelected.value = true;
+        data.splitAmountController.text = BaseUtil.getFormattedCurrency(owedAmount.toString());
+        if (isSplitUnevenly) {
+          data.isAmountManuallyEdited = true;
+        }
+      } else {
+        data.isPaidForSelected.value = false;
+      }
+
+      if (isSplitByPercentage) {
+        final total = BaseUtil.getNumericValue(amountString) ?? 0;
+        if (total > 0) {
+          data.percentageController.text = ((owedAmount / total) * 100).toStringAsFixed(2);
+          data.isPercentageManuallyEdited = true;
+        }
+      }
     }
   }
 
@@ -162,10 +223,19 @@ class AddExpenseController extends GetxController {
     String title = expenseTitleController.text.isEmpty
         ? Strings.expenseTitleDefaultText
         : expenseTitleController.text;
-    _addExpenseService.updateUserAmountOwed(
-        userExpenseDataList: userExpenseDataList);
+
+    final id = (Get.arguments is MyTransaction) ? (Get.arguments as MyTransaction).id : null;
+
     Get.back(
-        result: MyTransaction(title: title, totalAmount: amountString, subtitle: paidByText.value, transactionType: TransactionType.expense, splitType: splitOption.value, paidMap: paidMap, owedMap: owedMap));
+        result: MyTransaction(
+            id: id,
+            title: title,
+            totalAmount: amountString,
+            subtitle: paidByText.value,
+            transactionType: TransactionType.expense,
+            splitType: splitOption.value,
+            paidMap: paidMap,
+            owedMap: owedMap));
   }
 
   void _showSnackBar(String message) {

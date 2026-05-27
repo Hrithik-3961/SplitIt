@@ -73,10 +73,20 @@ class GroupsOverviewService {
 
   void addTransaction(MyTransaction? transaction) {
     if (transaction != null) {
-      _groupDetails.value?.transactions.insert(0, transaction);
+      if (transaction.id != null) {
+        // Update existing transaction in the list
+        final index = _groupDetails.value?.transactions
+            .indexWhere((t) => t.id == transaction.id);
+        if (index != null && index != -1) {
+          _groupDetails.value?.transactions[index] = transaction;
+        }
+      } else {
+        // Add new transaction
+        _groupDetails.value?.transactions.insert(0, transaction);
+      }
       _groupDetails.refresh();
       _firebaseService.addTransaction(
-          groupId: _groupId,
+        groupId: _groupId,
         transaction: transaction,
       );
     }

@@ -49,7 +49,7 @@ class RecordPaymentService {
     }
   }
 
-  MyTransaction? savePayment({required String amountText}) {
+  MyTransaction? savePayment({required String amountText, String? id}) {
     double amount = BaseUtil.getNumericValue(amountText) ?? 0;
 
     if (amount > 0) {
@@ -57,10 +57,14 @@ class RecordPaymentService {
           _users.firstWhere((u) => u.memberId == paidFromMemberId.value);
       GroupMembers paidTo =
           _users.firstWhere((u) => u.memberId == paidToMemberId.value);
-      paidFrom.addAmount(amount);
-      paidTo.subtractAmount(amount);
+
+      if (id == null) {
+        paidFrom.addAmount(amount);
+        paidTo.subtractAmount(amount);
+      }
 
       return MyTransaction(
+          id: id,
           title: paidFrom.name,
           totalAmount: amountText,
           subtitle: paidTo.name,

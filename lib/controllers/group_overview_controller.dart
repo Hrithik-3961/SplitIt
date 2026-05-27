@@ -10,6 +10,7 @@ import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/pages/add_expense_page.dart';
 import 'package:splitit/pages/record_payment_page.dart';
 import 'package:splitit/pages/settle_up_page.dart';
+import 'package:splitit/pages/transaction_details_page.dart';
 import 'package:splitit/services/groups_overview_service.dart';
 
 class GroupOverviewController extends GetxController {
@@ -19,7 +20,8 @@ class GroupOverviewController extends GetxController {
   late RxList<GroupMembers> members = <GroupMembers>[].obs;
   late RxList<MyTransaction> transactions = <MyTransaction>[].obs;
 
-  String get groupName => Get.arguments ?? "";
+  late final String _groupName;
+  String get groupName => _groupName;
 
   get fabKey => _fabKey;
 
@@ -33,6 +35,7 @@ class GroupOverviewController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _groupName = Get.arguments is String ? Get.arguments : "";
     String groupId = Get.currentRoute.split('/').last;
     _groupsOverviewService = Get.put(GroupsOverviewService(groupId));
 
@@ -110,6 +113,17 @@ class GroupOverviewController extends GetxController {
   void navigateToSettleUpPage() async {
     final newTransaction = await Get.toNamed(SettleUpPage.route);
     _groupsOverviewService.addTransaction(newTransaction);
+  }
+
+  void navigateToTransactionDetails(MyTransaction transaction) async {
+    final updatedTransaction = await Get.toNamed(TransactionDetailsPage.route, arguments: {
+      'transaction': transaction,
+      'members': members,
+    });
+    
+    if (updatedTransaction != null && updatedTransaction is MyTransaction) {
+      _groupsOverviewService.addTransaction(updatedTransaction);
+    }
   }
 }
 

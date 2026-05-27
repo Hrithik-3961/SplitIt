@@ -68,4 +68,7 @@ class Strings {
   static const String to = "To";
   static const String save = "Save";
   static const String group = "Group";
+  static const String edit = "Edit";
+  static const String transactionDetails = "Transaction Details";
+  static const String splitBetween = "Split between";
 }

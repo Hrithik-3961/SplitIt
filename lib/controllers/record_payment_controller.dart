@@ -22,12 +22,20 @@ class RecordPaymentController extends GetxController {
   void onInit() {
     super.onInit();
     _recordPaymentService = Get.put(RecordPaymentService());
+    final args = Get.arguments;
+    if (args is MyTransaction) {
+      _paymentAmountController.text = args.totalAmount;
+      _recordPaymentService.paidFromMemberId.value = args.paidMap.keys.first;
+      _recordPaymentService.paidToMemberId.value = args.owedMap.keys.first;
+    }
   }
 
   void onSaveClicked() {
     if (_formKey.currentState!.validate()) {
+      final args = Get.arguments;
+      final id = args is MyTransaction ? args.id : null;
       MyTransaction? transaction = _recordPaymentService.savePayment(
-          amountText: _paymentAmountController.text);
+          amountText: _paymentAmountController.text, id: id);
       if (transaction != null) {
         Get.back(result: transaction);
       }

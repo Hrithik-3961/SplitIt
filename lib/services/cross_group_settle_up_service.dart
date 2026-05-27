@@ -7,6 +7,7 @@ import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/models/my_user.dart';
 import 'package:splitit/services/firebase_service.dart';
+import 'package:splitit/utils/base_util.dart';
 import 'package:splitit/utils/debt_simplifier.dart';
 
 import '../models/suggested_payment.dart';
@@ -134,7 +135,7 @@ class CrossGroupSettleUpService {
 
       final transaction = MyTransaction(
         title: payerName,
-        totalAmount: amount.abs().toStringAsFixed(2),
+        totalAmount: BaseUtil.getFormattedCurrency(amount.abs().toString()),
         subtitle: owerName,
         transactionType: TransactionType.payment,
         paidMap: {payerId: amount.abs()},
