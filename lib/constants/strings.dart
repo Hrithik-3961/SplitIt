@@ -71,4 +71,7 @@ class Strings {
   static const String edit = "Edit";
   static const String transactionDetails = "Transaction Details";
   static const String splitBetween = "Split between";
+  static const String delete = "Delete";
+  static const String deleteTransaction = "Delete Transaction";
+  static const String deleteConfirmMsg = "Are you sure you want to delete this transaction? This will reverse all balance changes.";
 }

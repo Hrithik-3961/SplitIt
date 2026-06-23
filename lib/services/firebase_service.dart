@@ -519,6 +519,48 @@ class FirebaseService extends GetxService {
     });
   }
 
+  Future<void> deleteTransaction({
+    required String groupId,
+    required MyTransaction transaction,
+  }) async {
+    if (transaction.id == null) return;
+
+    final transactionRef = _transactionsRef.doc(transaction.id);
+    final groupRef = _groupsRef.doc(groupId);
+
+    await _firestore.runTransaction((txn) async {
+      final transactionSnap = await txn.get(transactionRef);
+      if (!transactionSnap.exists) return;
+
+      final currentData = transactionSnap.data()!;
+      final paidMap = currentData.paidMap;
+      final owedMap = currentData.owedMap;
+      final totalAmount = BaseUtil.getNumericValue(currentData.totalAmount) ?? 0;
+      final transactionType = currentData.transactionType;
+
+      // 1. Mark transaction as deleted
+      txn.update(transactionRef, {'isDeleted': true});
+
+      // 2. Reverse balances
+      final allMembers = {...paidMap.keys, ...owedMap.keys};
+      for (final memberId in allMembers) {
+        final paid = paidMap[memberId] ?? 0;
+        final owed = owedMap[memberId] ?? 0;
+        final delta = owed - paid; // Reverse: subtract (paid - owed)
+
+        if (delta == 0) continue;
+
+        final memberRef = _groupMembersRef.doc('${groupId}_$memberId');
+        txn.update(memberRef, {'balance': FieldValue.increment(delta)});
+      }
+
+      // 3. Update group total expense
+      if (transactionType == TransactionType.expense && totalAmount != 0) {
+        txn.update(groupRef, {'totalExpense': FieldValue.increment(-totalAmount)});
+      }
+    });
+  }
+
   Future<void> signOut() async {
     await _auth.signOut();
     Get.offAllNamed(LoginPage.route);

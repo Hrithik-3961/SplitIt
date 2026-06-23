@@ -32,6 +32,10 @@ class TransactionDetailsPage extends GetView<TransactionDetailsController> {
           ),
           actions: [
             IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: controller.onDeleteClicked,
+            ),
+            IconButton(
               icon: const Icon(Icons.edit),
               onPressed: controller.onEditClicked,
             ),

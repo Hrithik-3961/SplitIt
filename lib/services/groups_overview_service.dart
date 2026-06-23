@@ -91,4 +91,15 @@ class GroupsOverviewService {
       );
     }
   }
+
+  void deleteTransaction(MyTransaction transaction) {
+    if (transaction.id != null) {
+      _groupDetails.value?.transactions.removeWhere((t) => t.id == transaction.id);
+      _groupDetails.refresh();
+      _firebaseService.deleteTransaction(
+        groupId: _groupId,
+        transaction: transaction,
+      );
+    }
+  }
 }
