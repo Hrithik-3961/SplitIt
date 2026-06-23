@@ -58,11 +58,6 @@ class RecordPaymentService {
       GroupMembers paidTo =
           _users.firstWhere((u) => u.memberId == paidToMemberId.value);
 
-      if (id == null) {
-        paidFrom.addAmount(amount);
-        paidTo.subtractAmount(amount);
-      }
-
       return MyTransaction(
           id: id,
           title: paidFrom.name,

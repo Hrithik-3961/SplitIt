@@ -29,6 +29,25 @@ class GroupDetails {
       : transactions = transactions ?? <MyTransaction>[].obs,
         createdAt = createdAt ?? DateTime.now();
 
+  GroupDetails copyWith({
+    String? title,
+    int? memberCount,
+    double? totalExpense,
+  }) {
+    return GroupDetails(
+      id: id,
+      title: title ?? this.title,
+      createdBy: createdBy,
+      memberCount: memberCount ?? this.memberCount,
+      totalExpense: totalExpense ?? this.totalExpense,
+      inviteCode: inviteCode,
+      members: members,
+      transactions: transactions,
+      createdAt: createdAt,
+      currency: currency,
+    );
+  }
+
   factory GroupDetails.fromJson(Map<String, dynamic> json) {
     return GroupDetails(
         id: json['groupId'],

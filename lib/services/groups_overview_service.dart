@@ -5,6 +5,8 @@ import 'package:splitit/constants/strings.dart';
 import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/models/group_details.dart';
+import 'package:splitit/utils/base_util.dart';
+import 'package:splitit/enums/transaction_type.dart';
 
 import 'firebase_service.dart';
 
@@ -61,7 +63,11 @@ class GroupsOverviewService {
         phone: '${Strings.phoneNumberPrefix.trim()}${phone.trim()}',
         name: name);
 
-    _groupDetails.value?.members.add(newMember);
+    if (_groupDetails.value != null) {
+      _groupDetails.value!.members.add(newMember);
+      _groupDetails.value = _groupDetails.value!
+          .copyWith(memberCount: _groupDetails.value!.memberCount + 1);
+    }
     _groupDetails.refresh();
   }
 
@@ -78,10 +84,15 @@ class GroupsOverviewService {
         final index = _groupDetails.value?.transactions
             .indexWhere((t) => t.id == transaction.id);
         if (index != null && index != -1) {
+          final oldTransaction = _groupDetails.value?.transactions[index];
+          _updateLocalBalances(transaction, oldTransaction: oldTransaction);
+          _updateLocalTotalExpense(transaction, oldTransaction: oldTransaction);
           _groupDetails.value?.transactions[index] = transaction;
         }
       } else {
         // Add new transaction
+        _updateLocalBalances(transaction);
+        _updateLocalTotalExpense(transaction);
         _groupDetails.value?.transactions.insert(0, transaction);
       }
       _groupDetails.refresh();
@@ -94,12 +105,77 @@ class GroupsOverviewService {
 
   void deleteTransaction(MyTransaction transaction) {
     if (transaction.id != null) {
+      _updateLocalBalances(transaction, isDelete: true);
+      _updateLocalTotalExpense(transaction, isDelete: true);
       _groupDetails.value?.transactions.removeWhere((t) => t.id == transaction.id);
       _groupDetails.refresh();
       _firebaseService.deleteTransaction(
         groupId: _groupId,
         transaction: transaction,
       );
+    }
+  }
+
+  void _updateLocalTotalExpense(MyTransaction transaction,
+      {bool isDelete = false, MyTransaction? oldTransaction}) {
+    if (_groupDetails.value == null) return;
+
+    double delta = 0;
+    if (isDelete) {
+      if (transaction.transactionType == TransactionType.expense) {
+        delta = -(BaseUtil.getNumericValue(transaction.totalAmount) ?? 0);
+      }
+    } else if (oldTransaction != null) {
+      double oldAmount = oldTransaction.transactionType == TransactionType.expense
+          ? (BaseUtil.getNumericValue(oldTransaction.totalAmount) ?? 0)
+          : 0;
+      double newAmount = transaction.transactionType == TransactionType.expense
+          ? (BaseUtil.getNumericValue(transaction.totalAmount) ?? 0)
+          : 0;
+      delta = newAmount - oldAmount;
+    } else {
+      if (transaction.transactionType == TransactionType.expense) {
+        delta = BaseUtil.getNumericValue(transaction.totalAmount) ?? 0;
+      }
+    }
+
+    if (delta != 0) {
+      _groupDetails.value = _groupDetails.value!.copyWith(
+          totalExpense: _groupDetails.value!.totalExpense + delta);
+    }
+  }
+
+  void _updateLocalBalances(MyTransaction transaction,
+      {bool isDelete = false, MyTransaction? oldTransaction}) {
+    if (_groupDetails.value == null) return;
+
+    final allMemberIds = {
+      ...transaction.paidMap.keys,
+      ...transaction.owedMap.keys,
+      if (oldTransaction != null) ...oldTransaction.paidMap.keys,
+      if (oldTransaction != null) ...oldTransaction.owedMap.keys,
+    };
+
+    for (final memberId in allMemberIds) {
+      final member = _groupDetails.value!.members
+          .firstWhereOrNull((m) => m.memberId == memberId);
+      if (member == null) continue;
+
+      if (isDelete) {
+        final paid = transaction.paidMap[memberId] ?? 0;
+        final owed = transaction.owedMap[memberId] ?? 0;
+        member.subtractAmount(paid - owed);
+      } else if (oldTransaction != null) {
+        final oldPaid = oldTransaction.paidMap[memberId] ?? 0;
+        final oldOwed = oldTransaction.owedMap[memberId] ?? 0;
+        final newPaid = transaction.paidMap[memberId] ?? 0;
+        final newOwed = transaction.owedMap[memberId] ?? 0;
+        member.addAmount((newPaid - newOwed) - (oldPaid - oldOwed));
+      } else {
+        final paid = transaction.paidMap[memberId] ?? 0;
+        final owed = transaction.owedMap[memberId] ?? 0;
+        member.addAmount(paid - owed);
+      }
     }
   }
 }
