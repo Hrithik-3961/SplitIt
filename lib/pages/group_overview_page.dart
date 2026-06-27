@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:splitit/components/empty_list_view.dart';
 import 'package:splitit/components/transaction_tile.dart';
 import 'package:splitit/components/overview_tile.dart';
+import 'package:splitit/components/skeleton_loader.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/group_overview_controller.dart';
@@ -91,30 +92,52 @@ class GroupOverviewPage extends GetView<GroupOverviewController> {
               ),
               Expanded(
                 child: TabBarView(children: [
-                  Obx(() => ListView.builder(
-                    padding: Values.defaultPadding,
-                    itemBuilder: (context, item) {
-                      final user = controller.members[item];
-                      return OverviewTile(
-                        user: user,
-                        onTap: () {},
-                      );
-                    },
-                    itemCount: controller.members.length,
-                  ),),
-                  Obx(() => controller.transactions.isEmpty
-                      ? const EmptyListView(icon: Icons.receipt_outlined, text: Strings.noExpensesMsg)
-                      : ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemBuilder: (context, index) {
-                            final expense = controller.transactions[index];
-                            return TransactionTile(
-                              transaction: expense,
-                              onTap: () => controller.navigateToTransactionDetails(expense),
-                            );
-                          },
-                          itemCount: controller.transactions.length,
-                        ))
+                  Obx(
+                    () => AnimatedSwitcher(
+                      duration: Values.smallAnimationDuration,
+                      child: controller.isLoading
+                          ? const SkeletonLoader(key: ValueKey('loading_overview'))
+                          : ListView.builder(
+                              key: const ValueKey('content_overview'),
+                              padding: Values.defaultPadding,
+                              itemBuilder: (context, item) {
+                                final user = controller.members[item];
+                                return OverviewTile(
+                                  user: user,
+                                  onTap: () {},
+                                );
+                              },
+                              itemCount: controller.members.length,
+                            ),
+                    ),
+                  ),
+                  Obx(
+                    () => AnimatedSwitcher(
+                      duration: Values.smallAnimationDuration,
+                      child: controller.isLoading
+                          ? const SkeletonLoader(key: ValueKey('loading_transactions'))
+                          : controller.transactions.isEmpty
+                              ? const EmptyListView(
+                                  key: ValueKey('empty_transactions'),
+                                  icon: Icons.receipt_outlined,
+                                  text: Strings.noExpensesMsg)
+                              : ListView.builder(
+                                  key: const ValueKey('content_transactions'),
+                                  padding: const EdgeInsets.all(16),
+                                  itemBuilder: (context, index) {
+                                    final expense =
+                                        controller.transactions[index];
+                                    return TransactionTile(
+                                      transaction: expense,
+                                      onTap: () => controller
+                                          .navigateToTransactionDetails(
+                                              expense),
+                                    );
+                                  },
+                                  itemCount: controller.transactions.length,
+                                ),
+                    ),
+                  )
                 ]),
               )
             ],

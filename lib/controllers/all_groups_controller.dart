@@ -10,6 +10,7 @@ class AllGroupsController extends GetxController {
 
   late AllGroupsService _groupsService;
   List<Groups> get groups => _groupsService.groups;
+  bool get isLoading => _groupsService.isLoading.value;
 
   final RxBool showCreateInput = false.obs;
   final RxBool showJoinInput = false.obs;

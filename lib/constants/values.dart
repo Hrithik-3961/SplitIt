@@ -18,7 +18,9 @@ class Values {
   static const double largeIconSize = 48;
   static const double extraLargeIconSize = 80;
 
-  static const Duration defaultAnimationDuration = Duration(milliseconds: 400);
+  static const Duration defaultAnimationDuration = Duration(milliseconds: 500);
+  static const Duration smallAnimationDuration = Duration(milliseconds: 150);
+  static const Duration shimmerAnimationDuration = Duration(milliseconds: 1500);
 
   static const EdgeInsets defaultMarginSmall  = EdgeInsets.symmetric(vertical: 4);
   static const EdgeInsets defaultMargin = EdgeInsets.symmetric(horizontal: 16.0);

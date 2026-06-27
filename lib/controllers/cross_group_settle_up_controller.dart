@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/cross_group_suggestion.dart';
 import 'package:splitit/services/cross_group_settle_up_service.dart';
 
@@ -18,7 +19,11 @@ class CrossGroupSettleUpController extends GetxController {
   Future<void> _loadAllBalances() async {
     isLoading.value = true;
     try {
-      suggestions.assignAll(await _settleUpService.fetchCrossGroupSuggestions());
+      final results = await Future.wait([
+        _settleUpService.fetchCrossGroupSuggestions(),
+        Future.delayed(Values.defaultAnimationDuration),
+      ]);
+      suggestions.assignAll(results[0] as List<CrossGroupSuggestion>);
     } finally {
       isLoading.value = false;
     }

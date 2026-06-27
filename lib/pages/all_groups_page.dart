@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:splitit/components/empty_list_view.dart';
 import 'package:splitit/components/groups_tile.dart';
+import 'package:splitit/components/skeleton_loader.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/controllers/all_groups_controller.dart';
@@ -36,25 +37,32 @@ class AllGroupsPage extends GetView<AllGroupsController> {
         icon: const Icon(Icons.add),
       ),
       body: Obx(
-        () => controller.groups.isEmpty
-            ? EmptyListView(
-                icon: Icons.group_outlined,
-                text: Strings.noGroupsMsg,
-                child: ElevatedButton(
-                  onPressed: controller.onNewGroupOptionsClicked,
-                  child: const Text(Strings.createFirstGroupMsg),
-                ),
-              )
-            : ListView.builder(
-                padding: Values.defaultPadding,
-                itemBuilder: (context, item) {
-                  final group = controller.groups[item];
-                  return GroupsTile(
-                      title: group.groupName,
-                      onTap: () =>
-                          controller.navigateToGroupsOverview(group.groupId));
-                },
-                itemCount: controller.groups.length),
+        () => AnimatedSwitcher(
+          duration: Values.smallAnimationDuration,
+          child: controller.isLoading
+              ? const SkeletonLoader(height: 80, key: ValueKey('loading'),)
+              : controller.groups.isEmpty
+                  ? EmptyListView(
+                      key: const ValueKey('empty'),
+                      icon: Icons.group_outlined,
+                      text: Strings.noGroupsMsg,
+                      child: ElevatedButton(
+                        onPressed: controller.onNewGroupOptionsClicked,
+                        child: const Text(Strings.createFirstGroupMsg),
+                      ),
+                    )
+                  : ListView.builder(
+                      key: const ValueKey('content'),
+                      padding: Values.defaultPadding,
+                      itemBuilder: (context, item) {
+                        final group = controller.groups[item];
+                        return GroupsTile(
+                            title: group.groupName,
+                            onTap: () => controller
+                                .navigateToGroupsOverview(group.groupId));
+                      },
+                      itemCount: controller.groups.length),
+        ),
       ),
     );
   }

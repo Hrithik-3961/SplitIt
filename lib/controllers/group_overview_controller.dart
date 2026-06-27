@@ -19,6 +19,7 @@ class GroupOverviewController extends GetxController {
   late GroupDetails groupDetails;
   late RxList<GroupMembers> members = <GroupMembers>[].obs;
   late RxList<MyTransaction> transactions = <MyTransaction>[].obs;
+  bool get isLoading => _groupsOverviewService.isLoading.value;
 
   late final String _groupName;
   String get groupName => _groupName;

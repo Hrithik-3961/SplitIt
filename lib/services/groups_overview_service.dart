@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/values.dart';
 import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/models/group_details.dart';
@@ -14,6 +15,7 @@ class GroupsOverviewService {
   late final String _groupId;
   late final FirebaseService _firebaseService;
   final Rxn<GroupDetails> _groupDetails = Rxn<GroupDetails>();
+  final RxBool isLoading = true.obs;
 
   Rxn<GroupDetails> get groupDetailsRx => _groupDetails;
 
@@ -24,9 +26,9 @@ class GroupsOverviewService {
 
   Future<void> _init(String groupId) async {
     _firebaseService = Get.find<FirebaseService>();
+    isLoading.value = true;
 
-    final groupFuture =
-    _firebaseService.groupsRef.doc(groupId).get();
+    final groupFuture = _firebaseService.groupsRef.doc(groupId).get();
 
     final membersFuture = _firebaseService.groupMembersRef
         .where('groupId', isEqualTo: groupId)
@@ -42,6 +44,7 @@ class GroupsOverviewService {
       groupFuture,
       membersFuture,
       transactionsFuture,
+      Future.delayed(Values.defaultAnimationDuration),
     ]);
 
     final groupSnap = results[0] as DocumentSnapshot<GroupDetails>;
@@ -50,11 +53,13 @@ class GroupsOverviewService {
 
     final group = groupSnap.data();
     final members = membersSnap.docs.map((doc) => doc.data()).toList();
-    final transactions = transactionsSnap.docs.map((doc) => doc.data()).toList();
+    final transactions =
+        transactionsSnap.docs.map((doc) => doc.data()).toList();
 
-    group?.members.addAll(members);
-    group?.transactions.addAll(transactions);
+    group?.members.assignAll(members);
+    group?.transactions.assignAll(transactions);
     _groupDetails.value = group;
+    isLoading.value = false;
   }
 
   Future<void> addMember({required String phone, required String name}) async {

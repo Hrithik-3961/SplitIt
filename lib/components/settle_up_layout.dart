@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:splitit/components/empty_list_view.dart';
 import 'package:splitit/components/settle_up_item.dart';
+import 'package:splitit/components/skeleton_loader.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
 
@@ -26,23 +27,28 @@ class SettleUpLayout extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: _buildBody(),
+      body: AnimatedSwitcher(
+        duration: Values.smallAnimationDuration,
+        child: _buildBody(),
+      ),
     );
   }
 
   Widget _buildBody() {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const SkeletonLoader(key: ValueKey('loading'),);
     }
 
     if (isEmpty) {
       return const EmptyListView(
+        key: ValueKey('empty'),
         icon: Icons.check_circle_outline,
         text: Strings.settledUp,
       );
     }
 
     return ListView.builder(
+      key: const ValueKey('content'),
       padding: Values.defaultPadding,
       itemCount: itemCount,
       itemBuilder: itemBuilder,
