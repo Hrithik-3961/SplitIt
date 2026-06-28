@@ -25,9 +25,8 @@ class AllGroupsPage extends GetView<AllGroupsController> {
           ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              // Settings or profile
-            },
+            onPressed: controller.navigateToSettings,
+            tooltip: Strings.settings,
           ),
         ],
       ),

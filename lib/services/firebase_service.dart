@@ -12,6 +12,7 @@ import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/groups.dart';
 import 'package:splitit/models/my_user.dart';
 import 'package:splitit/models/my_transaction.dart';
+import 'package:splitit/controllers/login_controller.dart';
 import 'package:splitit/pages/login_page.dart';
 import 'package:splitit/utils/base_util.dart';
 
@@ -563,7 +564,59 @@ class FirebaseService extends GetxService {
 
   Future<void> signOut() async {
     await _auth.signOut();
+    Get.find<LoginController>().reset();
     Get.offAllNamed(LoginPage.route);
+  }
+
+  Future<void> updateUserName(String name) async {
+    final user = Get.find<MyUser>();
+    final oldName = user.name;
+    final memberId = user.memberId;
+    final batch = _firestore.batch();
+
+    // 1. Update user document
+    batch.update(_usersRef.doc(user.uid), {'name': name});
+
+    // 2. Update all group memberships
+    final memberships =
+        await _groupMembersRef.where('uid', isEqualTo: user.uid).get();
+    for (var doc in memberships.docs) {
+      batch.update(doc.reference, {'name': name});
+    }
+
+    // 3. Update transactions (Title check)
+    final transactionsByTitle =
+        await _transactionsRef.where('title', isEqualTo: oldName).get();
+    for (var doc in transactionsByTitle.docs) {
+      final data = doc.data();
+      if (data.paidMap.containsKey(memberId) ||
+          data.owedMap.containsKey(memberId)) {
+        batch.update(doc.reference, {'title': name});
+      }
+    }
+
+    // 4. Update transactions (Subtitle check)
+    final transactionsBySubtitle =
+        await _transactionsRef.where('subtitle', isEqualTo: oldName).get();
+    for (var doc in transactionsBySubtitle.docs) {
+      final data = doc.data();
+      if (data.paidMap.containsKey(memberId) ||
+          data.owedMap.containsKey(memberId)) {
+        batch.update(doc.reference, {'subtitle': name});
+      }
+    }
+
+    await batch.commit();
+
+    // Update local user object
+    final updatedUser = MyUser(
+        uid: user.uid,
+        memberId: user.memberId,
+        name: name,
+        phone: user.phone,
+        isGuest: user.isGuest,
+        totalAmountOwed: user.totalAmountOwed);
+    Get.replace<MyUser>(updatedUser);
   }
 
   MyUser _createUser(

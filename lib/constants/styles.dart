@@ -19,16 +19,35 @@ class Styles {
         ),
       );
 
-  static get nameInputDecoration => InputDecoration(
+  static InputDecoration nameInputDecoration({bool showIcon = true}) => InputDecoration(
     floatingLabelBehavior: FloatingLabelBehavior.always,
     labelText: Strings.name,
-    prefixIcon: const Icon(Icons.person_outline),
+    prefixIcon: showIcon ? const Icon(Icons.person_outline) : null,
     prefixStyle: Get.textTheme.bodyMedium,
     hintText: Strings.nameHint,
     hintStyle: Get.textTheme.bodyMedium?.copyWith(
       color: Get.theme.hintColor,
     ),
   );
+
+  static InputDecoration get editableNameInputDecoration =>
+      nameInputDecoration(showIcon: false).copyWith(
+        counterText: "",
+      );
+
+  static get readOnlyNameInputDecoration =>
+      editableNameInputDecoration.copyWith(
+        labelStyle: const TextStyle(color: MyColors.hint),
+        border: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+      );
+
+  static get nameInputFormatters => [
+    FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z\s]")),
+  ];
 
   static get phoneNumberInputFormatters => [
         FilteringTextInputFormatter.digitsOnly,

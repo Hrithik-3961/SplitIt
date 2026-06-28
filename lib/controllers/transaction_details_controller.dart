@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:splitit/components/confirmation_dialog.dart';
 import 'package:splitit/models/group_members.dart';
 import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/pages/add_expense_page.dart';
@@ -6,7 +7,6 @@ import 'package:splitit/pages/record_payment_page.dart';
 import 'package:splitit/services/groups_overview_service.dart';
 import 'package:splitit/services/transaction_details_service.dart';
 import 'package:splitit/constants/strings.dart';
-import 'package:flutter/material.dart';
 import '../enums/transaction_type.dart';
 
 class TransactionDetailsController extends GetxController {
@@ -42,23 +42,15 @@ class TransactionDetailsController extends GetxController {
 
   void onDeleteClicked() {
     Get.dialog(
-      AlertDialog(
-        title: const Text(Strings.deleteTransaction),
-        content: const Text(Strings.deleteConfirmMsg),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text(Strings.cancel),
-          ),
-          TextButton(
-            onPressed: () {
-              _groupsOverviewService.deleteTransaction(transaction.value);
-              Get.back(); // Close dialog
-              Get.back(result: null); // Go back to Overview with 'null' to indicate deletion
-            },
-            child: const Text(Strings.delete, style: TextStyle(color: Colors.red)),
-          ),
-        ],
+      ConfirmationDialog(
+        title: Strings.deleteTransaction,
+        content: Strings.deleteConfirmMsg,
+        confirmText: Strings.delete,
+        onConfirmed: () {
+          _groupsOverviewService.deleteTransaction(transaction.value);
+          Get.back(); // Close dialog
+          Get.back(result: null); // Go back to Overview with 'null' to indicate deletion
+        },
       ),
     );
   }

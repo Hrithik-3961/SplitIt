@@ -1,0 +1,150 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:splitit/components/confirmation_dialog.dart';
+import 'package:splitit/constants/strings.dart';
+import 'package:splitit/constants/values.dart';
+import 'package:splitit/models/my_user.dart';
+import 'package:splitit/services/settings_service.dart';
+
+class SettingsController extends GetxController {
+  late final SettingsService _settingsService;
+
+  final Rx<MyUser> user = Get.find<MyUser>().obs;
+  final RxBool isEditingName = false.obs;
+  final RxString version = "".obs;
+
+  final TextEditingController nameController = TextEditingController();
+  final GlobalKey<FormState> nameFormKey = GlobalKey<FormState>();
+
+  // Upgrade related
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
+  final RxBool otpSent = false.obs;
+  final RxBool isEnableSendOtp = false.obs;
+  final RxBool isEnableUpgrade = false.obs;
+  final RxBool isUpgrading = false.obs;
+  String _verificationId = '';
+
+  @override
+  void onInit() {
+    super.onInit();
+    _settingsService = Get.put(SettingsService());
+    nameController.text = user.value.name;
+    _fetchVersion();
+
+    phoneController.addListener(() {
+      isEnableSendOtp.value =
+          phoneController.text.length == Values.phoneNumberLength;
+    });
+    otpController.addListener(() {
+      isEnableUpgrade.value = otpController.text.length == Values.otpLength;
+    });
+
+    // Update local observable if MyUser changes in Get
+    ever(user, (_) {
+      if (!isEditingName.value) {
+        nameController.text = user.value.name;
+      }
+    });
+  }
+
+  void _fetchVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    version.value = packageInfo.version;
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    phoneController.dispose();
+    otpController.dispose();
+    super.onClose();
+  }
+
+  void toggleEditName() {
+    if (isEditingName.value) {
+      // If canceling, reset name
+      nameController.text = user.value.name;
+    }
+    isEditingName.value = !isEditingName.value;
+  }
+
+  void onUpdateName() async {
+    if (!(nameFormKey.currentState?.validate() ?? false)) {
+      return;
+    }
+
+    final newName = nameController.text.trim();
+    if (newName == user.value.name) {
+      isEditingName.value = false;
+      return;
+    }
+
+    try {
+      await _settingsService.updateName(newName);
+      user.value = Get.find<MyUser>();
+      isEditingName.value = false;
+      Get.snackbar("Success", "Name updated successfully");
+    } catch (e) {
+      Get.snackbar(Strings.error, e.toString());
+    }
+  }
+
+  void sendUpgradeOtp() async {
+    isUpgrading.value = true;
+    try {
+      await _settingsService.sendOtp(phoneController.text, (verId) {
+        _verificationId = verId;
+        otpSent.value = true;
+      });
+    } catch (e) {
+      Get.snackbar(Strings.error, e.toString());
+    } finally {
+      isUpgrading.value = false;
+    }
+  }
+
+  void verifyOtpAndUpgrade() async {
+    isUpgrading.value = true;
+    try {
+      await _settingsService.upgradeGuestAccount(
+          _verificationId, otpController.text);
+      user.value = Get.find<MyUser>();
+      Get.back(); // Close bottom sheet
+      Get.snackbar("Success", "Account upgraded successfully!");
+    } catch (e) {
+      Get.snackbar(Strings.error, e.toString());
+    } finally {
+      isUpgrading.value = false;
+    }
+  }
+
+  void resetUpgradeState() {
+    otpSent.value = false;
+    phoneController.clear();
+    otpController.clear();
+    _verificationId = '';
+  }
+
+  void logout() {
+    Get.dialog(
+      ConfirmationDialog(
+        title: Strings.logout,
+        content: Strings.logoutConfirmMsg,
+        confirmText: Strings.logout,
+        onConfirmed: () {
+          Get.back();
+          _settingsService.logout();
+        },
+      ),
+    );
+  }
+}
+
+class SettingsBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => SettingsController());
+  }
+}

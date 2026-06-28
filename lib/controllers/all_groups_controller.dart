@@ -4,6 +4,7 @@ import 'package:splitit/components/group_options_bottom_sheet.dart';
 import 'package:splitit/models/groups.dart';
 import 'package:splitit/pages/group_overview_page.dart';
 import 'package:splitit/pages/cross_group_settle_up_page.dart';
+import 'package:splitit/pages/settings_page.dart';
 import 'package:splitit/services/all_groups_service.dart';
 
 class AllGroupsController extends GetxController {
@@ -79,6 +80,10 @@ class AllGroupsController extends GetxController {
 
   void navigateToCrossGroupSettleUp() {
     Get.toNamed(CrossGroupSettleUpPage.route);
+  }
+
+  void navigateToSettings() {
+    Get.toNamed(SettingsPage.route);
   }
 }
 

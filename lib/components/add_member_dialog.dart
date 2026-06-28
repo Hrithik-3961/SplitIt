@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:splitit/components/name_form_field.dart';
 import 'package:splitit/components/option_divider.dart';
 import 'package:splitit/constants/colors.dart';
 import 'package:splitit/constants/strings.dart';
@@ -59,11 +60,9 @@ class AddMemberDialog extends StatelessWidget {
                 const SizedBox(
                   height: Values.defaultVerticalGap,
                 ),
-                TextFormField(
-                  controller: nameController,
-                  decoration: Styles.nameInputDecoration,
-                  maxLength: 20,
-                  validator: CommonValidator.validateName,
+                NameFormField(
+                    controller: nameController,
+                    inputDecoration: Styles.nameInputDecoration(),
                 ),
                 const SizedBox(
                   height: Values.defaultVerticalGap / 2,

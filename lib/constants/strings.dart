@@ -10,6 +10,8 @@ class Strings {
   static const String name = "Name";
   static const String nameHint = "John Doe";
   static const String enterValidName = "Enter a valid name";
+  static const String lessCharacterMsg = "Name must be at least 2 characters long";
+  static const String invalidCharactersMsg = "Name should only contain letters and spaces";
   static const String enterValidPhoneNumber = "Enter a valid phone number";
   static const String phoneNumberPrefix = "+91 ";
   static const String phoneNumberHint = "12345 67890";
@@ -74,4 +76,15 @@ class Strings {
   static const String delete = "Delete";
   static const String deleteTransaction = "Delete Transaction";
   static const String deleteConfirmMsg = "Are you sure you want to delete this transaction? This will reverse all balance changes.";
+
+  static const String settings = "Settings";
+  static const String profile = "Profile";
+  static const String logout = "Logout";
+  static const String logoutConfirmMsg = "Are you sure you want to logout?";
+  static const String version = "Version";
+  static const String editName = "Edit Name";
+  static const String update = "Update";
+
+  static const String upgradeAccount = "Upgrade Account";
+  static const String upgradeAccountMsg = "Link your phone number to keep your data safe across devices.";
 }

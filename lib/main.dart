@@ -21,6 +21,8 @@ import 'package:splitit/pages/settle_up_page.dart';
 import 'package:splitit/pages/cross_group_settle_up_page.dart';
 import 'package:splitit/pages/transaction_details_page.dart';
 import 'package:splitit/controllers/transaction_details_controller.dart';
+import 'package:splitit/pages/settings_page.dart';
+import 'package:splitit/controllers/settings_controller.dart';
 
 import 'firebase_options.dart';
 
@@ -54,7 +56,8 @@ class MyApp extends StatelessWidget {
         GetPage(name: RecordPaymentPage.route, page: () => const RecordPaymentPage(), binding: RecordPaymentBinding()),
         GetPage(name: SettleUpPage.route, page: () => const SettleUpPage(), binding: SettleUpBinding()),
         GetPage(name: CrossGroupSettleUpPage.route, page: () => const CrossGroupSettleUpPage(), binding: CrossGroupSettleUpBinding()),
-        GetPage(name: TransactionDetailsPage.route, page: () => const TransactionDetailsPage(), binding: TransactionDetailsBinding())
+        GetPage(name: TransactionDetailsPage.route, page: () => const TransactionDetailsPage(), binding: TransactionDetailsBinding()),
+        GetPage(name: SettingsPage.route, page: () => const SettingsPage(), binding: SettingsBinding()),
       ],
     );
   }

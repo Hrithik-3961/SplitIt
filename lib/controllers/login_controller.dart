@@ -108,4 +108,15 @@ class LoginController extends GetxController {
     _otpController.dispose();
     super.onClose();
   }
+
+  void reset() {
+    _phoneController.clear();
+    _otpController.clear();
+    isLoading.value = false;
+    otpSent.value = false;
+    resendSeconds.value = 0;
+    resendCount.value = 0;
+    _verificationId = '';
+    _timer?.cancel();
+  }
 }

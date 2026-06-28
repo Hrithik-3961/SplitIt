@@ -3,11 +3,15 @@ import 'package:splitit/constants/strings.dart';
 class CommonValidator {
 
   static String? validateName(String? name) {
-
-    if (name == null || name.isEmpty) {
+    if (name == null || name.trim().isEmpty) {
       return Strings.enterValidName;
     }
-
+    if (name.trim().length < 2) {
+      return Strings.lessCharacterMsg;
+    }
+    if (!RegExp(r"^[a-zA-Z\s]+$").hasMatch(name.trim())) {
+      return Strings.invalidCharactersMsg;
+    }
     return null;
   }
 
