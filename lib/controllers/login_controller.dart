@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +34,9 @@ class LoginController extends GetxController {
   final isEnableLogin = false.obs;
   final isLoading = false.obs;
   final otpSent = false.obs;
+  final resendSeconds = 0.obs;
+  final resendCount = 0.obs;
+  Timer? _timer;
 
   String _verificationId = '';
 
@@ -67,6 +72,10 @@ class LoginController extends GetxController {
   Future<void> sendOtp() async {
     if (!isEnableSendOtp.value) return;
     isLoading.value = true;
+    if (otpSent.value) {
+      resendCount.value++;
+      _startTimer();
+    }
     try {
       await _loginService.sendOtp(
           _phoneController.text, _onCodeSent, _onVerificationFailed);
@@ -81,12 +90,34 @@ class LoginController extends GetxController {
   void _onCodeSent(String verId) {
     _verificationId = verId;
     isLoading.value = false;
-    otpSent.value = true;
+    if (!otpSent.value) {
+      otpSent.value = true;
+      _startTimer();
+    }
   }
 
   void _onVerificationFailed(SendCodeException e) {
     isLoading.value = false;
     Get.snackbar(Strings.error, e.message);
+  }
+
+  void _startTimer() {
+    int seconds = 0;
+    if (resendCount.value < Values.resendTimings.length) {
+      seconds = Values.resendTimings[resendCount.value];
+    }
+
+    if (seconds > 0) {
+      resendSeconds.value = seconds;
+      _timer?.cancel();
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (resendSeconds.value > 0) {
+          resendSeconds.value--;
+        } else {
+          _timer?.cancel();
+        }
+      });
+    }
   }
 
   void editNumber() async {
@@ -101,6 +132,10 @@ class LoginController extends GetxController {
     );
     if (result != null) {
       otpSent.value = false;
+      _otpController.clear();
+      resendCount.value = 0;
+      resendSeconds.value = 0;
+      _timer?.cancel();
     }
   }
 
@@ -138,6 +173,7 @@ class LoginController extends GetxController {
   void onClose() {
     _phoneController.dispose();
     _otpController.dispose();
+    _timer?.cancel();
     super.onClose();
   }
 

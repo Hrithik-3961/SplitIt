@@ -4,6 +4,7 @@ class Values {
 
   static const int phoneNumberLength = 10;
   static const int otpLength = 6;
+  static const List<int> resendTimings = [30, 60, 120];
 
   static const double borderRadius = 12.0;
 

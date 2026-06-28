@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -25,6 +27,9 @@ class SettingsController extends GetxController {
   final RxBool isEnableSendOtp = false.obs;
   final RxBool isEnableUpgrade = false.obs;
   final RxBool isUpgrading = false.obs;
+  final RxInt resendSeconds = 0.obs;
+  final RxInt resendCount = 0.obs;
+  Timer? _timer;
   String _verificationId = '';
 
   @override
@@ -60,6 +65,7 @@ class SettingsController extends GetxController {
     nameController.dispose();
     phoneController.dispose();
     otpController.dispose();
+    _timer?.cancel();
     super.onClose();
   }
 
@@ -93,7 +99,12 @@ class SettingsController extends GetxController {
   }
 
   void sendUpgradeOtp() async {
+    if (!isEnableSendOtp.value) return;
     isUpgrading.value = true;
+    if (otpSent.value) {
+      resendCount.value++;
+      _startTimer();
+    }
     try {
       await _settingsService.sendOtp(
           phoneController.text, _onCodeSent, _onVerificationFailed);
@@ -117,6 +128,22 @@ class SettingsController extends GetxController {
     Get.snackbar(Strings.error, e.message);
   }
 
+  void _startTimer() {
+    int seconds = 0;
+    if (resendCount.value < Values.resendTimings.length) {
+      seconds = Values.resendTimings[resendCount.value];
+    }
+
+    if (seconds > 0) {
+      resendSeconds.value = seconds;
+      _timer?.cancel();
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (resendSeconds.value > 0) {
+          resendSeconds.value--;
+        } else {
+          _timer?.cancel();
+        }
+      });
     }
   }
 
@@ -140,6 +167,29 @@ class SettingsController extends GetxController {
     phoneController.clear();
     otpController.clear();
     _verificationId = '';
+    resendCount.value = 0;
+    resendSeconds.value = 0;
+    _timer?.cancel();
+  }
+
+  void editNumber() async {
+    final result = await Get.dialog(
+      ConfirmationDialog(
+          title: Strings.editPhoneNumber,
+          content:
+              "${Strings.editNumberMsg}\n${Strings.phoneNumberPrefix}${phoneController.text} ?",
+          confirmText: Strings.yes,
+          onConfirmed: () {
+            Get.back(result: true);
+          }),
+    );
+    if (result != null) {
+      otpSent.value = false;
+      otpController.clear();
+      resendCount.value = 0;
+      resendSeconds.value = 0;
+      _timer?.cancel();
+    }
   }
 
   void logout() {

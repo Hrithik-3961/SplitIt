@@ -112,6 +112,23 @@ class LoginPage extends GetView<LoginController> {
                                   textInputAction: TextInputAction.done,
                                   onCompleted: (_) => controller.login(),
                                 ),
+                                if (controller.resendCount.value <
+                                    Values.resendTimings.length)
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: TextButton(
+                                      onPressed: (controller.isLoading.value ||
+                                              controller.resendSeconds.value >
+                                                  0)
+                                          ? null
+                                          : controller.sendOtp,
+                                      child: Text(
+                                        controller.resendSeconds.value > 0
+                                            ? "${Strings.resendOtp} (${controller.resendSeconds.value}s)"
+                                            : Strings.resendOtp,
+                                      ),
+                                    ),
+                                  ),
                                 const SizedBox(
                                     height: Values.defaultVerticalGap),
                                 FormButton(
