@@ -67,17 +67,20 @@ class GroupOptionsBottomSheet extends GetView<AllGroupsController> {
                     },
                   ),
                 ),
-                FormButton(
-                  onPressed: () {
-                    if (controller.showCreateInput.value) {
-                      controller.onCreateGroup();
-                    } else {
-                      controller.onJoinGroup();
-                    }
-                  },
-                  text: controller.showCreateInput.value
-                      ? Strings.create
-                      : Strings.join,
+                Padding(
+                  padding: Values.defaultPadding,
+                  child: FormButton(
+                    onPressed: () {
+                      if (controller.showCreateInput.value) {
+                        controller.onCreateGroup();
+                      } else {
+                        controller.onJoinGroup();
+                      }
+                    },
+                    text: controller.showCreateInput.value
+                        ? Strings.create
+                        : Strings.join,
+                  ),
                 ),
               ],
               const SizedBox(height: Values.defaultVerticalGap),

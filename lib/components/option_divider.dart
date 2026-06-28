@@ -7,21 +7,24 @@ class OptionDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        SizedBox(height: Values.defaultHorizontalGap),
-        Row(
-          children: [
-            Expanded(child: Divider()),
-            Padding(
-              padding: Values.defaultContentPadding,
-              child: Text(Strings.or),
-            ),
-            Expanded(child: Divider()),
-          ],
-        ),
-        SizedBox(height: Values.defaultHorizontalGap),
-      ],
+    return const Padding(
+      padding: Values.defaultVerticalPadding,
+      child: Column(
+        children: [
+          SizedBox(height: Values.defaultHorizontalGap),
+          Row(
+            children: [
+              Expanded(child: Divider()),
+              Padding(
+                padding: Values.defaultContentPadding,
+                child: Text(Strings.or),
+              ),
+              Expanded(child: Divider()),
+            ],
+          ),
+          SizedBox(height: Values.defaultHorizontalGap),
+        ],
+      ),
     );
   }
 }

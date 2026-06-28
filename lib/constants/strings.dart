@@ -16,6 +16,7 @@ class Strings {
   static const String phoneNumberPrefix = "+91 ";
   static const String phoneNumberHint = "12345 67890";
   static const String otpText = "Enter the code sent to the number";
+  static const String editPhoneNumber = "Edit Phone Number";
   static const String editNumberMsg = "Incorrect number. Edit the number?";
   static const String yes = "Yes";
   static const String cancel = "Cancel";

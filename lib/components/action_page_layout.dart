@@ -47,9 +47,12 @@ class ActionPageLayout extends StatelessWidget {
               Expanded(
                 child: body,
               ),
-              FormButton(
-                onPressed: onButtonPressed,
-                text: buttonText,
+              Padding(
+                padding: Values.defaultPadding,
+                child: FormButton(
+                  onPressed: onButtonPressed,
+                  text: buttonText,
+                ),
               ),
             ],
           ),

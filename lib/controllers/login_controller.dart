@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:splitit/components/edit_phone_number_dialog.dart';
+import 'package:splitit/components/confirmation_dialog.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/exceptions/invalid_code_exception.dart';
@@ -43,6 +43,7 @@ class LoginController extends GetxController {
   final firebaseUser = Rxn<User>();
 
   bool get isLoggedIn => firebaseUser.value != null;
+
   bool get isGuest => firebaseUser.value?.isAnonymous == true;
 
   @override
@@ -57,6 +58,13 @@ class LoginController extends GetxController {
     ever(isLoading, (_) {
       _updateEnableSendOtp();
       _updateEnableLogin();
+    });
+
+    // Listen to auth state to navigate away if logged in (e.g. auto-verification)
+    once(firebaseUser, (user) {
+      if (user != null) {
+        Get.offAllNamed(AllGroupsPage.route);
+      }
     });
   }
 
@@ -122,13 +130,14 @@ class LoginController extends GetxController {
 
   void editNumber() async {
     final result = await Get.dialog(
-      EditPhoneNumberDialog(
-        text:
-            "${Strings.editNumberMsg}\n${Strings.phoneNumberPrefix}${_phoneController.text} ?",
-        onPositiveBtnPressed: () {
-          Get.back(result: true);
-        },
-      ),
+      ConfirmationDialog(
+          title: Strings.editPhoneNumber,
+          content:
+              "${Strings.editNumberMsg}\n${Strings.phoneNumberPrefix}${_phoneController.text} ?",
+          confirmText: Strings.yes,
+          onConfirmed: () {
+            Get.back(result: true);
+          }),
     );
     if (result != null) {
       otpSent.value = false;
@@ -143,10 +152,7 @@ class LoginController extends GetxController {
     if (!isEnableLogin.value) return;
     isLoading.value = true;
     try {
-      await _loginService.verifyOtp(
-          _otpController.text,
-          _verificationId
-      );
+      await _loginService.verifyOtp(_otpController.text, _verificationId);
       Get.offAllNamed(AllGroupsPage.route);
     } on InvalidCodeException catch (_) {
       Get.snackbar(Strings.error, Strings.invalidOtpMsg);

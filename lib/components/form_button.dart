@@ -19,9 +19,7 @@ class FormButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: Values.defaultPadding,
-        child: LayoutBuilder(
+    return LayoutBuilder(
       builder: (context, constraints) {
         return Center(
           child: AnimatedContainer(
@@ -65,7 +63,6 @@ class FormButton extends StatelessWidget {
           ),
         );
       },
-    ),
     );
   }
 }
