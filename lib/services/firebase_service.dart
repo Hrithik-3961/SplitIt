@@ -82,7 +82,8 @@ class FirebaseService extends GetxService {
     return this;
   }
 
-  Future<void> sendOtp(String phone, Function(String) onCodeSent) async {
+  Future<void> sendOtp(String phone, Function(String) onCodeSent,
+      Function(SendCodeException) onVerificationFailed) async {
     return _auth.verifyPhoneNumber(
       phoneNumber: phone,
       verificationCompleted: (credential) async {
@@ -90,17 +91,19 @@ class FirebaseService extends GetxService {
         await _createUserIfNeeded();
       },
       verificationFailed: (FirebaseAuthException e) {
+        SendCodeException exception;
         if (e.code == 'network-request-failed') {
-          throw SendCodeException(
+          exception = SendCodeException(
               message:
                   'Network error. Please check your internet connection and try again.');
         } else if (e.code == 'too-many-requests') {
-          throw SendCodeException(
+          exception = SendCodeException(
               message: 'Too many attempts. Please try again later.');
         } else {
           debugPrint(e.message);
-          throw SendCodeException();
+          exception = SendCodeException();
         }
+        onVerificationFailed(exception);
       },
       codeSent: (verId, _) => onCodeSent(verId),
       codeAutoRetrievalTimeout: (verId) => onCodeSent(verId),

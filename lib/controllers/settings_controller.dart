@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:splitit/components/confirmation_dialog.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
+import 'package:splitit/exceptions/send_code_exception.dart';
 import 'package:splitit/models/my_user.dart';
 import 'package:splitit/services/settings_service.dart';
 
@@ -94,14 +95,28 @@ class SettingsController extends GetxController {
   void sendUpgradeOtp() async {
     isUpgrading.value = true;
     try {
-      await _settingsService.sendOtp(phoneController.text, (verId) {
-        _verificationId = verId;
-        otpSent.value = true;
-      });
+      await _settingsService.sendOtp(
+          phoneController.text, _onCodeSent, _onVerificationFailed);
     } catch (e) {
       Get.snackbar(Strings.error, e.toString());
-    } finally {
       isUpgrading.value = false;
+    }
+  }
+
+  void _onCodeSent(String verId) {
+    _verificationId = verId;
+    isUpgrading.value = false;
+    if (!otpSent.value) {
+      otpSent.value = true;
+      _startTimer();
+    }
+  }
+
+  void _onVerificationFailed(SendCodeException e) {
+    isUpgrading.value = false;
+    Get.snackbar(Strings.error, e.message);
+  }
+
     }
   }
 

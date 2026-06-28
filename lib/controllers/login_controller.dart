@@ -45,29 +45,48 @@ class LoginController extends GetxController {
     super.onInit();
     firebaseUser.bindStream(FirebaseAuth.instance.authStateChanges());
     _loginService = Get.find<LoginService>();
-    _phoneController.addListener(() {
-      isEnableSendOtp.value =
-          _phoneController.text.length == Values.phoneNumberLength;
-    });
-    _otpController.addListener(() {
-      isEnableLogin.value = _otpController.text.length == Values.otpLength;
+    _phoneController.addListener(_updateEnableSendOtp);
+    _otpController.addListener(_updateEnableLogin);
+
+    // Also listen to isLoading changes to update button states
+    ever(isLoading, (_) {
+      _updateEnableSendOtp();
+      _updateEnableLogin();
     });
   }
 
+  void _updateEnableSendOtp() {
+    isEnableSendOtp.value =
+        _phoneController.text.length == Values.phoneNumberLength;
+  }
+
+  void _updateEnableLogin() {
+    isEnableLogin.value = _otpController.text.length == Values.otpLength;
+  }
+
   Future<void> sendOtp() async {
+    if (!isEnableSendOtp.value) return;
     isLoading.value = true;
     try {
-      await _loginService.sendOtp(_phoneController.text, _onCodeSent);
+      await _loginService.sendOtp(
+          _phoneController.text, _onCodeSent, _onVerificationFailed);
     } on SendCodeException catch (e) {
       Get.snackbar(Strings.error, e.message);
-    } finally {
+      isLoading.value = false;
+    } catch (e) {
       isLoading.value = false;
     }
   }
 
   void _onCodeSent(String verId) {
     _verificationId = verId;
+    isLoading.value = false;
     otpSent.value = true;
+  }
+
+  void _onVerificationFailed(SendCodeException e) {
+    isLoading.value = false;
+    Get.snackbar(Strings.error, e.message);
   }
 
   void editNumber() async {
@@ -86,6 +105,7 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
+    if (!isEnableLogin.value) return;
     isLoading.value = true;
     try {
       await _loginService.verifyOtp(

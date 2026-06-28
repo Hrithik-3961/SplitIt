@@ -5,6 +5,7 @@ import 'package:splitit/components/small_icon_button.dart';
 import 'package:splitit/components/upgrade_account_card.dart';
 import 'package:splitit/constants/colors.dart';
 import 'package:pinput/pinput.dart';
+import 'package:splitit/components/form_button.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
@@ -137,22 +138,11 @@ class SettingsPage extends GetView<SettingsController> {
                           ],
                         ),
                         const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: controller.isEnableSendOtp.value &&
-                                    !controller.isUpgrading.value
-                                ? controller.sendUpgradeOtp
-                                : null,
-                            child: controller.isUpgrading.value
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2),
-                                  )
-                                : const Text(Strings.sendOtp),
-                          ),
+                        FormButton(
+                          onPressed: controller.sendUpgradeOtp,
+                          text: Strings.sendOtp,
+                          enabled: controller.isEnableSendOtp.value,
+                          isLoading: controller.isUpgrading.value,
                         ),
                       ],
                     )
@@ -176,22 +166,11 @@ class SettingsPage extends GetView<SettingsController> {
                           keyboardType: TextInputType.number,
                         ),
                         const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: controller.isEnableUpgrade.value &&
-                                    !controller.isUpgrading.value
-                                ? controller.verifyOtpAndUpgrade
-                                : null,
-                            child: controller.isUpgrading.value
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2),
-                                  )
-                                : const Text(Strings.upgradeAccount),
-                          ),
+                        FormButton(
+                          onPressed: controller.verifyOtpAndUpgrade,
+                          text: Strings.upgradeAccount,
+                          enabled: controller.isEnableUpgrade.value,
+                          isLoading: controller.isUpgrading.value,
                         ),
                       ],
                     ),

@@ -7,6 +7,8 @@ class Values {
 
   static const double borderRadius = 12.0;
 
+  static const double formButtonSize = 56;
+
   static const double smallTextSize = 12;
   static const double defaultTextSize = 16;
   static const double mediumTextSize = 22;
@@ -20,6 +22,7 @@ class Values {
 
   static const Duration defaultAnimationDuration = Duration(milliseconds: 500);
   static const Duration smallAnimationDuration = Duration(milliseconds: 150);
+  static const Duration mediumAnimationDuration = Duration(milliseconds: 200);
   static const Duration shimmerAnimationDuration = Duration(milliseconds: 1500);
 
   static const EdgeInsets defaultMarginSmall  = EdgeInsets.symmetric(vertical: 4);

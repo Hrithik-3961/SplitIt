@@ -70,6 +70,7 @@ class LoginPage extends GetView<LoginController> {
                                   onPressed: controller.sendOtp,
                                   text: Strings.sendOtp,
                                   enabled: controller.isEnableSendOtp.value,
+                                  isLoading: controller.isLoading.value,
                                 ),
                               ],
                             )
@@ -117,6 +118,7 @@ class LoginPage extends GetView<LoginController> {
                                   onPressed: controller.login,
                                   text: Strings.login,
                                   enabled: controller.isEnableLogin.value,
+                                  isLoading: controller.isLoading.value,
                                 ),
                               ],
                             ),

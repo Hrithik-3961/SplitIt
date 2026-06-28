@@ -10,11 +10,13 @@ class LoginService {
     _firebaseService = Get.find<FirebaseService>();
   }
 
-  Future<void> sendOtp(String phoneNumber, Function(String) onCodeSent) async {
+  Future<void> sendOtp(String phoneNumber, Function(String) onCodeSent,
+      Function(SendCodeException) onVerificationFailed) async {
     try {
-      await _firebaseService
-          .sendOtp('${Strings.phoneNumberPrefix.trim()}${phoneNumber.trim()}',
-          onCodeSent);
+      await _firebaseService.sendOtp(
+          '${Strings.phoneNumberPrefix.trim()}${phoneNumber.trim()}',
+          onCodeSent,
+          onVerificationFailed);
     } on SendCodeException catch (_) {
       rethrow;
     }
