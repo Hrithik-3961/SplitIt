@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
+import 'package:splitit/components/option_divider.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 
@@ -60,9 +61,11 @@ class LoginPage extends GetView<LoginController> {
                                   inputFormatters:
                                       Styles.phoneNumberInputFormatters,
                                   keyboardType: TextInputType.phone,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (_) => controller.sendOtp(),
                                 ),
                                 const SizedBox(
-                                    height: Values.defaultHorizontalGap),
+                                    height: Values.defaultVerticalGap),
                                 FormButton(
                                   onPressed: controller.sendOtp,
                                   text: Strings.sendOtp,
@@ -88,7 +91,8 @@ class LoginPage extends GetView<LoginController> {
                                           ?.copyWith(
                                               color: Get.theme.hintColor),
                                     ),
-                                    IconButton(visualDensity: VisualDensity.compact,
+                                    IconButton(
+                                      visualDensity: VisualDensity.compact,
                                       onPressed: controller.editNumber,
                                       icon: const Icon(
                                         Icons.edit,
@@ -104,6 +108,8 @@ class LoginPage extends GetView<LoginController> {
                                   length: Values.otpLength,
                                   keyboardType: TextInputType.number,
                                   inputFormatters: Styles.otpInputFormatters,
+                                  textInputAction: TextInputAction.done,
+                                  onCompleted: (_) => controller.login(),
                                 ),
                                 const SizedBox(
                                     height: Values.defaultVerticalGap),
@@ -116,7 +122,20 @@ class LoginPage extends GetView<LoginController> {
                             ),
                     ),
                   ),
-                  const Spacer(),
+                  const OptionDivider(),
+                  Center(
+                    child: TextButton(
+                      onPressed: controller.isLoading.value
+                          ? null
+                          : controller.signInAsGuest,
+                      child: const Text(
+                        Strings.signInAsGuest,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

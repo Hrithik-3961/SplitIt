@@ -102,6 +102,18 @@ class LoginController extends GetxController {
     }
   }
 
+  Future<void> signInAsGuest() async {
+    isLoading.value = true;
+    try {
+      await _loginService.signInAsGuest();
+      Get.offAllNamed(AllGroupsPage.route);
+    } catch (e) {
+      Get.snackbar(Strings.error, Strings.unknownErrorMsg);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   @override
   void onClose() {
     _phoneController.dispose();

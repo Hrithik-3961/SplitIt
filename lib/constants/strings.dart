@@ -22,6 +22,7 @@ class Strings {
   static const String error = "Error";
   static const String invalidOtpMsg = "Invalid OTP. Please try again.";
   static const String unknownErrorMsg = "Something went wrong. Please try again.";
+  static const String signInAsGuest = "Sign in as Guest";
 
   static const String noGroupsMsg = "No groups found.\nPlease a join a group to continue";
   static const String createFirstGroupMsg = "Create your first group";

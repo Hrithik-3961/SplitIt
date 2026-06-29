@@ -23,4 +23,8 @@ class LoginService {
   Future<void> verifyOtp(String otp, String verificationId) async {
     return _firebaseService.verifyOtp(otp, verificationId);
   }
+
+  Future<void> signInAsGuest() async {
+    return _firebaseService.signInAsGuest();
+  }
 }
