@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:splitit/components/confirmation_dialog.dart';
+import 'package:splitit/components/upgrade_account_bottom_sheet.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/values.dart';
 import 'package:splitit/exceptions/send_code_exception.dart';
@@ -191,6 +192,14 @@ class SettingsController extends GetxController {
       resendSeconds.value = 0;
       _timer?.cancel();
     }
+  }
+
+  void showUpgradeAccountBottomSheet() {
+    resetUpgradeState();
+    Get.bottomSheet(
+      const UpgradeAccountBottomSheet(),
+      isScrollControlled: true,
+    );
   }
 
   void logout() {

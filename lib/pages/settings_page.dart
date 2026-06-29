@@ -4,8 +4,6 @@ import 'package:splitit/components/name_form_field.dart';
 import 'package:splitit/components/small_icon_button.dart';
 import 'package:splitit/components/upgrade_account_card.dart';
 import 'package:splitit/constants/colors.dart';
-import 'package:pinput/pinput.dart';
-import 'package:splitit/components/form_button.dart';
 import 'package:splitit/constants/strings.dart';
 import 'package:splitit/constants/styles.dart';
 import 'package:splitit/constants/values.dart';
@@ -103,121 +101,6 @@ class SettingsPage extends GetView<SettingsController> {
         return const SizedBox.shrink();
       }),
     ];
-  }
-
-  void _showUpgradeBottomSheet(BuildContext context) {
-    controller.resetUpgradeState();
-    Get.bottomSheet(
-      Container(
-        padding: Values.defaultPadding,
-        decoration: BoxDecoration(
-          color: Get.theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(Values.borderRadius * 2)),
-        ),
-        child: SingleChildScrollView(
-          child: Obx(
-            () => AnimatedSwitcher(
-              duration: Values.defaultAnimationDuration,
-              child: !controller.otpSent.value
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          Strings.upgradeAccount,
-                          style: Get.textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: controller.phoneController,
-                          decoration: const InputDecoration(
-                            labelText: Strings.phoneNumber,
-                            prefixText: Strings.phoneNumberPrefix,
-                            prefixIcon: Icon(Icons.phone),
-                            hintText: Strings.phoneNumberHint,
-                          ),
-                          keyboardType: TextInputType.phone,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(
-                                Values.phoneNumberLength),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        FormButton(
-                          onPressed: controller.sendUpgradeOtp,
-                          text: Strings.sendOtp,
-                          enabled: controller.isEnableSendOtp.value,
-                          isLoading: controller.isUpgrading.value,
-                        ),
-                      ],
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          Strings.otp,
-                          style: Get.textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${Strings.phoneNumberPrefix}${controller.phoneController.text}",
-                              style: Get.textTheme.titleMedium
-                                  ?.copyWith(color: Get.theme.hintColor),
-                            ),
-                            IconButton(
-                              visualDensity: VisualDensity.compact,
-                              onPressed: controller.editNumber,
-                              icon: const Icon(
-                                Icons.edit,
-                                size: Values.defaultTextSize,
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Pinput(
-                          controller: controller.otpController,
-                          length: Values.otpLength,
-                          keyboardType: TextInputType.number,
-                          onCompleted: (_) => controller.verifyOtpAndUpgrade(),
-                        ),
-                        if (controller.resendCount.value <
-                            Values.resendTimings.length)
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: (controller.isUpgrading.value ||
-                                      controller.resendSeconds.value > 0)
-                                  ? null
-                                  : controller.sendUpgradeOtp,
-                              child: Text(
-                                controller.resendSeconds.value > 0
-                                    ? "${Strings.resendOtp} (${controller.resendSeconds.value}s)"
-                                    : Strings.resendOtp,
-                              ),
-                            ),
-                          ),
-                        const SizedBox(height: 24),
-                        FormButton(
-                          onPressed: controller.verifyOtpAndUpgrade,
-                          text: Strings.upgradeAccount,
-                          enabled: controller.isEnableUpgrade.value,
-                          isLoading: controller.isUpgrading.value,
-                        ),
-                      ],
-                    ),
-            ),
-          ),
-        ),
-      ),
-      isScrollControlled: true,
-    );
   }
 
   Widget get _nameRow {

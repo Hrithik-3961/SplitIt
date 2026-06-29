@@ -169,6 +169,7 @@ class AddExpenseController extends GetxController {
         userExpenseDataList: userExpenseDataList,
         totalAmount: _totalAmount,
       ),
+      isScrollControlled: true
     );
   }
 
