@@ -33,6 +33,7 @@ class LoginController extends GetxController {
   final isEnableSendOtp = false.obs;
   final isEnableLogin = false.obs;
   final isLoading = false.obs;
+  final isGuestLoading = false.obs;
   final otpSent = false.obs;
   final resendSeconds = 0.obs;
   final resendCount = 0.obs;
@@ -61,8 +62,9 @@ class LoginController extends GetxController {
     });
 
     // Listen to auth state to navigate away if logged in (e.g. auto-verification)
-    once(firebaseUser, (user) {
-      if (user != null) {
+    // ONLY for auto-verification during phone auth
+    ever(firebaseUser, (user) {
+      if (user != null && otpSent.value && !isLoading.value) {
         Get.offAllNamed(AllGroupsPage.route);
       }
     });
@@ -78,7 +80,7 @@ class LoginController extends GetxController {
   }
 
   Future<void> sendOtp() async {
-    if (!isEnableSendOtp.value) return;
+    if (!isEnableSendOtp.value || isGuestLoading.value) return;
     isLoading.value = true;
     if (otpSent.value) {
       resendCount.value++;
@@ -91,6 +93,7 @@ class LoginController extends GetxController {
       Get.snackbar(Strings.error, e.message);
       isLoading.value = false;
     } catch (e) {
+      debugPrint("Send OTP Error: $e");
       isLoading.value = false;
     }
   }
@@ -153,25 +156,32 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       await _loginService.verifyOtp(_otpController.text, _verificationId);
-      Get.offAllNamed(AllGroupsPage.route);
+      // firebaseUser listener will handle navigation if successful
     } on InvalidCodeException catch (_) {
       Get.snackbar(Strings.error, Strings.invalidOtpMsg);
-    } on Exception catch (_) {
+      isLoading.value = false;
+    } catch (e) {
+      debugPrint("Login Error: $e");
       Get.snackbar(Strings.error, Strings.unknownErrorMsg);
-    } finally {
       isLoading.value = false;
     }
   }
 
   Future<void> signInAsGuest() async {
-    isLoading.value = true;
+    if (otpSent.value || isLoading.value) return;
+    isGuestLoading.value = true;
     try {
       await _loginService.signInAsGuest();
       Get.offAllNamed(AllGroupsPage.route);
     } catch (e) {
-      Get.snackbar(Strings.error, Strings.unknownErrorMsg);
+      debugPrint("Guest Sign-in Error: $e");
+      String errorMsg = Strings.unknownErrorMsg;
+      if (e.toString().contains("SSL") || e.toString().contains("connection abort")) {
+        errorMsg = "Network error. Please check your connection and try again.";
+      }
+      Get.snackbar(Strings.error, errorMsg);
     } finally {
-      isLoading.value = false;
+      isGuestLoading.value = false;
     }
   }
 
@@ -187,6 +197,7 @@ class LoginController extends GetxController {
     _phoneController.clear();
     _otpController.clear();
     isLoading.value = false;
+    isGuestLoading.value = false;
     otpSent.value = false;
     resendSeconds.value = 0;
     resendCount.value = 0;

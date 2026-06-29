@@ -143,14 +143,21 @@ class LoginPage extends GetView<LoginController> {
                   ),
                   const OptionDivider(),
                   Center(
-                    child: TextButton(
-                      onPressed: controller.isLoading.value
-                          ? null
-                          : controller.signInAsGuest,
-                      child: const Text(
-                        Strings.signInAsGuest,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                    child: Obx(
+                          () => controller.isGuestLoading.value
+                          ? const Padding(
+                        padding: Values.defaultPaddingSmall,
+                        child: CircularProgressIndicator(),
+                      )
+                          : TextButton(
+                        onPressed: controller.isLoading.value
+                            ? null
+                            : controller.signInAsGuest,
+                        child: const Text(
+                          Strings.signInAsGuest,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
