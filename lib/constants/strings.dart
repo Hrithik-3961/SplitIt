@@ -87,6 +87,9 @@ class Strings {
   static const String version = "Version";
   static const String editName = "Edit Name";
   static const String update = "Update";
+  static const String privacyPolicy = "Privacy Policy";
+  static const String privacyPolicyUrl = "https://Hrithik-3961.github.io/SplitIt/privacy_policy.html";
+  static const String privacyUrlErrorMsg = "Could not launch privacy policy link";
 
   static const String upgradeAccount = "Upgrade Account";
   static const String upgradeAccountMsg = "Link your phone number to keep your data safe across devices.";

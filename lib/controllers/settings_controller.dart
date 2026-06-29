@@ -9,6 +9,7 @@ import 'package:splitit/constants/values.dart';
 import 'package:splitit/exceptions/send_code_exception.dart';
 import 'package:splitit/models/my_user.dart';
 import 'package:splitit/services/settings_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsController extends GetxController {
   late final SettingsService _settingsService;
@@ -204,6 +205,13 @@ class SettingsController extends GetxController {
         },
       ),
     );
+  }
+
+  void openPrivacyPolicy() async {
+    final Uri url = Uri.parse(Strings.privacyPolicyUrl);
+    if (!await launchUrl(url)) {
+      Get.snackbar(Strings.error, Strings.privacyUrlErrorMsg);
+    }
   }
 }
 

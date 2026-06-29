@@ -45,6 +45,13 @@ class SettingsPage extends GetView<SettingsController> {
                       onTap: controller.logout,
                     ),
                     const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.privacy_tip_outlined),
+                      title: const Text(Strings.privacyPolicy),
+                      trailing: const Icon(Icons.open_in_new, size: Values.smallIconSize),
+                      onTap: controller.openPrivacyPolicy,
+                    ),
+                    const Divider(),
                     const Spacer(),
                     Center(
                       child: Padding(
