@@ -91,7 +91,7 @@ class AddExpenseController extends GetxController {
       amountString = "";
     }
 
-    _addExpenseService = Get.put(AddExpenseService());
+    _addExpenseService = AddExpenseService();
     userExpenseDataList = _addExpenseService.members
         .map((user) => UserExpenseData(user: user))
         .toList();

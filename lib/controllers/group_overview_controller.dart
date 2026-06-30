@@ -38,7 +38,7 @@ class GroupOverviewController extends GetxController {
     super.onInit();
     _groupName = Get.arguments is String ? Get.arguments : "";
     String groupId = Get.currentRoute.split('/').last;
-    _groupsOverviewService = Get.put(GroupsOverviewService(groupId));
+    _groupsOverviewService = GroupsOverviewService(groupId);
 
     ever(_groupsOverviewService.groupDetailsRx, (group) {
       if (group != null) {

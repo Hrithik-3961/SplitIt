@@ -21,7 +21,7 @@ class RecordPaymentController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _recordPaymentService = Get.put(RecordPaymentService());
+    _recordPaymentService = RecordPaymentService();
     final args = Get.arguments;
     if (args is MyTransaction) {
       _paymentAmountController.text = args.totalAmount;

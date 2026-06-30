@@ -12,7 +12,7 @@ class CrossGroupSettleUpController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _settleUpService = Get.put(CrossGroupSettleUpService());
+    _settleUpService = CrossGroupSettleUpService();
     _loadAllBalances();
   }
 

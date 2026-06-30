@@ -168,7 +168,12 @@ class FirebaseService extends GetxService {
 
     final snapshot = await ref.get();
     if (snapshot.exists) {
-      Get.put(snapshot.data()!, permanent: true);
+      final myUser = snapshot.data()!;
+      if (Get.isRegistered<MyUser>()) {
+        Get.replace<MyUser>(myUser);
+      } else {
+        Get.put(myUser, permanent: true);
+      }
       return true;
     }
     return false;
@@ -180,7 +185,12 @@ class FirebaseService extends GetxService {
 
     final snapshot = await ref.get();
     if (snapshot.exists) {
-      Get.put(snapshot.data()!, permanent: true);
+      final myUser = snapshot.data()!;
+      if (Get.isRegistered<MyUser>()) {
+        Get.replace<MyUser>(myUser);
+      } else {
+        Get.put(myUser, permanent: true);
+      }
       return;
     }
 
@@ -572,6 +582,7 @@ class FirebaseService extends GetxService {
 
   Future<void> signOut() async {
     await _auth.signOut();
+    Get.delete<MyUser>(force: true);
     if (Get.isRegistered<LoginController>()) {
       Get.find<LoginController>().reset();
     }
@@ -591,6 +602,7 @@ class FirebaseService extends GetxService {
     await user.delete();
 
     // 3. Cleanup and Navigate
+    Get.delete<MyUser>(force: true);
     if (Get.isRegistered<LoginController>()) {
       Get.find<LoginController>().reset();
     }
@@ -655,7 +667,11 @@ class FirebaseService extends GetxService {
       String? phone}) {
     final user =
         MyUser(uid: uid, memberId: memberId, isGuest: isGuest, phone: phone);
-    Get.put(user, permanent: true);
+    if (Get.isRegistered<MyUser>()) {
+      Get.replace<MyUser>(user);
+    } else {
+      Get.put(user, permanent: true);
+    }
 
     return user;
   }

@@ -21,7 +21,7 @@ class AllGroupsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _groupsService = Get.put(AllGroupsService());
+    _groupsService = AllGroupsService();
   }
 
   @override

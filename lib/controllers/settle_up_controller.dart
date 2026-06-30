@@ -11,7 +11,7 @@ class SettleUpController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _settleUpService = Get.put(SettleUpService());
+    _settleUpService = SettleUpService();
     _groupOverviewController = Get.find<GroupOverviewController>();
     
     _calculateSuggestions();
