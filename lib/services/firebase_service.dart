@@ -13,6 +13,7 @@ import 'package:splitit/models/groups.dart';
 import 'package:splitit/models/my_user.dart';
 import 'package:splitit/models/my_transaction.dart';
 import 'package:splitit/controllers/login_controller.dart';
+import 'package:splitit/pages/all_groups_page.dart';
 import 'package:splitit/pages/login_page.dart';
 import 'package:splitit/utils/base_util.dart';
 
@@ -89,6 +90,10 @@ class FirebaseService extends GetxService {
       verificationCompleted: (credential) async {
         await _auth.signInWithCredential(credential);
         await _createUserIfNeeded();
+        if (Get.isRegistered<LoginController>()) {
+          Get.find<LoginController>().isLoading.value = false;
+        }
+        Get.offAllNamed(AllGroupsPage.route);
       },
       verificationFailed: (FirebaseAuthException e) {
         SendCodeException exception;

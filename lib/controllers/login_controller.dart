@@ -60,23 +60,15 @@ class LoginController extends GetxController {
       _updateEnableSendOtp();
       _updateEnableLogin();
     });
-
-    // Listen to auth state to navigate away if logged in (e.g. auto-verification)
-    // ONLY for auto-verification during phone auth
-    ever(firebaseUser, (user) {
-      if (user != null && otpSent.value && !isLoading.value) {
-        Get.offAllNamed(AllGroupsPage.route);
-      }
-    });
   }
 
   void _updateEnableSendOtp() {
     isEnableSendOtp.value =
-        _phoneController.text.length == Values.phoneNumberLength;
+        _phoneController.text.length == Values.phoneNumberLength && !isLoading.value;
   }
 
   void _updateEnableLogin() {
-    isEnableLogin.value = _otpController.text.length == Values.otpLength;
+    isEnableLogin.value = _otpController.text.length == Values.otpLength && !isLoading.value;
   }
 
   Future<void> sendOtp() async {
@@ -156,7 +148,8 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       await _loginService.verifyOtp(_otpController.text, _verificationId);
-      // firebaseUser listener will handle navigation if successful
+      isLoading.value = false;
+      Get.offAllNamed(AllGroupsPage.route);
     } on InvalidCodeException catch (_) {
       Get.snackbar(Strings.error, Strings.invalidOtpMsg);
       isLoading.value = false;
