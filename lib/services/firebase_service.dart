@@ -572,7 +572,28 @@ class FirebaseService extends GetxService {
 
   Future<void> signOut() async {
     await _auth.signOut();
-    Get.find<LoginController>().reset();
+    if (Get.isRegistered<LoginController>()) {
+      Get.find<LoginController>().reset();
+    }
+    Get.offAllNamed(LoginPage.route);
+  }
+
+  Future<void> deleteAccount() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final uid = user.uid;
+
+    // 1. Delete user document
+    await _usersRef.doc(uid).delete();
+
+    // 2. Delete the Auth account
+    await user.delete();
+
+    // 3. Cleanup and Navigate
+    if (Get.isRegistered<LoginController>()) {
+      Get.find<LoginController>().reset();
+    }
     Get.offAllNamed(LoginPage.route);
   }
 

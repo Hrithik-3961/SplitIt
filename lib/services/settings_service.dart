@@ -14,6 +14,10 @@ class SettingsService extends GetxService {
     await _firebaseService.signOut();
   }
 
+  Future<void> deleteAccount() async {
+    await _firebaseService.deleteAccount();
+  }
+
   Future<void> sendOtp(String phoneNumber, Function(String) onCodeSent,
       Function(SendCodeException) onVerificationFailed) async {
     await _firebaseService.sendOtp(

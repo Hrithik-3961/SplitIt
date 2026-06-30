@@ -50,6 +50,20 @@ class SettingsPage extends GetView<SettingsController> {
                       onTap: controller.openPrivacyPolicy,
                     ),
                     const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.delete_forever_outlined),
+                      title: const Text(Strings.dataDeletion),
+                      trailing: const Icon(Icons.open_in_new, size: Values.smallIconSize),
+                      onTap: controller.openDataDeletion,
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.no_accounts_outlined, color: MyColors.error),
+                      title: const Text(Strings.deleteAccount,
+                          style: TextStyle(color: MyColors.error)),
+                      onTap: controller.deleteAccount,
+                    ),
+                    const Divider(),
                     const Spacer(),
                     Center(
                       child: Padding(

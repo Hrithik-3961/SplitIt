@@ -216,8 +216,29 @@ class SettingsController extends GetxController {
     );
   }
 
+  void deleteAccount() {
+    Get.dialog(
+      ConfirmationDialog(
+        title: Strings.deleteAccount,
+        content: Strings.deleteAccountConfirmMsg,
+        confirmText: Strings.delete,
+        onConfirmed: () {
+          Get.back();
+          _settingsService.deleteAccount();
+        },
+      ),
+    );
+  }
+
   void openPrivacyPolicy() async {
     final Uri url = Uri.parse(Strings.privacyPolicyUrl);
+    if (!await launchUrl(url)) {
+      Get.snackbar(Strings.error, Strings.privacyUrlErrorMsg);
+    }
+  }
+
+  void openDataDeletion() async {
+    final Uri url = Uri.parse(Strings.dataDeletionUrl);
     if (!await launchUrl(url)) {
       Get.snackbar(Strings.error, Strings.privacyUrlErrorMsg);
     }

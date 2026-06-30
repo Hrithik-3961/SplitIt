@@ -88,8 +88,13 @@ class Strings {
   static const String editName = "Edit Name";
   static const String update = "Update";
   static const String privacyPolicy = "Privacy Policy";
-  static const String privacyPolicyUrl = "https://Hrithik-3961.github.io/Splitit/privacy_policy.html";
+  static const String privacyPolicyUrl = "https://Hrithik-3961.github.io/Splitit/privacy-policy.html";
   static const String privacyUrlErrorMsg = "Could not launch privacy policy link";
+
+  static const String deleteAccount = "Delete Account";
+  static const String deleteAccountConfirmMsg = "Are you sure you want to delete your account? This action is permanent and all your data will be lost.";
+  static const String dataDeletion = "Data Deletion";
+  static const String dataDeletionUrl = "https://Hrithik-3961.github.io/Splitit/data-deletion.html";
 
   static const String upgradeAccount = "Upgrade Account";
   static const String upgradeAccountMsg = "Link your phone number to keep your data safe across devices.";
